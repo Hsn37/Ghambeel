@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'modules/login/login.dart';
+import 'modules/todolist/todolist.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,37 +17,35 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const LoginPage(),
+      home: const ToDoList(title:'To-Do List'),
     );
   }
 }
 
 
 
-class TodoList extends StatefulWidget {
-  @override
-  _TodoListState createState() => _TodoListState();
-}
-class _TodoListState extends State<TodoList>{
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('To-Do List'),
-        ),
-        body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Navigate to the second screen when tapped.
-            // Navigator.pushNamed(context, '/Todolist');
-          },
-          child: const Text('Launch screen'),
-        ),
-      ),
-        
-    
-    );
-  }
-}
+// class TodoList extends StatefulWidget {
+//   @override
+//   _TodoListState createState() => _TodoListState();
+// }
+// class _TodoListState extends State<TodoList>{
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//         appBar: AppBar(title: const Text('To-Do List'),
+//         ),
+//         body: Center(
+//         child: ElevatedButton(
+//           onPressed: () {
+//             // Navigate to the second screen when tapped.
+//             // Navigator.pushNamed(context, '/Todolist');
+//           },
+//           child: const Text('Launch screen'),
+//         ),
+//       ), 
+//     );
+//   }
+// }
 
 
 
@@ -77,9 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
       'Index 0: Calendar',
       style: optionStyle,
     ),
-    Text(
-      'Index 1: TodoList',
-      style: optionStyle,
+    Text( 
+        'Index 1: TodoList',
+        style: optionStyle,
     ),
     Text(
       'Index 2: Pomodoro',
