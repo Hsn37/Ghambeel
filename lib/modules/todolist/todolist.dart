@@ -32,21 +32,15 @@ class ToDoList extends StatefulWidget{
 
 class _ToDoListState extends State<ToDoList>{
   final topBar = AppBar(
-    elevation: 0.1,
-    backgroundColor: Color.fromARGB(255, 249, 250, 250),
-    title: const Text('To-Do List'),
-    actions: <Widget>[
-      IconButton(
-        icon: const Icon(Icons.list),
-        onPressed: () {print("heeh");},
-        alignment: Alignment.center,
-      )
-    ],
+    leading: const Icon( Icons.menu, color:Color.fromARGB(255, 47, 10, 180)),
+    title: const Text('Page title'),
+    
+    backgroundColor: Colors.purple,
   );
   @override
   Widget build(BuildContext context){
     return Scaffold (
-      backgroundColor: Color.fromARGB(255, 250, 247, 249),
+      backgroundColor: Color.fromARGB(255, 207, 57, 157),
       appBar:topBar,
     );
     
