@@ -25,25 +25,26 @@ import 'package:flutter/material.dart';
 class ToDoList extends StatefulWidget{
   const ToDoList({Key? key, required this.title}) : super(key: key);
   final String title;
-  @override
-  _ToDoListState createState() => _ToDoListState();
-}
 
-
-class _ToDoListState extends State<ToDoList>{
-  final topBar = AppBar(
+  static final topBar = AppBar(
     leading: const Icon( Icons.menu, color:Color.fromARGB(255, 47, 10, 180)),
     title: const Text('Page title'),
     
     backgroundColor: Colors.purple,
   );
+
+  @override
+  _ToDoListState createState() => _ToDoListState();
+}
+
+class _ToDoListState extends State<ToDoList>{
+  
+  
   @override
   Widget build(BuildContext context){
     return Scaffold (
-      backgroundColor: Color.fromARGB(255, 207, 57, 157),
-      appBar:topBar,
+      backgroundColor: const Color.fromARGB(255, 207, 57, 157),
     );
     
   }
-  
 }

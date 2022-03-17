@@ -17,37 +17,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const ToDoList(title:'To-Do List'),
+      home: const MyHomePage(title: "FLutter"),
     );
   }
 }
-
-
-
-// class TodoList extends StatefulWidget {
-//   @override
-//   _TodoListState createState() => _TodoListState();
-// }
-// class _TodoListState extends State<TodoList>{
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         appBar: AppBar(title: const Text('To-Do List'),
-//         ),
-//         body: Center(
-//         child: ElevatedButton(
-//           onPressed: () {
-//             // Navigate to the second screen when tapped.
-//             // Navigator.pushNamed(context, '/Todolist');
-//           },
-//           child: const Text('Launch screen'),
-//         ),
-//       ), 
-//     );
-//   }
-// }
-
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -57,8 +30,6 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
-
-
 
 class _MyHomePageState extends State<MyHomePage> {
   
@@ -76,9 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
       'Index 0: Calendar',
       style: optionStyle,
     ),
-    Text( 
-        'Index 1: TodoList',
-        style: optionStyle,
+    ToDoList(
+      title:'To-Do List'
     ),
     Text(
       'Index 2: Pomodoro',
@@ -90,7 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
   ];
   static const List<String> _titles = <String>["Calendar", "Todo List", "Pomodoro", "Statistics"];
-
+  static const List<Widget> appBars = <Widget>[];
+  
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -101,9 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_titles[_selectedIndex]),
-      ),
+      appBar: ToDoList.topBar,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex)
       ),
