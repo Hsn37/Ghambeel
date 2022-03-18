@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_const
+import 'package:ghambeel/modules/todolist/addtask.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
-
 // import 'package:ghambeel/main.dart';
 
 // class ListPage extends StatefulWidget {
@@ -53,6 +53,7 @@ class _ToDoListState extends State<ToDoList>{
         itemBuilder: (BuildContext context, int index) {
           return makeCard; // make card creates the items. receive data from make card for our tasks
         },
+
     ),
   );
   static final makeCard = Card( //static cos otherwise implicit declaration
@@ -102,6 +103,17 @@ class _ToDoListState extends State<ToDoList>{
     return Scaffold (
       backgroundColor: const Color.fromARGB(255, 251, 251, 251),
       body:makeBody,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const addTask(title: 'Add A Task',)),
+        );
+          // Add your onPressed code here! function call to creatTask
+        },
+        backgroundColor: Colors.blue,
+        child: const Icon(Icons.add ),
+      ),
     );
     
   }
