@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'modules/login/login.dart';
 import 'modules/todolist/todolist.dart';
+import 'modules/calendar/calendar.dart';
 import 'modules/storage/storage.dart';
 
 
@@ -76,9 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
   // This is where we have our Pages inserted as widgets. Currently it contains 4 text widgets.
   /////////////////////////////////////////////////////////
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Calendar',
-      style: optionStyle,
+    Calendar(
+      title: 'Calendar',
     ),
     ToDoList(
       title:'To-Do List'

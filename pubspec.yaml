@@ -37,6 +37,9 @@ dependencies:
 
   flutter_secure_storage: ^5.0.2
   icon_decoration: ^1.0.1
+  table_calendar: ^3.0.4
+  intl: ^0.17.0
+  provider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
