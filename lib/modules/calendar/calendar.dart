@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import '../utils.dart';
+import '../../theme.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({Key? key, required this.title}) : super(key: key);
@@ -12,7 +13,7 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar>{
-  CalendarFormat _calendarFormat = CalendarFormat.month;  // month format for calendar widget
+  final CalendarFormat _calendarFormat = CalendarFormat.month;  // month format for calendar widget
   // States:
   DateTime _focusedDay = DateTime.now(); //
   DateTime? _selectedDay;
@@ -20,9 +21,7 @@ class _CalendarState extends State<Calendar>{
   Widget build(BuildContext context) {
     return
       Scaffold(
-        appBar: AppBar(  // App bar for calendar
-        title: Text('Calendar'),
-    ),
+
     body: TableCalendar(
     firstDay: firstDay, // first day in calendar (defined in utils)
     lastDay: lastDay,
@@ -39,6 +38,19 @@ class _CalendarState extends State<Calendar>{
           });
         }
       },
+    calendarStyle: const CalendarStyle(
+      weekendTextStyle: TextStyle(color: accent),
+      // highlighted color for today
+      todayDecoration: BoxDecoration(
+      color: lightPrimary,
+      shape: BoxShape.circle,
+         ),
+      todayTextStyle: TextStyle(color: primaryText),
+      selectedDecoration: BoxDecoration(
+        color: darkPrimary,
+        shape: BoxShape.circle,
+      ),
+      ),
     ),
     );
   }

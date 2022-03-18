@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_const
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
+import '../../theme.dart';
 
 // import 'package:ghambeel/main.dart';
 
@@ -30,10 +31,10 @@ class ToDoList extends StatefulWidget{
   final String title;
 
   static final topBar = AppBar(
-    leading: const Icon( Icons.menu, color:Color.fromARGB(255, 47, 10, 180)),
+    leading: const Icon( Icons.menu, color: icon),
     title: const Text('Page title'),
     
-    backgroundColor: Colors.purple,
+    backgroundColor: primary,
   );
 
   @override
