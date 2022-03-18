@@ -2,7 +2,6 @@
 import 'package:ghambeel/modules/todolist/addtask.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
-// import 'package:ghambeel/main.dart';
 
 // class ListPage extends StatefulWidget {
 //   ListPage({Key key, this.title}) : super(key: key);
@@ -30,10 +29,10 @@ class ToDoList extends StatefulWidget{
   final String title;
 
   static final topBar = AppBar(
-    leading: const Icon( Icons.menu, color:Color.fromARGB(255, 47, 10, 180)),
+    leading: const Icon( Icons.menu, color: icon),
     title: const Text('Page title'),
     
-    backgroundColor: Colors.purple,
+    backgroundColor: primary,
   );
 
   @override
