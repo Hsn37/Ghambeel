@@ -4,27 +4,37 @@ import 'package:flutter/material.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:intl/intl.dart';
 import '../../theme.dart';
-class addTask extends StatefulWidget {
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+
+
+class topBar extends AppBar {
+    final String myTitle;
+    topBar({Key? key, required BuildContext context,required this.myTitle})
+    : super(
+        key: key,
+        leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: primaryText, ),           
+              onPressed: () {
+                  Navigator.pop(
+                    context,
+                  MaterialPageRoute(builder: (context) => const ToDoList(title: 'To-Do List',)),
+                );
+            }
+            
+        ),
+      title: const Text('Add A Task',style: TextStyle(color: primaryText),),
+      
+      backgroundColor: bg,
+    );
+  }
+class addTask extends StatefulWidget {  
   const addTask({Key? key, required this.title}) : super(key: key);
   final String title;
-
-  static final topBar = AppBar(
-    leading: const Icon( Icons.menu, color:Color.fromARGB(255, 47, 10, 180)),
-    title: const Text('Add A Task'),
-    
-    backgroundColor: Colors.purple,
-  );
-
   @override
   _AddTaskState createState() => _AddTaskState();
 }
 class _AddTaskState extends State<addTask>{
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a `GlobalKey<FormState>`,
-  // not a GlobalKey<MyCustomFormState>.
-  
+ 
   final _formKey = GlobalKey<FormState>();
   String dropdownValuePriority = 'High';
   TimeOfDay _time = TimeOfDay(hour: 11, minute: 55);
@@ -63,10 +73,12 @@ class _AddTaskState extends State<addTask>{
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Scaffold(
-      appBar: addTask.topBar,
+      appBar: topBar(context: context, myTitle: '',),
       key: _formKey,
       body: ListView(
+        
         children: <Widget>[
+          
           // Add TextFormFields and ElevatedButton here.
           Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
@@ -75,7 +87,8 @@ class _AddTaskState extends State<addTask>{
                 tasktitle=text;
             },
             decoration: const InputDecoration(
-              border: OutlineInputBorder(),
+              //border: OutlineInputBorder(),
+              fillColor: navColor,
               labelText: 'Task Title',
               
               ),
@@ -175,7 +188,7 @@ class _AddTaskState extends State<addTask>{
         // );
           // Add your onPressed code here! function call to creatTask
         },
-        backgroundColor: Colors.teal.shade800,
+        backgroundColor: toDoIconCols,//Colors.teal.shade800,
         focusColor: Colors.blue,
         foregroundColor: bg, //Colors.amber,
         hoverColor: accent,
@@ -185,3 +198,4 @@ class _AddTaskState extends State<addTask>{
     );
   }
 }
+
