@@ -28,7 +28,6 @@ import '../../theme.dart';
 class ToDoList extends StatefulWidget{
   const ToDoList({Key? key, required this.title}) : super(key: key);
   final String title;
-
   static final topBar = AppBar(
     leading: const Icon( Icons.menu, color: primaryText),
     title: const Text('To- Do List',style:TextStyle(color: primaryText)),
@@ -139,16 +138,16 @@ class _ToDoListState extends State<ToDoList>{
                     child: TextButton(
                         child: const Opacity(
                           opacity: 0.3,
-                          child: Text("More tasks",style: TextStyle(color: primaryText)),
+                          child: Text("More incomplteed tasks",style: TextStyle(color: primaryText)),
                         ),
                       // child: const Text("Load More",style: TextStyle(color: Colors.black.withOpacity(0.5))
                       onPressed: () {
-                        loadMoreUncomp();
+                        loadMoreComp();
                       },
                     ),
                   )
                       :
-                      makeCardundone(context);
+                      makeCardundone();
                   // ListTile(
                   //   title: Text(items[index]),
                   // );
@@ -192,22 +191,22 @@ class _ToDoListState extends State<ToDoList>{
                     child: TextButton(
                      child: const Opacity(
                           opacity: 0.3,
-                          child: Text("More tasks",style: TextStyle(color: primaryText)),
+                          child: Text("More completed tasks",style: TextStyle(color: primaryText)),
                     ),
                       onPressed: () {
-                        loadMoreComp();
+                        loadMoreUncomp();
                       },
                     ),
                   )
                       :
-                      makeCarddone(context);
+                      makeCarddone();
                 },          
             ),
       ),
    ]    
 );
 }
-  Widget makeCarddone(BuildContext context) {
+  Widget makeCarddone() {
     return Card ( //static cos otherwise implicit declaration
       elevation: 8.0,
       shadowColor: Color.fromARGB(0, 0, 255, 255),
@@ -218,7 +217,7 @@ class _ToDoListState extends State<ToDoList>{
     ),
   );
 }
-  Widget makeCardundone(BuildContext context){
+  Widget makeCardundone(){
     return Card ( //static cos otherwise implicit declaration
       elevation: 8.0,
       shadowColor: Color.fromARGB(0, 0, 255, 255),
@@ -315,7 +314,7 @@ static final makeListTileUncomp = ListTile(
         onPressed: () {
           Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const addTask(title: 'Add A Task',)),
+          MaterialPageRoute(builder: (context) => const addTask(title: 'Add A Task')),
         );
           // Add your onPressed code here! function call to creatTask
         },
