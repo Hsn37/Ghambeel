@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ghambeel/modules/homepage/homepage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -19,17 +20,8 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 60.0),
-              child: Center(
-                child: SizedBox(
-                    width: 200,
-                    height: 150,
-                    /*decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(50.0)),*/
-                    child: Image.asset('asset/images/flutter-logo.png')),
-              ),
+            const Padding(
+              padding: EdgeInsets.only(top: 60.0)
             ),
             const Padding(
               //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
@@ -56,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
               onPressed: (){
-                //TODO FORGOT PASSWORD SCREEN GOES HERE
+                //TODO FORGOT PASSWORD SCREEN GOES HERE,
               },
               child: const Text(
                 'Forgot Password',
@@ -70,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
-                  //TO DO SOMETHING,
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const MyHomePage(title: "FLutter")));
                 },
                 child: const Text(
                   'Login',
@@ -83,6 +75,27 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const Text('New User? Create Account')
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class SecondRoute extends StatelessWidget {
+  const SecondRoute({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Second Route'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Go back!'),
         ),
       ),
     );
