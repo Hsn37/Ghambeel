@@ -1,54 +1,91 @@
 import 'package:flutter/material.dart';
-// import 'package:ghambeel/main.dart';
+import 'package:ghambeel/modules/todolist/addtask.dart';
+import 'package:icon_decoration/icon_decoration.dart';
+import 'package:flutter/material.dart';
+import '../utils.dart';
+import '../../theme.dart';
 
-// class ListPage extends StatefulWidget {
-//   ListPage({Key key, this.title}) : super(key: key);
-
-//   final String title;
-
-//   @override
-//   _ListPageState createState() => _ListPageState();
-// }
-
-// class _ListPageState extends State<ListPage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-//       appBar: topAppBar,
-     
-//     );
-//   }
-// }
-
-
-class ToDoList extends StatefulWidget{
+class ToDoList extends StatefulWidget {
   const ToDoList({Key? key, required this.title}) : super(key: key);
   final String title;
+
   @override
   _ToDoListState createState() => _ToDoListState();
 }
 
+class _ToDoListState extends State<ToDoList> {
 
-class _ToDoListState extends State<ToDoList>{
-  final topBar = AppBar(
-    elevation: 0.1,
-    backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-    title: const Text('To-Do List'),
-    actions: <Widget>[
-      IconButton(
-        icon: const Icon(Icons.list),
-        onPressed: () {},
-      )
-    ],
-  );
+  int present = 0;
+  int perPage = 5;
+
+  final originalItems = List<String>.generate(10000, (i) => "Item $i");
+  var items = <String>[];
+
+
   @override
-  Widget build(BuildContext context){
-    return Scaffold (
-      backgroundColor: Color(0xFF0097A7),
-      appBar:topBar,
-    );
-    
+  void initState() {
+    super.initState();
+    setState(() {
+      items.addAll(originalItems.getRange(present, present + perPage));
+      present = present + perPage;
+    });
   }
-  
+
+  void loadMore() {
+    setState(() {
+      if((present + perPage )> originalItems.length) {
+        items.addAll(
+            originalItems.getRange(present, originalItems.length));
+      } else {
+        items.addAll(
+            originalItems.getRange(present, present + perPage));
+      }
+      present = present + perPage;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar:  AppBar(
+        title:  Text(widget.title),
+      ),
+     
+        body:
+        Container(
+        decoration: const BoxDecoration(color:Color.fromARGB(255, 255, 255, 255)),
+        
+        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+          child: ListView.builder(
+          itemCount: (present <= originalItems.length) ? items.length + 1 : items.length,
+          itemBuilder: (context, index) {
+            return (index == items.length ) ?
+            Container(
+              color: Colors.greenAccent,
+              child: TextButton(
+                child: const Text("Load More"),
+                onPressed: () {
+                  setState(() {
+                    if((present + perPage )> originalItems.length) {
+                      items.addAll(
+                          originalItems.getRange(present, originalItems.length));
+                    } else {
+                      items.addAll(
+                          originalItems.getRange(present, present + perPage));
+                    }
+                    present = present + perPage;
+                  });
+                },
+              ),
+            )
+                :
+            ListTile(
+              title: Text(items[index]),
+            );
+          },
+        ),
+      )
+    );
+
+  }
 }

@@ -3,7 +3,7 @@ import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:intl/intl.dart';
-
+import '../../theme.dart';
 class addTask extends StatefulWidget {
   const addTask({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -175,7 +175,10 @@ class _AddTaskState extends State<addTask>{
         // );
           // Add your onPressed code here! function call to creatTask
         },
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.teal.shade800,
+        focusColor: Colors.blue,
+        foregroundColor: bg, //Colors.amber,
+        hoverColor: accent,
         child: const Icon(Icons.check),
         
       ),

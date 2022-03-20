@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ghambeel/modules/login/login.dart';
 import 'modules/storage/storage.dart';
 import 'modules/homepage/homepage.dart';
-
-
+import '../../theme.dart';
 // initial varialbes setup.
 void setup() {
   // the flag for whether the user is logged in or not.
