@@ -111,6 +111,9 @@ class _AddTaskState extends State<AddTask>{
     }
   }
 */
+
+  var priorityIcon = Icon(Icons.priority_high, color: accent);
+  
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -168,22 +171,29 @@ class _AddTaskState extends State<AddTask>{
           child: Center(child:SelectFormField(
             type: SelectFormFieldType.dropdown, // or can be dialog
             initialValue: 'medium',
-            icon: const Icon(Icons.priority_high,color: accent,),
+            icon: priorityIcon,
             labelText: 'Priority',
             items: _items,
-            onChanged: (val) {
-              // if (val=="high"){
-              //   setState(() {
-              //     icon: const Icon(Icons.priority_high,color: Colors.red);
-              //   });
-                
-              //  // print("i am hereee")
-              // }else if(val=="low"){
-              //   icon: const Icon(Icons.priority_high,color: Colors.blue);
-              // }
-              dropdownValuePriority=val;
-                print(val);
-                print(dropdownValuePriority);
+            onChanged: (val) => {
+              if (val=="high"){
+                setState(() {
+                  priorityIcon = Icon(Icons.priority_high,color: Colors.red);
+                })
+              }
+              else if (val=="low"){
+                setState(() {
+                  priorityIcon = Icon(Icons.priority_high,color: Colors.blue);
+                })
+              }
+              else{
+                setState(() {
+                  priorityIcon = Icon(Icons.priority_high,color: accent);
+                }) 
+              },
+
+              dropdownValuePriority=val
+                // print(val)
+                // print(dropdownValuePriority);
             },
             onSaved: (val) => print(val),
           ),
