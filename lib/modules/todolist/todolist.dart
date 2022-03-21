@@ -1,5 +1,7 @@
-// ignore_for_file: unnecessary_const, deprecated_member_use
+// ignore_for_file: unnecessary_const, deprecated_member_use, curly_braces_in_flow_control_structures
+import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:ghambeel/modules/todolist/addtask.dart';
+import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
 import '../utils.dart';
@@ -24,6 +26,21 @@ import '../../theme.dart';
 //   }
 // }
 
+class Task {
+  String name, priority, description, status, timeAdded, timeCompleted;
+
+  Task(this.name, this.priority, this.description, this.status, this.timeAdded, this.timeCompleted);
+
+  static List<Task> parseTasks(tasks) {
+    var l = <Task>[];
+    tasks.forEach((k, v) => {
+      l.add(Task(v["name"], v["priority"], v["description"], v["status"], v["timeAdded"], v["timeCompleted"]))
+    });
+
+    return l;
+  }
+}
+
 
 class ToDoList extends StatefulWidget{
   const ToDoList({Key? key, required this.title}) : super(key: key);
@@ -45,29 +62,26 @@ class _ToDoListState extends State<ToDoList>{
   static int presentUncomp = 0;
   static int perPageUncomp = 3;
 
-  static final originalItems = List<String>.generate(10, (i) => "Item $i");
-  static var itemsComp = <String>[];
-  static var itemsUncomp = <String>[];
+  var completedTasks = <Task>[];
+  var incompleteTasks = <Task>[];
+
+  static var itemsComp = <Task>[];
+  static var itemsUncomp = <Task>[];
+
+  var fetchData = true;
   
   @override
   void initState() {
       super.initState();
-      setState(() {
-        itemsComp.addAll(originalItems.getRange(presentComp, presentComp + perPageComp));
-        presentComp = presentComp + perPageComp;
-        itemsUncomp.addAll(originalItems.getRange(presentUncomp, presentUncomp + perPageUncomp));
-        presentUncomp = presentUncomp + perPageUncomp;
-      });
-      
     }
   void loadMoreComp() {
       setState(() {
-        if((presentComp + perPageComp )> originalItems.length) {
+        if((presentComp + perPageComp )> completedTasks.length) {
           itemsComp.addAll(
-              originalItems.getRange(presentComp, originalItems.length));
+              completedTasks.getRange(presentComp, completedTasks.length));
         } else {
           itemsComp.addAll(
-              originalItems.getRange(presentComp, presentComp + perPageComp));
+              completedTasks.getRange(presentComp, presentComp + perPageComp));
         }
         presentComp = presentComp + perPageComp;
       });
@@ -75,149 +89,149 @@ class _ToDoListState extends State<ToDoList>{
   }
   void loadMoreUncomp() {
       setState(() {
-        if((presentUncomp + perPageUncomp )> originalItems.length) {
+        if((presentUncomp + perPageUncomp )> incompleteTasks.length) {
           itemsUncomp.addAll(
-              originalItems.getRange(presentUncomp, originalItems.length));
+              incompleteTasks.getRange(presentUncomp, incompleteTasks.length));
         } else {
           itemsUncomp.addAll(
-              originalItems.getRange(presentUncomp, presentUncomp + perPageUncomp));
+              incompleteTasks.getRange(presentUncomp, presentUncomp + perPageUncomp));
         }
         presentUncomp = presentUncomp + perPageUncomp;
       });
     
   }
   Widget makeBody(BuildContext context){
-  // final makeBody = 
-  return ListView (
-     //shrinkWrap: true,
-     //physics: const ClampingScrollPhysics(), 
-    children:<Widget>[
-      Container(
-        color: bg,
-        //mainAxisAlignment: MainAxisAlignment.start
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-        child:Column(
-          children: [
-            Row(             
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Padding(
-                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    child: Text("5 incomplete, 5 complete",style: TextStyle(fontSize: 12,color: primaryText)),
-                  ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child:  Icon(Icons.filter_list, color: toDoIconCols),
-                ),
-              ],
-            ),
-            Row(
-              children: const [
-                Padding(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: Text("Incomplete",style: TextStyle( fontWeight: FontWeight. bold,fontSize: 14,color: primaryText)),
-                  ),
-                ],
-            ),            
-        ],
-        )        
-      ),  
-      Container(
-          decoration: const BoxDecoration(color:bg),
-          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-            child:ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-             // itemCount: 5, // number here shold be the sum of items in to do list
-              itemCount: (presentComp <= originalItems.length) ? itemsComp.length + 1 : itemsComp.length,
-              itemBuilder: (context, index) {
-                return (index == itemsComp.length ) ?
-                  Container(
-                    color: lightPrimary.withOpacity(0.1),
-                    child: TextButton(
-                        child: const Opacity(
-                          opacity: 0.3,
-                          child: Text("More incomplteed tasks",style: TextStyle(color: primaryText)),
-                        ),
-                      // child: const Text("Load More",style: TextStyle(color: Colors.black.withOpacity(0.5))
-                      onPressed: () {
-                        loadMoreComp();
-                      },
-                    ),
-                  )
-                      :
-                      makeCardundone();
-                  // ListTile(
-                  //   title: Text(items[index]),
-                  // );
-                },
-        
-              //itemBuilder: (BuildContext context, int index) {
-                 // make card creates the items. receive data from make card for our tasks
-            ),
-      ),
 
-      Container(
-        //mainAxisAlignment: MainAxisAlignment.start
-        color: bg,
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-        child:Column(
-          children: [
-            Row(
-              children: const [
-                Padding(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: Text("Complete",style: TextStyle( fontWeight: FontWeight. bold,fontSize: 14,color: primaryText)),
+    return ListView (
+      //shrinkWrap: true,
+      //physics: const ClampingScrollPhysics(), 
+      children:<Widget>[
+        Container(
+          color: bg,
+          //mainAxisAlignment: MainAxisAlignment.start
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+          child:Column(
+            children: [
+              Row(             
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                      child: Text("Incomplete: ${incompleteTasks.length}, Complete: ${completedTasks.length}", style: const TextStyle(fontSize: 12,color: primaryText)),
+                    ),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    child:  Icon(Icons.filter_list, color: toDoIconCols),
                   ),
                 ],
-            ),            
-        ],
-        )        
-      ),
-      Container(
-          decoration: const BoxDecoration(color:bg),
-          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-            child:ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-             // itemCount: 5, // number here shold be the sum of items in to do list
-              itemCount: (presentUncomp <= originalItems.length) ? itemsUncomp.length + 1 : itemsUncomp.length,
-              itemBuilder: (context, index) {
-                return (index == itemsUncomp.length ) ?
-                  Container(
-                    color: lightPrimary.withOpacity(0.1),
-                    child: TextButton(
-                     child: const Opacity(
-                          opacity: 0.3,
-                          child: Text("More completed tasks",style: TextStyle(color: primaryText)),
+              ),
+              Row(
+                children: const [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: Text("Incomplete",style: TextStyle( fontWeight: FontWeight. bold,fontSize: 14,color: primaryText)),
                     ),
-                      onPressed: () {
-                        loadMoreUncomp();
-                      },
+                  ],
+              ),            
+          ],
+          )        
+        ),  
+        Container(
+            decoration: const BoxDecoration(color:bg),
+            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+              child:ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+              // itemCount: 5, // number here shold be the sum of items in to do list
+                itemCount: (presentUncomp <= incompleteTasks.length) ? itemsUncomp.length + 1 : itemsUncomp.length,
+                itemBuilder: (context, index) {
+                  return (index == itemsUncomp.length) ?
+                    Container(
+                      color: lightPrimary.withOpacity(0.1),
+                      child: TextButton(
+                          child: const Opacity(
+                            opacity: 0.3,
+                            child: Text("More incomplteed tasks",style: TextStyle(color: primaryText)),
+                          ),
+                        // child: const Text("Load More",style: TextStyle(color: Colors.black.withOpacity(0.5))
+                        onPressed: () {
+                          loadMoreComp();
+                        },
+                      ),
+                    )
+                        :
+                        makeCardundone(index);
+                    // ListTile(
+                    //   title: Text(items[index]),
+                    // );
+                  },
+          
+                //itemBuilder: (BuildContext context, int index) {
+                  // make card creates the items. receive data from make card for our tasks
+              ),
+        ),
+
+        Container(
+          //mainAxisAlignment: MainAxisAlignment.start
+          color: bg,
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+          child:Column(
+            children: [
+              Row(
+                children: const [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: Text("Complete",style: TextStyle( fontWeight: FontWeight. bold,fontSize: 14,color: primaryText)),
                     ),
-                  )
-                      :
-                      makeCarddone();
-                },          
-            ),
-      ),
-   ]    
-);
-}
-  Widget makeCarddone() {
+                  ],
+              ),            
+          ],
+          )        
+        ),
+        Container(
+            decoration: const BoxDecoration(color:bg),
+            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+              child:ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+              // itemCount: 5, // number here shold be the sum of items in to do list
+                itemCount: (presentComp <= completedTasks.length) ? itemsComp.length + 1 : itemsComp.length,
+                itemBuilder: (context, index) {
+                  return (index == itemsComp.length) ?
+                    Container(
+                      color: lightPrimary.withOpacity(0.1),
+                      child: TextButton(
+                      child: const Opacity(
+                            opacity: 0.3,
+                            child: Text("More completed tasks",style: TextStyle(color: primaryText)),
+                      ),
+                        onPressed: () {
+                          loadMoreUncomp();
+                        },
+                      ),
+                    )
+                        :
+                        makeCarddone(index);
+                  },          
+              ),
+        ),
+    ]    
+  );
+  }
+  Widget makeCarddone(int index) {
     return Card ( //static cos otherwise implicit declaration
       elevation: 8.0,
       shadowColor: Color.fromARGB(0, 0, 255, 255),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
       decoration: const BoxDecoration(color: bg,borderRadius:BorderRadius.all(Radius.circular(50.0))),// function call check task urgency, select and return color!!!
-      child: makeListTile,
+      child: makeListTile(index, itemsComp),
     ),
   );
 }
-  Widget makeCardundone(){
+  Widget makeCardundone(int index){
     return Card ( //static cos otherwise implicit declaration
       elevation: 8.0,
       shadowColor: Color.fromARGB(0, 0, 255, 255),
@@ -225,11 +239,21 @@ class _ToDoListState extends State<ToDoList>{
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
       decoration: const BoxDecoration(color:bg,borderRadius:BorderRadius.all(Radius.circular(50.0))),// function call check task urgency, select and return color!!!
-      child: makeListTileUncomp,
+      child: makeListTileUncomp(index, itemsUncomp),
     ),
   );
 }
-static final makeListTileUncomp = ListTile( 
+  Widget makeListTileUncomp(int index, List<Task> list) {
+    
+    Color timerCol;
+    if (list[index].priority == "0")
+      timerCol = Colors.blue;
+    else if (list[index].priority == "1")
+      timerCol = accent;
+    else
+      timerCol = Colors.red;
+
+    return ListTile( 
       contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       // tileColor: const Color.fromARGB(199, 152, 182, 17),
       // shape: const RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(100.0))),
@@ -250,23 +274,34 @@ static final makeListTileUncomp = ListTile(
             // ),
            ),
         ),
-      title: const Text( // this needs to have task header!!!!! sample text here
-          "task title",
+      title: Text( // this needs to have task header!!!!! sample text here
+          list[index].name,
           style: TextStyle(color: primaryText, fontSize: 18),
         ),
       subtitle: Row(
-          children: const <Widget>[
-            Text(" Task description", style: TextStyle(color: secondaryText)),
+          children: <Widget>[
+            Text(list[index].description, style: TextStyle(color: secondaryText)),
            // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
             // so set color thru a function??
           ],
         ),
-      trailing: const Icon(Icons.timer, color: toDoIconCols, size: 20.0), // not required as per our interface, or we can put that tmer here
+      trailing: Icon(Icons.timer, color: timerCol, size: 20.0), // not required as per our interface, or we can put that tmer here
         // we can set color of this timer from red yellow to blue based on task importance? 
     
-  );
+    );
+  }
   // see options for this.
-  static final makeListTile = ListTile( 
+  Widget makeListTile(int index, List<Task> list){
+
+    Color timerCol;
+    if (list[index].priority == "0")
+      timerCol = Colors.blue;
+    else if (list[index].priority == "1")
+      timerCol = accent;
+    else
+      timerCol = Colors.red;
+
+    return ListTile( 
       contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       // tileColor: const Color.fromARGB(199, 152, 182, 17),
       // shape: const RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(100.0))),
@@ -285,27 +320,46 @@ static final makeListTileUncomp = ListTile(
             //   shadows: [Shadow(blurRadius: 2, offset: Offset(0,0))],
             //   gradient: LinearGradient(colors:[Color.fromARGB(255, 155, 17, 17),Color.fromARGB(255, 12, 10, 10)] )
             // ),
-           ),
-        ),
-      title: const Text( // this needs to have task header!!!!! sample text here
-          "task title",
-          style: TextStyle(color:primaryText,  fontSize: 18),
-        ),
-      subtitle: Row(
-          children: const <Widget>[
-            Text(" Task description", style: TextStyle(color: secondaryText)),
-           // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
-            // so set color thru a function??
-          ],
-        ),
-      trailing: const Icon(Icons.timer, color: toDoIconCols, size: 20.0), // not required as per our interface, or we can put that tmer here
-        // we can set color of this timer from red yellow to blue based on task importance? 
-    
-  );
+            ),
+          ),
+        title: Text( // this needs to have task header!!!!! sample text here
+            list[index].name,
+            style: const TextStyle(color:primaryText,  fontSize: 18),
+          ),
+        subtitle: Row(
+            children: <Widget>[
+              Text(list[index].description, style: const TextStyle(color: secondaryText)),
+            // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
+              // so set color thru a function??
+            ],
+          ),
+        trailing: Icon(Icons.timer, color: timerCol, size: 20.0), // not required as per our interface, or we can put that tmer here
+          // we can set color of this timer from red yellow to blue based on task importance? 
+      
+    );
+  } 
 
   @override
   Widget build(BuildContext context){
-    return Scaffold (
+    print("fetchData" + fetchData.toString());
+    if (fetchData) {
+      Storage.fetchTasks().then((v) => { 
+        incompleteTasks = Task.parseTasks(v["incomplete"]), 
+        completedTasks = Task.parseTasks(v["complete"]), 
+        setState(() => {
+          fetchData = false,
+          itemsComp.addAll(completedTasks.getRange(presentComp, presentComp + perPageComp)),
+          presentComp = presentComp + perPageComp,
+          itemsUncomp.addAll(incompleteTasks.getRange(presentUncomp, presentUncomp + perPageUncomp)),
+          presentUncomp = presentUncomp + perPageUncomp
+        }) 
+      });
+
+      return Loading();
+    }
+    else {
+      // fetchData = true;
+      return Scaffold (
       //appBar: ToDoList.topBar,
       backgroundColor: bg,
       body:makeBody(context),
@@ -326,7 +380,7 @@ static final makeListTileUncomp = ListTile(
 
         child: const Icon(Icons.add ),
       ),
-    );
-    
+    ); 
+    }
   }
 }
