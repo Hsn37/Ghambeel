@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ghambeel/modules/homepage/homepage.dart';
 import 'signup.dart';
+import 'package:mysql1/mysql1.dart';
+import 'package:ghambeel/modules/utils.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -13,6 +16,18 @@ class _LoginPageState extends State<LoginPage> {
   bool loading = false;
   var email = TextEditingController();
   var password = TextEditingController();
+
+  var db = Mysql();
+
+  void getName(name) {
+    db.getConnection().then((connection) {
+      String sql = 'select * from ghambeel.Users;';
+      connection.query(sql).then((results) => {
+        print(results)
+      });
+      connection.close();
+    });
+  }
 
   @override
   void dispose() {
@@ -75,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
+                  //getName("hello");
                   if (email.text == "danyalmaqbool@hotmail.com" && password.text == "123") {
                     Navigator.push(context, MaterialPageRoute(
                         builder: (context) => const MyHomePage(
