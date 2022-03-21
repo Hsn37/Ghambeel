@@ -46,6 +46,7 @@ dependencies:
   flutter_awesome_select: ^6.0.1
   chips_choice_null_safety: ^2.0.6
   select_form_field: ^2.2.0
+  mysql1: ^0.19.2
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
