@@ -26,10 +26,15 @@ class Storage {
       return json.decode(str);
     }
   }
+
+  static Future<dynamic> fetchTasks() {
+    return getValue(Keys.tasks).then((v) => (jsonDec(v))["tasks"]);
+  }
 }
 
 class Keys {
   static String login = "loginStatus";
   static String tasks = "tasks";
   static String taskNum = "globalTaskNum";
+  static String weekNum = "globalWeekNum";
 }
