@@ -35,8 +35,9 @@ class _CalendarState extends State<Calendar> {
   // States:
   DateTime _focusedDay = DateTime.now(); //
   DateTime? _selectedDay;
+  ValueNotifier<List<Task>> incompleteTasks = ValueNotifier([Task("","","","","","")]);
   var completedTasks = <Task>[];
-  var incompleteTasks = <Task>[];
+  // var incompleteTasks = <Task>[];
 
   static var itemsComp = <Task>[];
   static var itemsUncomp = <Task>[];
@@ -53,7 +54,8 @@ class _CalendarState extends State<Calendar> {
     return
       Scaffold(
 
-        body: TableCalendar(
+        body: Column(
+          children: [TableCalendar(
           firstDay: firstDay,
           // first day in calendar (defined in utils)
           lastDay: lastDay,
@@ -85,7 +87,35 @@ class _CalendarState extends State<Calendar> {
               color: darkPrimary,
               shape: BoxShape.circle,
             ),
+           ),
           ),
+          // event box
+          const SizedBox(height:10),
+          Expanded(
+            child: ValueListenableBuilder<List<Task>>(
+              valueListenable: incompleteTasks,
+              builder: (context, value, _) {
+                return ListView.builder(
+                    itemCount: value.length,
+                    itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: 4.0,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: ListTile(
+                      onTap: () => print('hello'),
+                    ),
+                  );
+                },
+                );
+              },
+            )
+          )]
         ),
       );
   }
@@ -93,7 +123,7 @@ class _CalendarState extends State<Calendar> {
   getEventsToday(DateTime day) {
     Storage.fetchTasks().then((v) =>
     {
-      incompleteTasks = Task.parseTasks(v["incomplete"]),
+      incompleteTasks = ValueNotifier(Task.parseTasks(v["incomplete"])),
       completedTasks = Task.parseTasks(v["complete"]),
       setState(() =>
       {
@@ -101,11 +131,13 @@ class _CalendarState extends State<Calendar> {
         itemsComp.addAll(
             completedTasks.getRange(presentComp, presentComp + perPageComp)),
         presentComp = presentComp + perPageComp,
-        itemsUncomp.addAll(incompleteTasks.getRange(
+        itemsUncomp.addAll(incompleteTasks.value.getRange(
             presentUncomp, presentUncomp + perPageUncomp)),
         presentUncomp = presentUncomp + perPageUncomp
       })
     });
   }
+
+
 }
 //
