@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               const Padding(padding: EdgeInsets.only(top: 20)),
               const Image(
-                image: AssetImage("images/logo.png"),
+                image: AssetImage("assets/images/logo.png"),
                 height: 200,
                 width: 200,
               ),
