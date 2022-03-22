@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ghambeel/modules/homepage/homepage.dart';
 import 'signup.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
 // import 'package:mysql1/mysql1.dart';
 // import 'package:ghambeel/modules/utils.dart';
 
@@ -29,6 +31,13 @@ class _LoginPageState extends State<LoginPage> {
   //     connection.close();
   //   });
   // }
+
+  void getData() async {
+    // Replace the url inside with https://localhost:{port}/?username=admin&password=123 (try either localhost or 10.0.0.2)
+    Response response = await get(Uri.parse('https://jsonplaceholder.typicode.com/todos/1'));
+    Map data = jsonDecode(response.body);
+    print(data);
+  }
 
   @override
   void dispose() {
@@ -95,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextButton(
                 onPressed: (){
-                  //TODO FORGOT PASSWORD SCREEN GOES HERE,
+                  getData();
                 },
                 child: const Text(
                   'Forgot Password',
