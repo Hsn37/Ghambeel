@@ -19,8 +19,7 @@ void setup() {
   Storage.getValue(Keys.tasks).then((v) => {
       // Priorities: 0 = low, 1 = medium, 2 = high
       // using empty string if want to overwrite the value
-      if (v == null || v == "") 
-        Storage.setValue(Keys.tasks, Storage.jsonEnc({
+      Storage.setValue(Keys.tasks, Storage.jsonEnc({
           "tasks":{
             "incomplete":{
                 "task0":{"name":"SampleTask", "priority":"0", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},

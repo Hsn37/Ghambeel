@@ -36,7 +36,7 @@ class _CalendarState extends State<Calendar> {
   DateTime _focusedDay = DateTime.now(); //
   DateTime? _selectedDay;
   ValueNotifier<List<Task>> incompleteTasks = ValueNotifier([Task("NULL","","","","","")]);
-  var completedTasks = <Task>[];
+  ValueNotifier<List<Task>> completedTasks = ValueNotifier([Task("NULL","","","","","")]);
   // var incompleteTasks = <Task>[];
 
   static var itemsComp = <Task>[];
@@ -109,13 +109,14 @@ class _CalendarState extends State<Calendar> {
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: ListTile(
-                      onTap: () => print(value[index].name),
+                      onTap: () => print(_selectedDay),
+                      title: Text(value[index].name),
                     ),
                   );
                 },
                 );
                 }
-                return const Text("No tasks here!");
+                return const Text("No tasks to show");
               },
             )
           )]
@@ -127,12 +128,12 @@ class _CalendarState extends State<Calendar> {
     Storage.fetchTasks().then((v) =>
     {
       incompleteTasks = ValueNotifier(Task.parseTasks(v["incomplete"])),
-      completedTasks = Task.parseTasks(v["complete"]),
+      completedTasks = ValueNotifier(Task.parseTasks(v["complete"])),
       setState(() =>
       {
         fetchData = false,
         itemsComp.addAll(
-            completedTasks.getRange(presentComp, presentComp + perPageComp)),
+            completedTasks.value.getRange(presentComp, presentComp + perPageComp)),
         presentComp = presentComp + perPageComp,
         itemsUncomp.addAll(incompleteTasks.value.getRange(
             presentUncomp, presentUncomp + perPageUncomp)),

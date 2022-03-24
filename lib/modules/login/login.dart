@@ -32,11 +32,11 @@ class _LoginPageState extends State<LoginPage> {
   //   });
   // }
 
-  void getData() async {
+  Future<Map> getData(email, pwd) async {
     // Replace the url inside with https://localhost:{port}/?username=admin&password=123 (try either localhost or 10.0.0.2)
-    Response response = await get(Uri.parse('https://jsonplaceholder.typicode.com/todos/1'));
+    Response response = await get(Uri.parse("http://10.0.2.2:8080/?username="+email + "&password=" + pwd));
     Map data = jsonDecode(response.body);
-    print(data);
+    return data;
   }
 
   @override
@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextButton(
                 onPressed: (){
-                  getData();
+                  print(":)");
                 },
                 child: const Text(
                   'Forgot Password',
@@ -119,7 +119,8 @@ class _LoginPageState extends State<LoginPage> {
                 child: TextButton(
                   onPressed: () {
                     //getName("hello");
-                    if (email.text == "danyalmaqbool@hotmail.com" && password.text == "123") {
+                    var success = getData(email.text, password.text);
+                    if (true) {
                       Navigator.push(context, MaterialPageRoute(
                           builder: (context) => const MyHomePage(
                               title: "FLutter")));
