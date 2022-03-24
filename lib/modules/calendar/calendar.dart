@@ -10,12 +10,15 @@ class Task {
 
   Task(this.name, this.priority, this.description, this.status, this.timeAdded, this.timeCompleted);
 
-  static List<Task> parseTasks(tasks) {
+  static List<Task> parseTasks(tasks, day) {
     var l = <Task>[];
     tasks.forEach((k, v) => {
-      l.add(Task(v["name"], v["priority"], v["description"], v["status"], v["timeAdded"], v["timeCompleted"]))
+      if (day.toString().split(" ")[0] == v["timeAdded"].split(" ")[0]){
+      l.add(Task(v["name"], v["priority"], v["description"], v["status"], v["timeAdded"], v["timeCompleted"]))}
     });
-
+    if (l.isEmpty){
+      l = [Task("NULL","","","","","")];
+    }
     return l;
   }
 }
@@ -71,6 +74,7 @@ class _CalendarState extends State<Calendar> {
               setState(() {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
+                fetchData = true;
               });
             }
             getEventsToday(selectedDay);
@@ -95,6 +99,7 @@ class _CalendarState extends State<Calendar> {
             child: ValueListenableBuilder<List<Task>>(
               valueListenable: incompleteTasks,
               builder: (context, value, _) {
+
                 if (value[0].name != "NULL") {
                 return ListView.builder(
                     itemCount: value.length,
@@ -127,8 +132,8 @@ class _CalendarState extends State<Calendar> {
   getEventsToday(DateTime day) {
     Storage.fetchTasks().then((v) =>
     {
-      incompleteTasks = ValueNotifier(Task.parseTasks(v["incomplete"])),
-      completedTasks = ValueNotifier(Task.parseTasks(v["complete"])),
+      incompleteTasks = ValueNotifier(Task.parseTasks(v["incomplete"], day)),
+      completedTasks = ValueNotifier(Task.parseTasks(v["complete"],day)),
       setState(() =>
       {
         fetchData = false,
