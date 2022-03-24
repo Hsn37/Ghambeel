@@ -35,7 +35,7 @@ class _CalendarState extends State<Calendar> {
   // States:
   DateTime _focusedDay = DateTime.now(); //
   DateTime? _selectedDay;
-  ValueNotifier<List<Task>> incompleteTasks = ValueNotifier([Task("","","","","","")]);
+  ValueNotifier<List<Task>> incompleteTasks = ValueNotifier([Task("NULL","","","","","")]);
   var completedTasks = <Task>[];
   // var incompleteTasks = <Task>[];
 
@@ -95,6 +95,7 @@ class _CalendarState extends State<Calendar> {
             child: ValueListenableBuilder<List<Task>>(
               valueListenable: incompleteTasks,
               builder: (context, value, _) {
+                if (value[0].name != "NULL") {
                 return ListView.builder(
                     itemCount: value.length,
                     itemBuilder: (context, index) {
@@ -108,11 +109,13 @@ class _CalendarState extends State<Calendar> {
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: ListTile(
-                      onTap: () => print('hello'),
+                      onTap: () => print(value[index].name),
                     ),
                   );
                 },
                 );
+                }
+                return const Text("No tasks here!");
               },
             )
           )]
