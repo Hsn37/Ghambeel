@@ -117,10 +117,10 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: BoxDecoration(
                     color: Colors.blue, borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     //getName("hello");
-                    var success = getData(email.text, password.text);
-                    if (true) {
+                    var success = await getData(email.text, password.text);
+                    if (success['status'] == "true") {
                       Navigator.push(context, MaterialPageRoute(
                           builder: (context) => const MyHomePage(
                               title: "FLutter")));
