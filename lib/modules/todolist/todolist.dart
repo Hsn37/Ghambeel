@@ -52,10 +52,10 @@ class ToDoList extends StatefulWidget{
   );
 
   @override
-  _ToDoListState createState() => _ToDoListState();
+  ToDoListState createState() => ToDoListState();
 }
 
-class _ToDoListState extends State<ToDoList>{
+class ToDoListState extends State<ToDoList>{
   
   int presentComp = 0;
   int perPageComp = 3;
@@ -342,9 +342,16 @@ class _ToDoListState extends State<ToDoList>{
   @override
   Widget build(BuildContext context){
     if (fetchData) {
-      Storage.fetchTasks().then((v) => { 
+      Storage.fetchTasks().then((v) => {
+        // Reset these with every refresh
+        itemsUncomp = <Task>[],
+        itemsComp = <Task>[],
+        presentComp = 0,
+        presentUncomp = 0,
+
         incompleteTasks = Task.parseTasks(v["incomplete"]), 
         completedTasks = Task.parseTasks(v["complete"]), 
+        print(incompleteTasks),
         setState(() => {
           fetchData = false,
           loadMoreComp(),
@@ -365,7 +372,12 @@ class _ToDoListState extends State<ToDoList>{
           Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const AddTask(title: 'Add A Task')),
-        );
+        ).then((T) => {
+          setState(() {
+            print("here");
+            fetchData = true;
+          })
+        });
           // Add your onPressed code here! function call to creatTask
         },
         backgroundColor: toDoIconCols,//Colors.teal.shade800,
