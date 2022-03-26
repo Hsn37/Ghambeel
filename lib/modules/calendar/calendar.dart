@@ -8,6 +8,7 @@ import 'package:ghambeel/modules/storage/storage.dart';
 import '../utils.dart';
 import '../../theme.dart';
 
+
 class Task {
   String name, priority, description, status, timeAdded, timeCompleted;
 
@@ -36,7 +37,7 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  final CalendarFormat _calendarFormat = CalendarFormat
+   CalendarFormat _calendarFormat = CalendarFormat
       .month; // month format for calendar widget
   // States:
   late final Map<DateTime, List<Task>?> sortedTasks;
@@ -59,6 +60,7 @@ class _CalendarState extends State<Calendar> {
   static int perPageUncomp = 3;
 
   var fetchData = true;
+
   @override
   void initState() {
     super.initState();
@@ -67,7 +69,6 @@ class _CalendarState extends State<Calendar> {
     _selectedDay = _focusedDay;
     sortEvents();
     _todayIncomplete = ValueNotifier(_getEventsToday(_selectedDay!));
-    // print(_todayIncomplete);
   }
 
   @override
@@ -79,7 +80,6 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-
     return
       Scaffold(
 
@@ -96,6 +96,14 @@ class _CalendarState extends State<Calendar> {
           selectedDayPredicate: (day) {
             return _selectedDay == day;
           },
+            onFormatChanged: (format) {
+              if (_calendarFormat != format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              }
+            },
+
           eventLoader: _getEventsToday,
           onDaySelected: (selectedDay, focusedDay) { // What happens when we click on a day
             if (_selectedDay !=
@@ -106,7 +114,14 @@ class _CalendarState extends State<Calendar> {
                 fetchData = true;
               });
             }
+            // getEvents();
+            sortEvents();
             _todayIncomplete.value = _getEventsToday(selectedDay);
+          },
+          onPageChanged: (newday) {
+            _focusedDay = newday;
+            getEvents();
+            sortEvents();
           },
           calendarStyle: const CalendarStyle(
             weekendTextStyle: TextStyle(color: accent),
@@ -155,24 +170,8 @@ class _CalendarState extends State<Calendar> {
       );
   }
 
-  // getEventsToday(DateTime day) {
-  //   Storage.fetchTasks().then((v) =>
-  //   {
-  //     incompleteTasks = ValueNotifier(Task.parseTasks(v["incomplete"], day)),
-  //     completedTasks = ValueNotifier(Task.parseTasks(v["complete"],day)),
-  //     setState(() =>
-  //     {
-  //       fetchData = false,
-  //       itemsComp.addAll(
-  //           completedTasks.value.getRange(presentComp, presentComp + perPageComp)),
-  //       presentComp = presentComp + perPageComp,
-  //       itemsUncomp.addAll(incompleteTasks.value.getRange(
-  //           presentUncomp, presentUncomp + perPageUncomp)),
-  //       presentUncomp = presentUncomp + perPageUncomp
-  //     })
-  //   });
-  // }
   List<Task> _getEventsToday(DateTime day){
+
     DateFormat format = DateFormat("yyyy-MM-dd");
     var idx =DateTime.parse(day.toString().split(" ")[0]);
     // // print(day);
@@ -189,9 +188,6 @@ class _CalendarState extends State<Calendar> {
       setState(()
       {
         fetchData = false;
-        itemsComp.addAll(
-            rawTasks.getRange(presentComp, presentComp + perPageComp));
-        presentComp = presentComp + perPageComp;
         sortEvents();
 
       })
@@ -218,7 +214,6 @@ class _CalendarState extends State<Calendar> {
     });
 
   }
-
 
 
 }
