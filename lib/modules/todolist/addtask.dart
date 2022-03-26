@@ -77,12 +77,15 @@ class _AddTaskState extends State<AddTask>{
   }
 
   final _formKey = GlobalKey<FormState>();
-  String dropdownValuePriority = 'High';
+  String dropdownValuePriority = 'high';
   final TimeOfDay _time = const TimeOfDay(hour: 11, minute: 55);
-  var tasktitle="NULL";
-  var taskDesc="NULL";
-  var taskNotes="NULL";
-  var tag=1;
+  var tasktitle="";
+  var taskDesc="";
+  var taskNotes="";
+  late String formattedDate;
+  late String formattedTime;
+  late DateTime date;
+  late TimeOfDay time;
   /*
   void _selectTime() async {
     final TimeOfDay? newTime = await showTimePicker(
@@ -243,8 +246,9 @@ class _AddTaskState extends State<AddTask>{
                   );
                   
                   if(pickedDate != null ){
+                      date = pickedDate;
                       print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
-                      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); 
+                      formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); 
                       print(formattedDate); //formatted date output using intl package =>  2021-03-16
                         //you can implement different kind of Date Format here according to your requirement
 
@@ -275,11 +279,12 @@ class _AddTaskState extends State<AddTask>{
                       );
                   
                   if(pickedTime != null ){
+                      time = pickedTime;
                       print(pickedTime.format(context));   //output 10:51 PM
                       DateTime parsedTime = DateFormat.jm().parse(pickedTime.format(context).toString());
                       //converting to DateTime so that we can further format on different pattern.
                       print(parsedTime); //output 1970-01-01 22:53:00.000
-                      String formattedTime = DateFormat('HH:mm:ss').format(parsedTime);
+                      formattedTime = DateFormat('HH:mm:ss').format(parsedTime);
                       print(formattedTime); //output 14:59:00
                       //DateFormat() is from intl package, you can format the time on any pattern you need.
 
@@ -298,12 +303,29 @@ class _AddTaskState extends State<AddTask>{
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print(dropdownValuePriority);
-        //   Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const addTask(title: 'Add A Task',)),
-        // );
-          // Add your onPressed code here! function call to creatTask
+          
+          if (tasktitle == "") {
+            return;
+          }
+
+          String pr = "";
+          if (dropdownValuePriority == "high") {
+            pr = "2";
+          } 
+          else if (dropdownValuePriority == "medium") {
+            pr = "1";
+          } 
+          else {
+            pr = "0";
+          }
+          String deadline;
+          try {
+            deadline = DateTime(date.year, date.month, date.day, time.hour, time.minute).toString();
+          }
+          catch (LateInitializationError) {
+            deadline = "";
+          }
+          Storage.AddTask(tasktitle, taskDesc, taskNotes, pr, deadline).then((v) => {Navigator.pop(this.context)});
         },
         backgroundColor: toDoIconCols,//Colors.teal.shade800,
         focusColor: Colors.blue,
