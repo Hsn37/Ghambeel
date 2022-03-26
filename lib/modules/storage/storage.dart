@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
@@ -30,11 +31,33 @@ class Storage {
   static Future<dynamic> fetchTasks() {
     return getValue(Keys.tasks).then((v) => (jsonDec(v))["tasks"]);
   }
+
+  static Future<void> deleteAll() async {
+    return __storage.deleteAll();
+  }
+
+  static Future<void> AddTask (String title, String desc, String notes, String pr, String deadline) async {
+    int newNum = -1;
+    dynamic newTask = {"name":title, "priority":pr, "description":desc, "status":"incomplete", "timeAdded":DateTime.now().toString(), "deadline":deadline, "timeCompleted":""};
+    
+    await Storage.getValue(Keys.taskNum).then((value) => {
+      if (value != null) {
+        newNum = int.parse(value) + 1,
+      }
+    });
+
+    await Storage.setValue(Keys.taskNum, (newNum).toString()); 
+
+    dynamic tasks = await fetchTasks(); 
+
+    tasks["incomplete"]["task" + newNum.toString()] = newTask;
+    
+    return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks})).then((value) => print("data stored"));
+  }
 }
 
 class Keys {
   static String login = "loginStatus";
   static String tasks = "tasks";
   static String taskNum = "globalTaskNum";
-  static String weekNum = "globalWeekNum";
 }
