@@ -52,7 +52,7 @@ class Storage {
 
     tasks["incomplete"]["task" + newNum.toString()] = newTask;
     
-    return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks})).then((value) => print("data stored"));
+    return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
   }
 }
 

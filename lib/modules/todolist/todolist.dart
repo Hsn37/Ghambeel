@@ -351,7 +351,6 @@ class ToDoListState extends State<ToDoList>{
 
         incompleteTasks = Task.parseTasks(v["incomplete"]), 
         completedTasks = Task.parseTasks(v["complete"]), 
-        print(incompleteTasks),
         setState(() => {
           fetchData = false,
           loadMoreComp(),
@@ -374,7 +373,6 @@ class ToDoListState extends State<ToDoList>{
           MaterialPageRoute(builder: (context) => const AddTask(title: 'Add A Task')),
         ).then((T) => {
           setState(() {
-            print("here");
             fetchData = true;
           })
         });
