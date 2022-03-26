@@ -24,20 +24,14 @@ Future setup() {
         Storage.setValue(Keys.tasks, Storage.jsonEnc({
             "tasks":{
               "incomplete":{
-                  "task0":{"name":"SampleTask", "priority":"0", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
-                  "task2":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
-                  "task3":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
-                  "task4":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
-                  "task5":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
+                  "task0":{"name":"First Task", "priority":"0", "description":"Take a tour of our app", "status":"incomplete", "timeAdded":DateTime.now().toString(), "deadline":"", "timeCompleted":""},
+                  // "task2":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
+                  // "task3":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
+                  // "task4":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
+                  // "task5":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
                 },
-              "complete":{
-                  "task1":{"name":"SampleTask", "priority":"2", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime(2021, 2, 2, 2, 2, 2).toString(), "timeCompleted":DateTime.now().toString()},
-                  "task6":{"name":"SampleTask", "priority":"2", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime(2021, 2, 2, 2, 2, 2).toString(), "timeCompleted":DateTime.now().toString()},
-                  "task7":{"name":"SampleTask", "priority":"2", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime(2021, 2, 2, 2, 2, 2).toString(), "timeCompleted":DateTime.now().toString()},
-                  "task8":{"name":"SampleTask", "priority":"2", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime(2021, 2, 2, 2, 2, 2).toString(), "timeCompleted":DateTime.now().toString()},
-                  "task9":{"name":"SampleTask", "priority":"2", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime(2021, 2, 2, 2, 2, 2).toString(), "timeCompleted":DateTime.now().toString()}
-              },
-              "week":{"week0":{"date":DateTime.now().toString(), "tasks":["task0"]}}
+              "complete":{},
+              // "days":{DateTime.now().toString():{},}
               }
             }))
       }
@@ -46,23 +40,33 @@ Future setup() {
   // Global task number to be used for task keys, like task1, task2, task3 in the object.
   var p3 = Storage.getValue(Keys.taskNum).then((v) => {
     if (v == null)
-      Storage.setValue(Keys.taskNum, 1.toString())
+      Storage.setValue(Keys.taskNum, 0.toString())
   });
 
-  var p4 = Storage.getValue(Keys.weekNum).then((v) => {
-    if (v == null)
-      Storage.setValue(Keys.weekNum, 1.toString())
-  });
+  // String today;
+  // dynamic decoded;
+  // var p4 = Storage.getValue(Keys.tasks).then((v) => {
+  //     if (v != null) {
+  //       today = DateTime.now().toString(),
+  //       decoded = Storage.jsonDec(v),
+  //         decoded["days"][today] = {},
+  //         Storage.setValue(Keys.tasks, Storage.jsonEnc(decoded)),
+  //       },
+  //     },
+  // );
 
-  return Future.wait(<Future>[p1, p2, p3, p4]);
+  return Future.wait(<Future>[p1, p2, p3]);
 }
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // Wait for the setup to finish first. then run the app
-  setup().then((v) => runApp(const MyApp()));
 
-  // Storage.deleteAll();
+  // Wait for the setup to finish first. then run the app
+  
+  // when you want to refresh the storage, run this
+  Storage.deleteAll().then((v) => setup()).then((value) => runApp(const MyApp()));
+  // else this one.
+  // setup().then((v) => runApp(const MyApp()));
 }
 
 
@@ -76,7 +80,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const LoginPage(),
+      home: const MyHomePage(title: "TodoList"),
     );
   }
 }
