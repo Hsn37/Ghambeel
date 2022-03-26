@@ -57,16 +57,16 @@ class ToDoList extends StatefulWidget{
 
 class _ToDoListState extends State<ToDoList>{
   
-  static int presentComp = 0;
-  static int perPageComp = 3;
-  static int presentUncomp = 0;
-  static int perPageUncomp = 3;
+  int presentComp = 0;
+  int perPageComp = 3;
+  int presentUncomp = 0;
+  int perPageUncomp = 3;
 
   var completedTasks = <Task>[];
   var incompleteTasks = <Task>[];
 
-  static var itemsComp = <Task>[];
-  static var itemsUncomp = <Task>[];
+  var itemsComp = <Task>[];
+  var itemsUncomp = <Task>[];
 
   var fetchData = true;
   
@@ -156,7 +156,7 @@ class _ToDoListState extends State<ToDoList>{
                           ),
                         // child: const Text("Load More",style: TextStyle(color: Colors.black.withOpacity(0.5))
                         onPressed: () {
-                          loadMoreComp();
+                          loadMoreUncomp();
                         },
                       ),
                     )
@@ -208,7 +208,7 @@ class _ToDoListState extends State<ToDoList>{
                             child: Text("More completed tasks",style: TextStyle(color: primaryText)),
                       ),
                         onPressed: () {
-                          loadMoreUncomp();
+                          loadMoreComp();
                         },
                       ),
                     )
@@ -341,24 +341,20 @@ class _ToDoListState extends State<ToDoList>{
 
   @override
   Widget build(BuildContext context){
-    print("fetchData" + fetchData.toString());
     if (fetchData) {
       Storage.fetchTasks().then((v) => { 
         incompleteTasks = Task.parseTasks(v["incomplete"]), 
         completedTasks = Task.parseTasks(v["complete"]), 
         setState(() => {
           fetchData = false,
-          itemsComp.addAll(completedTasks.getRange(presentComp, presentComp + perPageComp)),
-          presentComp = presentComp + perPageComp,
-          itemsUncomp.addAll(incompleteTasks.getRange(presentUncomp, presentUncomp + perPageUncomp)),
-          presentUncomp = presentUncomp + perPageUncomp
+          loadMoreComp(),
+          loadMoreUncomp()
         }) 
       });
 
       return Loading();
     }
     else {
-      // fetchData = true;
       return Scaffold (
       //appBar: ToDoList.topBar,
       backgroundColor: bg,
