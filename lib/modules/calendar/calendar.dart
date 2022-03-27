@@ -54,7 +54,7 @@ class _CalendarState extends State<Calendar> {
     super.initState();
     sortedTasks = {};
     getEvents();
-    _selectedDay = _focusedDay;
+    _selectedDay = DateTime.now();
     _todayIncomplete = ValueNotifier(_getEventsToday(_selectedDay!));
   }
 
@@ -137,18 +137,21 @@ class _CalendarState extends State<Calendar> {
             ),
             todayTextStyle: TextStyle(color: primaryText),
             selectedDecoration: BoxDecoration(
-              color: darkPrimary,
+              color: accent,
               shape: BoxShape.circle,
             ),
            ),
           ),
           // event box
-          const SizedBox(height:10),
-          Expanded(
 
+
+          const SizedBox(height:10),
+
+          Expanded(
             child: ValueListenableBuilder<List<Task>>(
               valueListenable: _todayIncomplete,
               builder: (context, value, _) {
+                if (_todayIncomplete.value.isNotEmpty) {
                 return ListView.builder(
                     itemCount: value.length,
                     itemBuilder: (context, index) {
@@ -163,14 +166,15 @@ class _CalendarState extends State<Calendar> {
                       color: lightPrimary
                     ),
                     child: ListTile(
-                      onTap: () => sortEvents(),
+                      onTap: () => print(value[index].timeAdded),
                       title: Text(value[index].name),
                       subtitle: Text(value[index].description),
                     ),
                   );
                 },
                 );
-              },
+              };
+              {return const Text("No tasks here!");}},
             )
           )]
         ),
