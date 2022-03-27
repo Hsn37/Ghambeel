@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:ghambeel/sharedfolder/task.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:icon_decoration/icon_decoration.dart';
@@ -8,25 +9,6 @@ import 'package:ghambeel/modules/calendar/addtask.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
 import '../utils.dart';
 import '../../theme.dart';
-
-
-class Task {
-  String name, priority, description, status, timeAdded, deadline, timeCompleted;
-
-  Task(this.name, this.priority, this.description, this.status, this.timeAdded, this.deadline,this.timeCompleted);
-
-  static List<Task> parseTasks(tasks, day) {
-    var l = <Task>[];
-    tasks.forEach((k, v) => {
-      if (day.toString().split(" ")[0] == v["timeAdded"].split(" ")[0] || (day == null)){
-      l.add(Task(v["name"], v["priority"], v["description"], v["status"], v["timeAdded"], v["deadline"], v["timeCompleted"]))}
-    });
-    if (l.isEmpty){
-      l = [];
-    }
-    return l;
-  }
-}
 
 
 class Calendar extends StatefulWidget {
@@ -187,7 +169,7 @@ class _CalendarState extends State<Calendar> {
   getEvents() {
     Storage.fetchTasks().then((v) =>
     {
-      rawTasks = Task.parseTasks(v["incomplete"], null),
+      rawTasks = Task.parseTasksCal(v["incomplete"], null),
 
       setState(()
       {

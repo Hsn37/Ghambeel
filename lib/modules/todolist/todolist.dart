@@ -4,6 +4,7 @@ import 'package:ghambeel/modules/todolist/addtask.dart';
 import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
+import 'package:ghambeel/sharedfolder/Task.dart';
 import '../utils.dart';
 import '../../theme.dart';
 // class ListPage extends StatefulWidget {
@@ -25,22 +26,6 @@ import '../../theme.dart';
 //     );
 //   }
 // }
-
-class Task {
-  String name, priority, description, status, timeAdded, timeCompleted;
-
-  Task(this.name, this.priority, this.description, this.status, this.timeAdded, this.timeCompleted);
-
-  static List<Task> parseTasks(tasks) {
-    var l = <Task>[];
-    tasks.forEach((k, v) => {
-      l.add(Task(v["name"], v["priority"], v["description"], v["status"], v["timeAdded"], v["timeCompleted"]))
-    });
-
-    return l;
-  }
-}
-
 
 class ToDoList extends StatefulWidget{
   const ToDoList({Key? key, required this.title}) : super(key: key);
@@ -280,15 +265,24 @@ class ToDoListState extends State<ToDoList>{
         ),
       subtitle: Row(
           children: <Widget>[
-            Text(list[index].description, style: TextStyle(color: secondaryText)),
+            Text(shortenDescription(list[index].description), style: TextStyle(color: secondaryText)),
            // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
             // so set color thru a function??
           ],
         ),
       trailing: Icon(Icons.timer, color: timerCol, size: 20.0), // not required as per our interface, or we can put that tmer here
         // we can set color of this timer from red yellow to blue based on task importance? 
-    
+      onTap: () => print(index.toString() + " pressed"),
     );
+  }
+
+  String shortenDescription(String x){
+    if (x.length > 15) {
+      return x.substring(0, 15) + "...";
+    }
+    else {
+      return x;
+    }
   }
   // see options for this.
   Widget makeListTile(int index, List<Task> list){
@@ -328,13 +322,14 @@ class ToDoListState extends State<ToDoList>{
           ),
         subtitle: Row(
             children: <Widget>[
-              Text(list[index].description, style: const TextStyle(color: secondaryText)),
+              Text(shortenDescription(list[index].description), style: const TextStyle(color: secondaryText)),
             // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
               // so set color thru a function??
             ],
           ),
         trailing: Icon(Icons.timer, color: timerCol, size: 20.0), // not required as per our interface, or we can put that tmer here
           // we can set color of this timer from red yellow to blue based on task importance? 
+        onTap: () => print(index.toString() + "pressed"),
       
     );
   } 
