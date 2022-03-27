@@ -39,7 +39,7 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> {
    CalendarFormat _calendarFormat = CalendarFormat.month; // month format for calendar widget
   // States:
-  late final Map<DateTime, List<Task>?> sortedTasks;
+  late Map<DateTime, List<Task>?> sortedTasks;
   DateTime _focusedDay = DateTime.now(); //
   DateTime? _selectedDay;
   late final ValueNotifier<List<Task>> _todayIncomplete;
@@ -55,7 +55,6 @@ class _CalendarState extends State<Calendar> {
     sortedTasks = {};
     getEvents();
     _selectedDay = _focusedDay;
-    sortEvents();
     _todayIncomplete = ValueNotifier(_getEventsToday(_selectedDay!));
   }
 
@@ -78,7 +77,9 @@ class _CalendarState extends State<Calendar> {
               MaterialPageRoute(builder: (context) => const AddTask(title: 'Add A Task')),
             ).then((T) => {
               setState(() {
+                sortedTasks = {};
                 fetchData = true;
+                getEvents();
               })
             });
             // Add your onPressed code here! function call to creatTask
@@ -162,7 +163,7 @@ class _CalendarState extends State<Calendar> {
                       color: lightPrimary
                     ),
                     child: ListTile(
-                      onTap: () => print(_selectedDay),
+                      onTap: () => sortEvents(),
                       title: Text(value[index].name),
                       subtitle: Text(value[index].description),
                     ),
@@ -179,7 +180,7 @@ class _CalendarState extends State<Calendar> {
   List<Task> _getEventsToday(DateTime day){
 
     DateFormat format = DateFormat("yyyy-MM-dd");
-    var idx =DateTime.parse(day.toString().split(" ")[0]);
+    var idx =DateTime.parse(format.format(DateTime.parse(day.toString().split(" ")[0])));
     return sortedTasks[idx] ?? [];
   }
 
@@ -202,12 +203,9 @@ class _CalendarState extends State<Calendar> {
     print(rawTasks);
     setState(() {
       for (var task in rawTasks) {
-        print(task.name);
         DateFormat format = DateFormat("yyyy-MM-dd");
         var i = format.format(DateTime.parse(task.deadline.split(" ")[0]));
-        // print(i);
         var idx = DateTime.parse(i);
-        print(idx);
         if (sortedTasks[idx] != null) {
           sortedTasks[idx]?.add(task);
         } else {
@@ -215,8 +213,7 @@ class _CalendarState extends State<Calendar> {
         }
         sortedTasks[idx] = sortedTasks[idx]?.toSet().toList();
       }
-
-
+      print(sortedTasks);
     });
 
   }
