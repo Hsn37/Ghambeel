@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:icon_decoration/icon_decoration.dart';
+import 'package:ghambeel/modules/calendar/addtask.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
 import '../utils.dart';
 import '../../theme.dart';
@@ -31,7 +32,6 @@ class Task {
 class Calendar extends StatefulWidget {
   const Calendar({Key? key, required this.title}) : super(key: key);
   final String title;
-
   @override
   _CalendarState createState() => _CalendarState();
 }
@@ -70,7 +70,27 @@ class _CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
     return
       Scaffold(
+        floatingActionButton: FloatingActionButton(
+          //splashColor: plusFloatCol,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddTask(title: 'Add A Task')),
+            ).then((T) => {
+              setState(() {
+                fetchData = true;
+              })
+            });
+            // Add your onPressed code here! function call to creatTask
+          },
+          backgroundColor: toDoIconCols,//Colors.teal.shade800,
+          focusColor: Colors.blue,
+          foregroundColor: bg, //Colors.amber,
+          hoverColor: accent, //Colors.green,
+          //splashColor: Colors.tealAccent,
 
+          child: const Icon(Icons.add ),
+        ),
         body: Column(
           children: [TableCalendar(
           firstDay: firstDay,
@@ -124,6 +144,7 @@ class _CalendarState extends State<Calendar> {
           // event box
           const SizedBox(height:10),
           Expanded(
+
             child: ValueListenableBuilder<List<Task>>(
               valueListenable: _todayIncomplete,
               builder: (context, value, _) {
@@ -159,9 +180,6 @@ class _CalendarState extends State<Calendar> {
 
     DateFormat format = DateFormat("yyyy-MM-dd");
     var idx =DateTime.parse(day.toString().split(" ")[0]);
-    // // print(day);
-    // // print(idx);
-    // print(rawTasks);
     return sortedTasks[idx] ?? [];
   }
 
@@ -186,7 +204,7 @@ class _CalendarState extends State<Calendar> {
       for (var task in rawTasks) {
         print(task.name);
         DateFormat format = DateFormat("yyyy-MM-dd");
-        var i = format.format(DateTime.parse(task.timeAdded.split(" ")[0]));
+        var i = format.format(DateTime.parse(task.deadline.split(" ")[0]));
         // print(i);
         var idx = DateTime.parse(i);
         print(idx);

@@ -24,7 +24,7 @@ Future setup() {
         Storage.setValue(Keys.tasks, Storage.jsonEnc({
             "tasks":{
               "incomplete":{
-                  "task0":{"name":"First Task", "priority":"0", "description":"Take a tour of our app", "status":"incomplete", "timeAdded":DateTime.now().toString(), "deadline":"", "timeCompleted":""},
+                  "task0":{"name":"First Task", "priority":"0", "description":"Take a tour of our app", "status":"incomplete", "timeAdded":DateTime.now().toString(), "deadline":DateTime.now().toString(), "timeCompleted":""},
                   // "task2":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
                   // "task3":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
                   // "task4":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
