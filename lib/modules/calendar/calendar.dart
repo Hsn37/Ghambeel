@@ -10,18 +10,18 @@ import '../../theme.dart';
 
 
 class Task {
-  String name, priority, description, status, timeAdded, timeCompleted;
+  String name, priority, description, status, timeAdded, deadline, timeCompleted;
 
-  Task(this.name, this.priority, this.description, this.status, this.timeAdded, this.timeCompleted);
+  Task(this.name, this.priority, this.description, this.status, this.timeAdded, this.deadline,this.timeCompleted);
 
   static List<Task> parseTasks(tasks, day) {
     var l = <Task>[];
     tasks.forEach((k, v) => {
       if (day.toString().split(" ")[0] == v["timeAdded"].split(" ")[0] || (day == null)){
-      l.add(Task(v["name"], v["priority"], v["description"], v["status"], v["timeAdded"], v["timeCompleted"]))}
+      l.add(Task(v["name"], v["priority"], v["description"], v["status"], v["timeAdded"], v["deadline"], v["timeCompleted"]))}
     });
     if (l.isEmpty){
-      l = [Task("NULL","","","","","")];
+      l = [];
     }
     return l;
   }
@@ -37,27 +37,15 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-   CalendarFormat _calendarFormat = CalendarFormat
-      .month; // month format for calendar widget
+   CalendarFormat _calendarFormat = CalendarFormat.month; // month format for calendar widget
   // States:
   late final Map<DateTime, List<Task>?> sortedTasks;
   DateTime _focusedDay = DateTime.now(); //
   DateTime? _selectedDay;
-  // ValueNotifier<List<Task>> globalIncompleteTasks = ValueNotifier([Task("NULL","","","","","")]);
   late final ValueNotifier<List<Task>> _todayIncomplete;
-  // ValueNotifier<List<Task>> incompleteTasks = ValueNotifier([Task("NULL","","","","","")]);
-  // ValueNotifier<List<Task>> completedTasks = ValueNotifier([Task("NULL","","","","","")]);
-  // var incompleteTasks = <Task>[];
 
-  static var itemsComp = <Task>[];
-  static var itemsUncomp = <Task>[];
   var rawTasks = <Task>[];
 
-
-  static int presentComp = 0;
-  static int perPageComp = 3;
-  static int presentUncomp = 0;
-  static int perPageUncomp = 3;
 
   var fetchData = true;
 
@@ -114,14 +102,10 @@ class _CalendarState extends State<Calendar> {
                 fetchData = true;
               });
             }
-            // getEvents();
-            sortEvents();
             _todayIncomplete.value = _getEventsToday(selectedDay);
           },
           onPageChanged: (newday) {
             _focusedDay = newday;
-            getEvents();
-            sortEvents();
           },
           calendarStyle: const CalendarStyle(
             weekendTextStyle: TextStyle(color: accent),
@@ -159,6 +143,7 @@ class _CalendarState extends State<Calendar> {
                     child: ListTile(
                       onTap: () => print(_selectedDay),
                       title: Text(value[index].name),
+                      subtitle: Text(value[index].description),
                     ),
                   );
                 },
@@ -210,7 +195,10 @@ class _CalendarState extends State<Calendar> {
         } else {
           sortedTasks[idx] = [task];
         }
+        sortedTasks[idx] = sortedTasks[idx]?.toSet().toList();
       }
+
+
     });
 
   }
