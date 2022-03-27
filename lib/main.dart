@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/modules/login/login.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
+import 'package:ghambeel/modules/utils.dart';
 import 'modules/storage/storage.dart';
 import 'modules/homepage/homepage.dart';
 import '../../theme.dart';
@@ -24,7 +25,7 @@ Future setup() {
         Storage.setValue(Keys.tasks, Storage.jsonEnc({
             "tasks":{
               "incomplete":{
-                  "task0":{"name":"First Task", "priority":"0", "description":"Take a tour of our app", "notes": "", "status":"incomplete", "timeAdded":DateTime.now().toString(), "deadline":DateTime.now().toString(), "timeCompleted":""},
+                  "task0":{"name":"First Task", "priority":"0", "description":"Take a tour of our app", "notes": "", "status":"incomplete", "timeAdded":getNowDateTime(), "deadline":getNowDateTime(), "timeCompleted":""},
                   // "task2":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
                   // "task3":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
                   // "task4":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
