@@ -1,31 +1,12 @@
 // ignore_for_file: unnecessary_const, deprecated_member_use, curly_braces_in_flow_control_structures
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:ghambeel/modules/todolist/addtask.dart';
+import 'package:ghambeel/modules/todolist/viewtasks.dart';
 import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
-import 'package:ghambeel/sharedfolder/Task.dart';
-import '../utils.dart';
+import 'package:ghambeel/sharedfolder/task.dart';
 import '../../theme.dart';
-// class ListPage extends StatefulWidget {
-//   ListPage({Key key, this.title}) : super(key: key);
-
-//   final String title;
-
-//   @override
-//   _ListPageState createState() => _ListPageState();
-// }
-
-// class _ListPageState extends State<ListPage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-//       appBar: topAppBar,
-     
-//     );
-//   }
-// }
 
 class ToDoList extends StatefulWidget{
   const ToDoList({Key? key, required this.title}) : super(key: key);
@@ -272,7 +253,7 @@ class ToDoListState extends State<ToDoList>{
         ),
       trailing: Icon(Icons.timer, color: timerCol, size: 20.0), // not required as per our interface, or we can put that tmer here
         // we can set color of this timer from red yellow to blue based on task importance? 
-      onTap: () => print(index.toString() + " pressed"),
+      onTap: () => viewTask(list[index], context),
     );
   }
 

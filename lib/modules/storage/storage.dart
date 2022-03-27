@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
+import '../utils.dart';
+
 
 const __storage = FlutterSecureStorage();
 
@@ -38,7 +40,7 @@ class Storage {
 
   static Future<void> AddTask (String title, String desc, String notes, String pr, String deadline) async {
     int newNum = -1;
-    dynamic newTask = {"name":title, "priority":pr, "description":desc, "notes":notes, "status":"incomplete", "timeAdded":DateTime.now().toString(), "deadline":deadline, "timeCompleted":""};
+    dynamic newTask = {"name":title, "priority":pr, "description":desc, "notes":notes, "status":"incomplete", "timeAdded":getNowDateTime(), "deadline":deadline, "timeCompleted":""};
     
     await Storage.getValue(Keys.taskNum).then((value) => {
       if (value != null) {

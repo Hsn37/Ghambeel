@@ -320,7 +320,7 @@ class _AddTaskState extends State<AddTask>{
           }
           String deadline;
           try {
-            deadline = DateTime(date.year, date.month, date.day, time.hour, time.minute).toString();
+            deadline = DateTime(date.year, date.month, date.day, time.hour, time.minute).toString().split(".")[0];
           }
           catch (LateInitializationError) {
             deadline = "";
