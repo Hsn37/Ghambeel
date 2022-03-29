@@ -1,4 +1,6 @@
 // ignore_for_file: unnecessary_const, deprecated_member_use, curly_braces_in_flow_control_structures
+import 'dart:async';
+
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:ghambeel/modules/todolist/addtask.dart';
 import 'package:ghambeel/modules/todolist/viewtasks.dart';
@@ -318,6 +320,7 @@ class ToDoListState extends State<ToDoList>{
   @override
   Widget build(BuildContext context){
     if (fetchData) {
+      var start = DateTime.now();
       Storage.fetchTasks().then((v) => {
         // Reset these with every refresh
         itemsUncomp = <Task>[],
@@ -326,12 +329,16 @@ class ToDoListState extends State<ToDoList>{
         presentUncomp = 0,
 
         incompleteTasks = Task.parseTasks(v["incomplete"]), 
-        completedTasks = Task.parseTasks(v["complete"]), 
-        setState(() => {
+        completedTasks = Task.parseTasks(v["complete"]),
+
+        // makes sure the loading screen is displayed for 1 second.
+        // calculates the remaining time from 1 second that is left, after loading the data.
+        // and sets the timeout for that much time.
+        Timer(Duration(milliseconds: 1000 - DateTime.now().difference(start).inMilliseconds), () => setState(() => {
           fetchData = false,
           loadMoreComp(),
           loadMoreUncomp()
-        }) 
+        })),
       });
 
       return Loading();
