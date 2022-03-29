@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:ghambeel/modules/todolist/addtask.dart';
 import 'package:ghambeel/modules/todolist/edittask.dart';
+import 'package:ghambeel/modules/todolist/filter.dart';
 import 'package:ghambeel/modules/todolist/viewtasks.dart';
 import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:icon_decoration/icon_decoration.dart';
@@ -30,6 +31,9 @@ class ToDoListState extends State<ToDoList>{
   int perPageComp = 3;
   int presentUncomp = 0;
   int perPageUncomp = 3;
+
+  // 3 corresponds to "None" in the list;
+  int currentFilter = 3;
 
   var completedTasks = <Task>[];
   var incompleteTasks = <Task>[];
@@ -88,9 +92,22 @@ class ToDoListState extends State<ToDoList>{
                       padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                       child: Text("Incomplete: ${incompleteTasks.length}, Complete: ${completedTasks.length}", style: const TextStyle(fontSize: 12,color: primaryText)),
                     ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    child:  Icon(Icons.filter_list, color: toDoIconCols),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    child:  IconButton(
+                      icon: const Icon(Icons.filter_list, color: toDoIconCols),
+                      onPressed: () {
+                        filterTasks(context, currentFilter).then((val) {
+                          if (val != null && val != -1) {
+                            print(val);
+                            currentFilter = val;
+                            setState(() {
+                              fetchData = true;
+                            });
+                          }
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -223,20 +240,28 @@ class ToDoListState extends State<ToDoList>{
       timerCol = Colors.red;
 
     return ListTile( 
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10.0),
       // tileColor: const Color.fromARGB(199, 152, 182, 17),
       // shape: const RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(100.0))),
       dense: true, //assuming task title+description so keeping it true, check with false once text here
       enabled: true, //keep this false when task is completed so that object is not interactive. cant edit if task done from to do list.
       leading: Container(
 
-          padding: const EdgeInsets.only(right: 12.0),
           decoration: const BoxDecoration(
-          border: const Border(
-                  right: const BorderSide(width: 1.0, color: toDoIconCols)),
-                  ),
-          child: const DecoratedIcon(
+            border: const Border(
+              right: const BorderSide(width: 1.0, color: toDoIconCols)),
+          ),
+          child: IconButton(
             icon: Icon(Icons.check_box_outline_blank_outlined,color: toDoIconCols),
+            onPressed: () {
+              Storage.markTaskDone(list[index]).then((v) {
+                setState(() {
+                  fetchData = true;
+                });
+              });
+            },
+            constraints: BoxConstraints(),
+            // padding: EdgeInsets.zero,
             //  decoration: IconDecoration(
             //    shadows: [Shadow(blurRadius: 0, offset: Offset(0,0))],
             //   gradient: LinearGradient(colors:[Color.fromARGB(255, 202, 202, 202),Color.fromARGB(255, 160, 159, 159)] )
@@ -267,8 +292,10 @@ class ToDoListState extends State<ToDoList>{
   }
 
   String shortenDescription(String x){
-    if (x.length > 15) {
-      return x.substring(0, 15) + "...";
+    int stringLength = 25;
+
+    if (x.length > stringLength) {
+      return x.substring(0, stringLength) + "...";
     }
     else {
       return x;
@@ -286,20 +313,26 @@ class ToDoListState extends State<ToDoList>{
       timerCol = Colors.red;
 
     return ListTile( 
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
       // tileColor: const Color.fromARGB(199, 152, 182, 17),
       // shape: const RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(100.0))),
       dense: true, //assuming task title+description so keeping it true, check with false once text here
       enabled: true, //keep this false when task is completed so that object is not interactive. cant edit if task done from to do list.
       leading: Container(
-
-          padding: const EdgeInsets.only(right: 12.0),
           decoration: const BoxDecoration(
           border: const Border(
                   right: const BorderSide(width: 1.0,color:toDoIconCols)),
                   ),
-          child: const DecoratedIcon(
-            icon: Icon(Icons.check_box,color: toDoIconCols,),
+          child: IconButton(
+            icon: Icon(Icons.check_box, color: toDoIconCols),
+            onPressed: () {
+              Storage.markTaskunDone(list[index]).then((v) {
+                setState(() {
+                  fetchData = true;
+                });
+              });
+            },
+            constraints: BoxConstraints(),
             // decoration: IconDecoration(
             //   shadows: [Shadow(blurRadius: 2, offset: Offset(0,0))],
             //   gradient: LinearGradient(colors:[Color.fromARGB(255, 155, 17, 17),Color.fromARGB(255, 12, 10, 10)] )
@@ -324,6 +357,18 @@ class ToDoListState extends State<ToDoList>{
     );
   } 
 
+  void sortTasks() {
+    if (currentFilter == 1) {
+      // sort by deadlines
+    }
+    else if (currentFilter == 2) {
+      // sort by priorities
+    }
+    else if (currentFilter == 3) {
+      // do nothing. this is the "None option"
+    }
+  }
+
   @override
   Widget build(BuildContext context){
     if (fetchData) {
@@ -337,6 +382,9 @@ class ToDoListState extends State<ToDoList>{
 
         incompleteTasks = Task.parseTasks(v["incomplete"]), 
         completedTasks = Task.parseTasks(v["complete"]),
+
+        // sorts the tasks based on the filter selected. by default, none is selected.
+        sortTasks(),
 
         // makes sure the loading screen is displayed for 1 second.
         // calculates the remaining time from 1 second that is left, after loading the data.
