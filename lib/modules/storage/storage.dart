@@ -71,6 +71,32 @@ class Storage {
 
     return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
   }
+
+  static Future<void> markTaskDone (Task task) async {
+    dynamic tasks = await fetchTasks();
+
+    dynamic t = tasks["incomplete"][task.taskId];
+    tasks["incomplete"].remove(task.taskId);
+
+    t["status"] = "complete";
+
+    tasks["complete"][task.taskId] = t;
+
+    return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
+  }
+
+  static Future<void> markTaskunDone (Task task) async {
+    dynamic tasks = await fetchTasks();
+
+    dynamic t = tasks["complete"][task.taskId];
+    tasks["complete"].remove(task.taskId);
+
+    t["status"] = "incomplete";
+
+    tasks["incomplete"][task.taskId] = t;
+
+    return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
+  }
 }
 
 class Keys {
