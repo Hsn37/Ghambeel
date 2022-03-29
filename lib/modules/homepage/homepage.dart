@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ghambeel/modules/login/login.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:ghambeel/modules/calendar/calendar.dart';
+import 'package:ghambeel/modules/pomodoro/pomodoroHome.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -31,16 +32,15 @@ class _MyHomePageState extends State<MyHomePage> {
     ToDoList(
         title:'To-Do List'
     ),
-    Text(
-      'Index 2: Pomodoro',
-      style: optionStyle,
+    PomodoroHome(
+      title: 'Pomodoro'
     ),
     Text(
       'Index 3: Stats Page',
       style: optionStyle,
     ),
   ];
-  static const List<String> _titles = <String>["Calendar", "Todo List", "Pomodoro", "Statistics"];
+  static const List<String> _titles = <String>["Calendar", "Todo List", "pomodoro", "Statistics"];
   static const List<Widget> appBars = <Widget>[];
 
   void _onItemTapped(int index) {
@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 label: "ToDo"),
             BottomNavigationBarItem(icon: Icon(Icons.timer,
                 color: _selectedIndex == 2 ? navColorSelected : navColor),
-                label: "Pomodoro"),
+                label: "pomodoro"),
             BottomNavigationBarItem(icon: Icon(Icons.show_chart,
                 color: _selectedIndex == 3 ? navColorSelected : navColor),
                 label: "Statistics"),
