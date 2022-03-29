@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ghambeel/sharedfolder/task.dart';
 import 'dart:convert';
 
 import '../utils.dart';
@@ -54,6 +55,20 @@ class Storage {
 
     tasks["incomplete"]["task" + newNum.toString()] = newTask;
     
+    return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
+  }
+
+  static Future<void> EditTask (Task task) async {
+    dynamic editedTask = {"name":task.name, "priority":task.priority, "description":task.description, "notes":task.notes, "status":task.status, "timeAdded":task.timeAdded, "deadline":task.deadline, "timeCompleted":task.timeCompleted};
+    
+    dynamic tasks = await fetchTasks();
+    if (task.status == "incomplete") {
+      tasks["incomplete"][task.taskId] = editedTask;
+    }
+    else {
+      tasks["complete"][task.taskId] = editedTask;
+    }
+
     return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
   }
 }

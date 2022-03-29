@@ -1,6 +1,7 @@
 
 
 import 'package:ghambeel/modules/todolist/todolist.dart';
+import 'package:ghambeel/sharedfolder/task.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
@@ -30,8 +31,10 @@ class topBar extends AppBar {
   }
 
 class EditTask extends StatefulWidget {  
-  const EditTask({Key? key, required this.title}) : super(key: key);
+  const EditTask({Key? key, required this.title, required this.task}) : super(key: key);
   final String title;
+  final Task task;
+  
   @override
   _EditTaskState createState() => _EditTaskState();
 }
@@ -52,7 +55,7 @@ class _EditTaskState extends State<EditTask>{
   late TimeOfDay previousTime; // set this variable.
   //final TimeOfDay _time = const TimeOfDay(hour: 11, minute: 55); // sample how to set
   // again read existing value for priority of task.
-  static String dropdownValuePriority = 'high'; //rn default is high here  but also declared as initial value
+  late String dropdownValuePriority; //rn default is high here  but also declared as initial value
   // in that part of code. have set it to inital value there. so need to change here only
   
   List<String> options = ['High','Medium','low'];
@@ -80,9 +83,33 @@ class _EditTaskState extends State<EditTask>{
   void initState() {
     timeinput.text = ""; //set the initial value of text field
     dateinput.text="";
+
+    if (widget.task.priority == "0") {
+      dropdownValuePriority = "low";
+    }
+    else if (widget.task.priority == "1") {
+      dropdownValuePriority = "medium";
+    }
+    else {
+      dropdownValuePriority = "high";
+    }
+
+    priorityIcon = Icon(Icons.priority_high, color: findColorBasedOnPriority(dropdownValuePriority));
+
+    tasktitle = widget.task.name;
+    taskDesc = widget.task.description;
+    taskNotes = widget.task.notes;
+
+    previousDate = DateTime.parse(widget.task.deadline);
+    previousTime = TimeOfDay.fromDateTime(DateTime.parse(widget.task.deadline));
+
+    dateinput.text = DateFormat('yyyy-MM-dd').format(previousDate);
+    timeinput.text = DateFormat('HH:mm:ss').format(DateTime.parse(widget.task.deadline));
+
     super.initState();
   }
-  static Color findColorBasedOnPriority(val){
+
+  Color findColorBasedOnPriority(val){
     if (val=="high"){
       return Colors.red;
     }
@@ -97,16 +124,16 @@ class _EditTaskState extends State<EditTask>{
   final _formKey = GlobalKey<FormState>();
   
   
-  var tasktitle="NULL"; // this is the default value. if user does not enter value for title
-  
-  var taskDesc="NULL";// this is the default value. if user does not enter value for a descriptio
-  var taskNotes="NULL"; // this is the default value. if user does not enter value for a Notes
+  late String tasktitle=""; // this is the default value. if user does not enter value for title
+  late String taskDesc="";// this is the default value. if user does not enter value for a descriptio
+  late String taskNotes=""; // this is the default value. if user does not enter value for a Notes
 
-  var priorityIcon = Icon(Icons.priority_high, color: findColorBasedOnPriority(dropdownValuePriority)); // select correct icon color by default for task
+  late var priorityIcon;
   
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
+
     return Scaffold(
       appBar: topBar(context: context, myTitle: '',),
       key: _formKey,
@@ -120,10 +147,11 @@ class _EditTaskState extends State<EditTask>{
             onChanged: (text) {
                 tasktitle=text;
             },
+            initialValue: widget.task.name,
             decoration:  InputDecoration(
               //border: OutlineInputBorder(),
               //fillColor: navColor,
-              icon: Icon(Icons.title,color: accent,),
+              icon: const Icon(Icons.title,color: accent,),
               labelText: "Task Title", //replacing label text with our variable'Task Title', // 
               hintText: tasktitle,
               ),
@@ -136,6 +164,7 @@ class _EditTaskState extends State<EditTask>{
             onChanged: (text) {
                 taskDesc=text;
             },
+            initialValue: widget.task.description,
             decoration:  InputDecoration(
               //border: OutlineInputBorder(),
               icon: const Icon(Icons.description,color: accent,),
@@ -150,6 +179,7 @@ class _EditTaskState extends State<EditTask>{
             onChanged: (text) {
                 taskNotes=text;
             },
+            initialValue: widget.task.notes,
             decoration:  InputDecoration(
             //  border: OutlineInputBorder(),
               icon: const Icon(Icons.notes,color: accent,),
@@ -170,17 +200,17 @@ class _EditTaskState extends State<EditTask>{
             onChanged: (val) => {
               if (val=="high"){
                 setState(() {
-                  priorityIcon = Icon(Icons.priority_high,color: Colors.red);
+                  priorityIcon = const Icon(Icons.priority_high,color: Colors.red);
                 })
               }
               else if (val=="low"){
                 setState(() {
-                  priorityIcon = Icon(Icons.priority_high,color: Colors.blue);
+                  priorityIcon = const Icon(Icons.priority_high,color: Colors.blue);
                 })
               }
               else{
                 setState(() {
-                  priorityIcon = Icon(Icons.priority_high,color: accent);
+                  priorityIcon = const Icon(Icons.priority_high,color: accent);
                 }) 
               },
 
@@ -207,7 +237,6 @@ class _EditTaskState extends State<EditTask>{
                   DateTime? pickedDate = await showDatePicker(
                       context: context, 
                       initialDate: previousDate,
-                      
                       firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
                       lastDate: DateTime(2101)
                   );
@@ -217,7 +246,7 @@ class _EditTaskState extends State<EditTask>{
                       String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); 
                       print(formattedDate); //formatted date output using intl package =>  2021-03-16
                         //you can implement different kind of Date Format here according to your requirement
-
+                      previousDate = pickedDate;
                       setState(() {
                          dateinput.text = formattedDate; //set output date to TextField value. 
                       });
@@ -245,14 +274,11 @@ class _EditTaskState extends State<EditTask>{
                       );
                   
                   if(pickedTime != null ){
-                      print(pickedTime.format(context));   //output 10:51 PM
                       DateTime parsedTime = DateFormat.jm().parse(pickedTime.format(context).toString());
                       //converting to DateTime so that we can further format on different pattern.
-                      print(parsedTime); //output 1970-01-01 22:53:00.000
                       String formattedTime = DateFormat('HH:mm:ss').format(parsedTime);
-                      print(formattedTime); //output 14:59:00
                       //DateFormat() is from intl package, you can format the time on any pattern you need.
-
+                      previousTime = TimeOfDay.fromDateTime(parsedTime);
                       setState(() {
                         timeinput.text = formattedTime; //set the value of text field. 
                       });
@@ -268,7 +294,26 @@ class _EditTaskState extends State<EditTask>{
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print(dropdownValuePriority);
+          Task t = widget.task;
+
+          t.name = tasktitle;
+          t.description = taskDesc;
+          t.notes = t.notes;
+          if (dropdownValuePriority == "high") {
+            t.priority = "2";
+          }
+          else if (dropdownValuePriority == "medium") {
+            t.priority = "1";
+          }
+          else {
+            t.priority = "0";
+          }
+
+          t.deadline = DateTime(previousDate.year, previousDate.month, previousDate.day, previousTime.hour, previousTime.minute).toString().split(".")[0];
+          
+          Storage.EditTask(t).then((c) {
+            Navigator.pop(context);
+          });
           // update the form
         //   Navigator.push(
         //   context,

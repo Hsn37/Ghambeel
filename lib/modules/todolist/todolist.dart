@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:ghambeel/modules/todolist/addtask.dart';
+import 'package:ghambeel/modules/todolist/edittask.dart';
 import 'package:ghambeel/modules/todolist/viewtasks.dart';
 import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:icon_decoration/icon_decoration.dart';
@@ -256,6 +257,12 @@ class ToDoListState extends State<ToDoList>{
       trailing: Icon(Icons.timer, color: timerCol, size: 20.0), // not required as per our interface, or we can put that tmer here
         // we can set color of this timer from red yellow to blue based on task importance? 
       onTap: () => viewTask(list[index], context),
+      onLongPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EditTask(title: 'Add A Task', task: list[index])),
+        ).then((T) => {
+          setState(() {
+            fetchData = true;
+          })
+        }),
     );
   }
 
