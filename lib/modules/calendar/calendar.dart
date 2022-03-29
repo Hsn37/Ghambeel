@@ -5,6 +5,7 @@ import 'package:ghambeel/sharedfolder/task.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:icon_decoration/icon_decoration.dart';
+import 'package:ghambeel/modules/todolist/viewtasks.dart';
 import 'package:ghambeel/modules/calendar/addtask.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
 import '../utils.dart';
@@ -36,7 +37,7 @@ class _CalendarState extends State<Calendar> {
     super.initState();
     sortedTasks = {};
     getEvents();
-    _selectedDay = DateTime.now();
+    _selectedDay = _focusedDay;
     _todayIncomplete = ValueNotifier(_getEventsToday(_selectedDay!));
   }
 
@@ -77,11 +78,10 @@ class _CalendarState extends State<Calendar> {
         body: Column(
           children: [TableCalendar(
           firstDay: firstDay,
-
+          currentDay: DateTime.now(),
           // first day in calendar (defined in utils)
           lastDay: lastDay,
           focusedDay: _focusedDay,
-
           // selected day
           calendarFormat: _calendarFormat,
           selectedDayPredicate: (day) {
@@ -123,6 +123,7 @@ class _CalendarState extends State<Calendar> {
               shape: BoxShape.circle,
             ),
            ),
+
           ),
           // event box
 
@@ -143,12 +144,11 @@ class _CalendarState extends State<Calendar> {
                       vertical: 4.0,
                     ),
                     decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                       color: lightPrimary
                     ),
                     child: ListTile(
-                      onTap: () => print(value[index].timeAdded),
+                      onTap: () => viewTask(value[index], context),
                       title: Text(value[index].name),
                       subtitle: Text(value[index].description),
                     ),
