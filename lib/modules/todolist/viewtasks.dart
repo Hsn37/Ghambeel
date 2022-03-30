@@ -14,14 +14,18 @@ Widget subHeading(String heading, IconData icon, [Color col = accent]) {
   );
 }
 
+File? image;
+
 Future<void> displayImg(Task task) async{
+  print(task.imgname);
   if (task.imgname == ""){
     return;
   }
   try {
     Directory dir = await getApplicationDocumentsDirectory();
-    String path = dir.path + "_" + task.imgname;
+    String path = dir.path + "/" + task.imgname;
     final File? localImage = File(path);
+    print(path);
     image = localImage;
   } catch(e)
   {
@@ -29,7 +33,7 @@ Future<void> displayImg(Task task) async{
   }
 }
 
-File? image;
+
 
 Future<void> viewTask(Task task, BuildContext context) async {
   displayImg(task);

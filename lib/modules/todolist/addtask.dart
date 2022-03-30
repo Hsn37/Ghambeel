@@ -82,14 +82,14 @@ class _AddTaskState extends State<AddTask>{
 
   Future pickImg() async {
     try{
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image == null){
+    final img = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (img == null){
       return;
     }
 
-    final tempImage = File(image.path);
+    final tempImage = File(img.path);
     setState(()=>{
-      this.image = tempImage,
+      image = tempImage,
       filename = tasktitle + "_" + formattedDate
     });} on PlatformException catch(e){
       print("Permission denied");
@@ -101,6 +101,7 @@ class _AddTaskState extends State<AddTask>{
       Directory dir = await getApplicationDocumentsDirectory();
       String path = dir.path;
       final File? localImage = await image?.copy('$path/$filename');
+      print('$path/$filename');
     }
   }
 
