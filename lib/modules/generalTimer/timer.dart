@@ -16,13 +16,18 @@ class _CountdownTimerState extends State<CountdownTimer> {
   @override
   void initState() {
     super.initState();
-
-    startTimer(testDuration);
   }
 
   void startTimer(duration) {
     myTime = testDuration;
     timer = Timer.periodic(const Duration(seconds: 1), (_){addTime();});
+  }
+
+  void stopTimer(isRunning) {
+    if (isRunning) {
+      timer?.cancel();
+      setState(() {});
+    }
   }
 
   void addTime() {
@@ -50,6 +55,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
     String formatted(int n) => n.toString().padLeft(2, "0") ;
     String minutes = formatted(myTime.inMinutes.remainder(60));
     String seconds = formatted(myTime.inSeconds.remainder(60));
+    final isRunning = timer == null ? false : timer!.isActive;
 
     return Scaffold(
       body: Column(
@@ -81,13 +87,14 @@ class _CountdownTimerState extends State<CountdownTimer> {
               ],
             ),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
+          isRunning
+          ?Row(
+            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                onPressed: (){},
-                child: const Text("Start"),
+                onPressed: (){stopTimer(isRunning);},
+                child: isRunning ? const Text("Pause") : const Text("Resume"),
               ),
               ElevatedButton(
                 onPressed: (){},
@@ -95,6 +102,16 @@ class _CountdownTimerState extends State<CountdownTimer> {
               )
             ],
           )
+          :Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: (){startTimer(testDuration);},
+                child: const Text("Start"),
+              ),
+            ]
+          ),
         ],
       ),
     );
