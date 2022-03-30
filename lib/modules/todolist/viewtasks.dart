@@ -19,6 +19,7 @@ File? image;
 Future<void> displayImg(Task task) async{
   print(task.imgname);
   if (task.imgname == ""){
+    image = null;
     return;
   }
   try {
@@ -29,6 +30,7 @@ Future<void> displayImg(Task task) async{
     image = localImage;
   } catch(e)
   {
+    image = null;
     return;
   }
 }
