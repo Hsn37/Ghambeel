@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:ghambeel/sharedfolder/task.dart';
 import 'package:ghambeel/theme.dart';
+import 'package:path_provider/path_provider.dart';
 
 Widget subHeading(String heading, IconData icon, [Color col = accent]) {
   return Row(
@@ -11,7 +14,25 @@ Widget subHeading(String heading, IconData icon, [Color col = accent]) {
   );
 }
 
+Future<void> displayImg(Task task) async{
+  if (task.imgname == ""){
+    return;
+  }
+  try {
+    Directory dir = await getApplicationDocumentsDirectory();
+    String path = dir.path + "_" + task.imgname;
+    final File? localImage = File(path);
+    image = localImage;
+  } catch(e)
+  {
+    return;
+  }
+}
+
+File? image;
+
 Future<void> viewTask(Task task, BuildContext context) async {
+  displayImg(task);
   Color timerCol;
   if (task.priority == "0") {
     timerCol = Colors.blue;
@@ -43,7 +64,10 @@ Future<void> viewTask(Task task, BuildContext context) async {
                 child: Text(task.notes == ""? "-":task.notes),
               ),
               subHeading(task.deadline, Icons.timer, timerCol),
-            ]
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+              child: (image == null) ? const Text("No image found") : Image.file(image!, width:160, height:160),
+            )]
           ),
         ),
         actions: <Widget>[

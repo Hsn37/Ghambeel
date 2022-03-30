@@ -1,11 +1,15 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../theme.dart';
 import 'package:select_form_field/select_form_field.dart';
-
+import 'package:image_picker/image_picker.dart';
 // import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
 //import 'package:smart_select/smart_select.dart';
 // import 'package:flutter_awesome_select/flutter_awesome_select.dart';
@@ -76,12 +80,38 @@ class _AddTaskState extends State<AddTask>{
     super.initState();
   }
 
+  Future pickImg() async {
+    try{
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null){
+      return;
+    }
+
+    final tempImage = File(image.path);
+    setState(()=>{
+      this.image = tempImage,
+      filename = tasktitle + "_" + formattedDate
+    });} on PlatformException catch(e){
+      print("Permission denied");
+    }
+  }
+
+  Future saveImg() async {
+    if (image!= null) {
+      Directory dir = await getApplicationDocumentsDirectory();
+      String path = dir.path;
+      final File? localImage = await image?.copy('$path/$filename');
+    }
+  }
+
   final _formKey = GlobalKey<FormState>();
   String dropdownValuePriority = 'high';
   final TimeOfDay _time = const TimeOfDay(hour: 11, minute: 55);
   var tasktitle="";
   var taskDesc="";
   var taskNotes="";
+  File? image;
+  String filename = "";
   late String formattedDate;
   late String formattedTime;
   late DateTime date;
@@ -298,6 +328,17 @@ class _AddTaskState extends State<AddTask>{
              )
           )
         ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: TextButton(
+              child: const Text("Upload image"),
+              onPressed: ()=>{pickImg()},
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: image != null ? Image.file(image!, width:160, height:160) : const Text("No image uploaded"),
+          ),
 
         ],
       ),
@@ -325,7 +366,9 @@ class _AddTaskState extends State<AddTask>{
           catch (LateInitializationError) {
             deadline = "";
           }
-          Storage.AddTask(tasktitle, taskDesc, taskNotes, pr, deadline).then((v) => {Navigator.pop(this.context)});
+          Storage.AddTask(tasktitle, taskDesc, taskNotes, pr, deadline, filename).then((v) => {Navigator.pop(this.context)});
+          saveImg();
+          print(filename);
         },
         backgroundColor: toDoIconCols,//Colors.teal.shade800,
         focusColor: Colors.blue,
