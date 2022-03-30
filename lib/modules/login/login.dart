@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ghambeel/modules/homepage/homepage.dart';
+import 'package:ghambeel/sharedfolder/loading.dart';
 import 'signup.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
@@ -120,9 +121,14 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () async {
                     // var success = await getData(email.text, password.text);
                     if (true) {
+                      setState(() => {
+                        loading = true
+                      });
+                      // await Future.delayed(Duration(seconds: 2));
                       Navigator.push(context, MaterialPageRoute(
                           builder: (context) => const MyHomePage(
                               title: "FLutter")));
+                          // loading = false;
                     }
                   },
                   child: const Text(
