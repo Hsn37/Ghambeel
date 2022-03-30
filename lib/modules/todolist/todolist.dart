@@ -1,46 +1,16 @@
 // ignore_for_file: unnecessary_const, deprecated_member_use, curly_braces_in_flow_control_structures
+import 'dart:async';
+
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:ghambeel/modules/todolist/addtask.dart';
+import 'package:ghambeel/modules/todolist/edittask.dart';
+import 'package:ghambeel/modules/todolist/filter.dart';
+import 'package:ghambeel/modules/todolist/viewtasks.dart';
 import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
-import '../utils.dart';
+import 'package:ghambeel/sharedfolder/task.dart';
 import '../../theme.dart';
-// class ListPage extends StatefulWidget {
-//   ListPage({Key key, this.title}) : super(key: key);
-
-//   final String title;
-
-//   @override
-//   _ListPageState createState() => _ListPageState();
-// }
-
-// class _ListPageState extends State<ListPage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-//       appBar: topAppBar,
-     
-//     );
-//   }
-// }
-
-class Task {
-  String name, priority, description, status, timeAdded, timeCompleted;
-
-  Task(this.name, this.priority, this.description, this.status, this.timeAdded, this.timeCompleted);
-
-  static List<Task> parseTasks(tasks) {
-    var l = <Task>[];
-    tasks.forEach((k, v) => {
-      l.add(Task(v["name"], v["priority"], v["description"], v["status"], v["timeAdded"], v["timeCompleted"]))
-    });
-
-    return l;
-  }
-}
-
 
 class ToDoList extends StatefulWidget{
   const ToDoList({Key? key, required this.title}) : super(key: key);
@@ -61,6 +31,9 @@ class ToDoListState extends State<ToDoList>{
   int perPageComp = 3;
   int presentUncomp = 0;
   int perPageUncomp = 3;
+
+  // 3 corresponds to "None" in the list;
+  int currentFilter = 3;
 
   var completedTasks = <Task>[];
   var incompleteTasks = <Task>[];
@@ -119,9 +92,22 @@ class ToDoListState extends State<ToDoList>{
                       padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                       child: Text("Incomplete: ${incompleteTasks.length}, Complete: ${completedTasks.length}", style: const TextStyle(fontSize: 12,color: primaryText)),
                     ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    child:  Icon(Icons.filter_list, color: toDoIconCols),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    child:  IconButton(
+                      icon: const Icon(Icons.filter_list, color: toDoIconCols),
+                      onPressed: () {
+                        filterTasks(context, currentFilter).then((val) {
+                          if (val != null && val != -1) {
+                            print(val);
+                            currentFilter = val;
+                            setState(() {
+                              fetchData = true;
+                            });
+                          }
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -254,20 +240,28 @@ class ToDoListState extends State<ToDoList>{
       timerCol = Colors.red;
 
     return ListTile( 
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10.0),
       // tileColor: const Color.fromARGB(199, 152, 182, 17),
       // shape: const RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(100.0))),
       dense: true, //assuming task title+description so keeping it true, check with false once text here
       enabled: true, //keep this false when task is completed so that object is not interactive. cant edit if task done from to do list.
       leading: Container(
 
-          padding: const EdgeInsets.only(right: 12.0),
           decoration: const BoxDecoration(
-          border: const Border(
-                  right: const BorderSide(width: 1.0, color: toDoIconCols)),
-                  ),
-          child: const DecoratedIcon(
+            border: const Border(
+              right: const BorderSide(width: 1.0, color: toDoIconCols)),
+          ),
+          child: IconButton(
             icon: Icon(Icons.check_box_outline_blank_outlined,color: toDoIconCols),
+            onPressed: () {
+              Storage.markTaskDone(list[index]).then((v) {
+                setState(() {
+                  fetchData = true;
+                });
+              });
+            },
+            constraints: BoxConstraints(),
+            // padding: EdgeInsets.zero,
             //  decoration: IconDecoration(
             //    shadows: [Shadow(blurRadius: 0, offset: Offset(0,0))],
             //   gradient: LinearGradient(colors:[Color.fromARGB(255, 202, 202, 202),Color.fromARGB(255, 160, 159, 159)] )
@@ -280,15 +274,32 @@ class ToDoListState extends State<ToDoList>{
         ),
       subtitle: Row(
           children: <Widget>[
-            Text(list[index].description, style: TextStyle(color: secondaryText)),
+            Text(shortenDescription(list[index].description), style: TextStyle(color: secondaryText)),
            // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
             // so set color thru a function??
           ],
         ),
       trailing: Icon(Icons.timer, color: timerCol, size: 20.0), // not required as per our interface, or we can put that tmer here
         // we can set color of this timer from red yellow to blue based on task importance? 
-    
+      onTap: () => viewTask(list[index], context),
+      onLongPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EditTask(title: 'Add A Task', task: list[index])),
+        ).then((T) => {
+          setState(() {
+            fetchData = true;
+          })
+        }),
     );
+  }
+
+  String shortenDescription(String x){
+    int stringLength = 25;
+
+    if (x.length > stringLength) {
+      return x.substring(0, stringLength) + "...";
+    }
+    else {
+      return x;
+    }
   }
   // see options for this.
   Widget makeListTile(int index, List<Task> list){
@@ -302,20 +313,26 @@ class ToDoListState extends State<ToDoList>{
       timerCol = Colors.red;
 
     return ListTile( 
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
       // tileColor: const Color.fromARGB(199, 152, 182, 17),
       // shape: const RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(100.0))),
       dense: true, //assuming task title+description so keeping it true, check with false once text here
       enabled: true, //keep this false when task is completed so that object is not interactive. cant edit if task done from to do list.
       leading: Container(
-
-          padding: const EdgeInsets.only(right: 12.0),
           decoration: const BoxDecoration(
           border: const Border(
                   right: const BorderSide(width: 1.0,color:toDoIconCols)),
                   ),
-          child: const DecoratedIcon(
-            icon: Icon(Icons.check_box,color: toDoIconCols,),
+          child: IconButton(
+            icon: Icon(Icons.check_box, color: toDoIconCols),
+            onPressed: () {
+              Storage.markTaskunDone(list[index]).then((v) {
+                setState(() {
+                  fetchData = true;
+                });
+              });
+            },
+            constraints: BoxConstraints(),
             // decoration: IconDecoration(
             //   shadows: [Shadow(blurRadius: 2, offset: Offset(0,0))],
             //   gradient: LinearGradient(colors:[Color.fromARGB(255, 155, 17, 17),Color.fromARGB(255, 12, 10, 10)] )
@@ -328,20 +345,34 @@ class ToDoListState extends State<ToDoList>{
           ),
         subtitle: Row(
             children: <Widget>[
-              Text(list[index].description, style: const TextStyle(color: secondaryText)),
+              Text(shortenDescription(list[index].description), style: const TextStyle(color: secondaryText)),
             // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
               // so set color thru a function??
             ],
           ),
         trailing: Icon(Icons.timer, color: timerCol, size: 20.0), // not required as per our interface, or we can put that tmer here
           // we can set color of this timer from red yellow to blue based on task importance? 
+        onTap: () => print(index.toString() + "pressed"),
       
     );
   } 
 
+  void sortTasks() {
+    if (currentFilter == 1) {
+      // sort by deadlines
+    }
+    else if (currentFilter == 2) {
+      // sort by priorities
+    }
+    else if (currentFilter == 3) {
+      // do nothing. this is the "None option"
+    }
+  }
+
   @override
   Widget build(BuildContext context){
     if (fetchData) {
+      var start = DateTime.now();
       Storage.fetchTasks().then((v) => {
         // Reset these with every refresh
         itemsUncomp = <Task>[],
@@ -350,12 +381,19 @@ class ToDoListState extends State<ToDoList>{
         presentUncomp = 0,
 
         incompleteTasks = Task.parseTasks(v["incomplete"]), 
-        completedTasks = Task.parseTasks(v["complete"]), 
-        setState(() => {
+        completedTasks = Task.parseTasks(v["complete"]),
+
+        // sorts the tasks based on the filter selected. by default, none is selected.
+        sortTasks(),
+
+        // makes sure the loading screen is displayed for 1 second.
+        // calculates the remaining time from 1 second that is left, after loading the data.
+        // and sets the timeout for that much time.
+        Timer(Duration(milliseconds: 1000 - DateTime.now().difference(start).inMilliseconds), () => setState(() => {
           fetchData = false,
           loadMoreComp(),
           loadMoreUncomp()
-        }) 
+        })),
       });
 
       return Loading();

@@ -1,32 +1,15 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:ghambeel/sharedfolder/task.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:icon_decoration/icon_decoration.dart';
+import 'package:ghambeel/modules/todolist/viewtasks.dart';
 import 'package:ghambeel/modules/calendar/addtask.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
 import '../utils.dart';
 import '../../theme.dart';
-
-
-class Task {
-  String name, priority, description, status, timeAdded, deadline, timeCompleted;
-
-  Task(this.name, this.priority, this.description, this.status, this.timeAdded, this.deadline,this.timeCompleted);
-
-  static List<Task> parseTasks(tasks, day) {
-    var l = <Task>[];
-    tasks.forEach((k, v) => {
-      if (day.toString().split(" ")[0] == v["timeAdded"].split(" ")[0] || (day == null)){
-      l.add(Task(v["name"], v["priority"], v["description"], v["status"], v["timeAdded"], v["deadline"], v["timeCompleted"]))}
-    });
-    if (l.isEmpty){
-      l = [];
-    }
-    return l;
-  }
-}
 
 
 class Calendar extends StatefulWidget {
@@ -95,11 +78,10 @@ class _CalendarState extends State<Calendar> {
         body: Column(
           children: [TableCalendar(
           firstDay: firstDay,
-
+          currentDay: DateTime.now(),
           // first day in calendar (defined in utils)
           lastDay: lastDay,
           focusedDay: _focusedDay,
-
           // selected day
           calendarFormat: _calendarFormat,
           selectedDayPredicate: (day) {
@@ -137,18 +119,22 @@ class _CalendarState extends State<Calendar> {
             ),
             todayTextStyle: TextStyle(color: primaryText),
             selectedDecoration: BoxDecoration(
-              color: darkPrimary,
+              color: accent,
               shape: BoxShape.circle,
             ),
            ),
+
           ),
           // event box
-          const SizedBox(height:10),
-          Expanded(
 
+
+          const SizedBox(height:10),
+
+          Expanded(
             child: ValueListenableBuilder<List<Task>>(
               valueListenable: _todayIncomplete,
               builder: (context, value, _) {
+                if (_todayIncomplete.value.isNotEmpty) {
                 return ListView.builder(
                     itemCount: value.length,
                     itemBuilder: (context, index) {
@@ -158,19 +144,19 @@ class _CalendarState extends State<Calendar> {
                       vertical: 4.0,
                     ),
                     decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                       color: lightPrimary
                     ),
                     child: ListTile(
-                      onTap: () => sortEvents(),
+                      onTap: () => viewTask(value[index], context),
                       title: Text(value[index].name),
                       subtitle: Text(value[index].description),
                     ),
                   );
                 },
                 );
-              },
+              };
+              {return const Text("No tasks here!");}},
             )
           )]
         ),
@@ -187,7 +173,7 @@ class _CalendarState extends State<Calendar> {
   getEvents() {
     Storage.fetchTasks().then((v) =>
     {
-      rawTasks = Task.parseTasks(v["incomplete"], null),
+      rawTasks = Task.parseTasksCal(v["incomplete"], null),
 
       setState(()
       {

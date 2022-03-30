@@ -24,3 +24,7 @@ class Mysql {
     return await MySqlConnection.connect(settings);
   }
 }
+
+String getNowDateTime() {
+  return DateTime.now().toString().split(".")[0];
+}
