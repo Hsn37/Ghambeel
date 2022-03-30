@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ghambeel/theme.dart';
+import 'package:ghambeel/modules/generalTimer/timer.dart';
 
 class PomodoroHome extends StatefulWidget {
   const PomodoroHome({Key? key, required this.title}) : super(key: key);
@@ -9,6 +11,19 @@ class PomodoroHome extends StatefulWidget {
 }
 
 class _PomodoroHomeState extends State<PomodoroHome> {
+  final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
+    onPrimary: Colors.red,
+    primary: Colors.blue,
+    minimumSize: const Size(120, 50),
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(0)),
+    ),
+  );
+  final TextStyle myTextStyle = const TextStyle(
+    color: primaryText,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,24 +37,25 @@ class _PomodoroHomeState extends State<PomodoroHome> {
       child: Scaffold(
         body: Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(
-                width: 100,
-                height: 100,
-                child: TextButton(
+              ElevatedButton(
                   onPressed: (){},
-                  child: const Text("Pomodoro"),
-                ),
+                  child: Text(
+                    "Pomodoro",
+                    style: myTextStyle,
+                  ),
+                  style: raisedButtonStyle
               ),
-              SizedBox(
-                width: 100,
-                height: 100,
-                child: TextButton(
-                  onPressed: (){},
-                  child: const Text("Timer"),
-                ),
-              )
+              ElevatedButton(
+                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => Timer()));},
+                  child: Text(
+                    "Timer",
+                    style: myTextStyle,
+                  ),
+                  style: raisedButtonStyle
+              ),
             ],
           ),
         ),
