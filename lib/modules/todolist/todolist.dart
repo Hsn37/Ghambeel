@@ -15,11 +15,11 @@ import '../../theme.dart';
 class ToDoList extends StatefulWidget{
   const ToDoList({Key? key, required this.title}) : super(key: key);
   final String title;
-  static final topBar = AppBar(
-    leading: const Icon( Icons.menu, color: primaryText),
-    title: const Text('To- Do List',style:TextStyle(color: primaryText)),
-    backgroundColor: bg,
-  );
+  // static final topBar = AppBar(
+  //   leading: const Icon( Icons.menu, color: primaryText),
+  //   title: const Text('To- Do List',style:TextStyle(color: primaryText)),
+  //   backgroundColor: bg,
+  // );
 
   @override
   ToDoListState createState() => ToDoListState();

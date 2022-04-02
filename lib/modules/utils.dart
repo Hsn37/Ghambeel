@@ -28,3 +28,5 @@ class Mysql {
 String getNowDateTime() {
   return DateTime.now().toString().split(".")[0];
 }
+
+final appBarTitles = ["Calendar", "To-do List", "Timers", "Statistics"];

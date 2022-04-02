@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ghambeel/theme.dart';
 import 'package:ghambeel/modules/login/login.dart';
+import 'package:ghambeel/modules/utils.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:ghambeel/modules/calendar/calendar.dart';
 import 'package:ghambeel/modules/pomodoro/pomodoroHome.dart';
@@ -53,7 +55,40 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     if (loggedin) {
       return Scaffold(
-        appBar: ToDoList.topBar,
+        appBar: AppBar(
+          title: Text(appBarTitles[_selectedIndex]),
+          // leading: const Icon( Icons.menu, color: primaryText),
+          backgroundColor: primary,
+        ),
+        drawer: Drawer(
+          child: ListView(
+            children: <Widget>[
+              const SizedBox(
+                height: 80,
+                child: DrawerHeader(
+                decoration: BoxDecoration(
+                  color: accent,
+
+                ),
+
+                child: Text(
+                  'Hello!',
+                  style: TextStyle(
+                    color: primaryText,
+                    fontSize: 24,
+
+                  ),
+                ),
+              ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings),
+                title: const Text('Settings'),
+                onTap: ()=>{},
+              ),
+            ],
+          ),
+        ),
         body: Center(
             child: _widgetOptions.elementAt(_selectedIndex)
         ),
