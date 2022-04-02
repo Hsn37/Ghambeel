@@ -52,6 +52,7 @@ class _CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
     return
       Scaffold(
+        backgroundColor: bg,
         floatingActionButton: FloatingActionButton(
           //splashColor: plusFloatCol,
           onPressed: () {
@@ -110,15 +111,16 @@ class _CalendarState extends State<Calendar> {
           onPageChanged: (newday) {
             _focusedDay = newday;
           },
-          calendarStyle: const CalendarStyle(
-            weekendTextStyle: TextStyle(color: accent),
+          calendarStyle: CalendarStyle(
+            defaultTextStyle: TextStyle(color: primaryText),
+            weekendTextStyle: const TextStyle(color: accent),
             // highlighted color for today
             todayDecoration: BoxDecoration(
               color: lightPrimary,
               shape: BoxShape.circle,
             ),
             todayTextStyle: TextStyle(color: primaryText),
-            selectedDecoration: BoxDecoration(
+            selectedDecoration: const BoxDecoration(
               color: accent,
               shape: BoxShape.circle,
             ),
@@ -156,7 +158,7 @@ class _CalendarState extends State<Calendar> {
                 },
                 );
               };
-              {return const Text("No tasks here!");}},
+              {return Text("No tasks here!", style: TextStyle(color: primaryText),);}},
             )
           )]
         ),

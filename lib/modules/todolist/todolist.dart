@@ -90,12 +90,12 @@ class ToDoListState extends State<ToDoList>{
                 children: [
                   Padding(
                       padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                      child: Text("Incomplete: ${incompleteTasks.length}, Complete: ${completedTasks.length}", style: const TextStyle(fontSize: 12,color: primaryText)),
+                      child: Text("Incomplete: ${incompleteTasks.length}, Complete: ${completedTasks.length}", style: TextStyle(fontSize: 12,color: primaryText)),
                     ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                     child:  IconButton(
-                      icon: const Icon(Icons.filter_list, color: toDoIconCols),
+                      icon: Icon(Icons.filter_list, color: toDoIconCols),
                       onPressed: () {
                         filterTasks(context, currentFilter).then((val) {
                           if (val != null && val != -1) {
@@ -112,9 +112,9 @@ class ToDoListState extends State<ToDoList>{
                 ],
               ),
               Row(
-                children: const [
+                children: [
                   Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Text("Incomplete",style: TextStyle( fontWeight: FontWeight. bold,fontSize: 14,color: primaryText)),
                     ),
                   ],
@@ -123,7 +123,7 @@ class ToDoListState extends State<ToDoList>{
           )        
         ),  
         Container(
-            decoration: const BoxDecoration(color:bg),
+            decoration: BoxDecoration(color:bg),
             padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
               child:ListView.builder(
                 scrollDirection: Axis.vertical,
@@ -136,7 +136,7 @@ class ToDoListState extends State<ToDoList>{
                     Container(
                       color: lightPrimary.withOpacity(0.1),
                       child: TextButton(
-                          child: const Opacity(
+                          child: Opacity(
                             opacity: 0.3,
                             child: Text("More incomplteed tasks",style: TextStyle(color: primaryText)),
                           ),
@@ -165,9 +165,9 @@ class ToDoListState extends State<ToDoList>{
           child:Column(
             children: [
               Row(
-                children: const [
+                children:  [
                   Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Text("Complete",style: TextStyle( fontWeight: FontWeight. bold,fontSize: 14,color: primaryText)),
                     ),
                   ],
@@ -176,7 +176,7 @@ class ToDoListState extends State<ToDoList>{
           )        
         ),
         Container(
-            decoration: const BoxDecoration(color:bg),
+            decoration: BoxDecoration(color:bg),
             padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
               child:ListView.builder(
                 scrollDirection: Axis.vertical,
@@ -189,7 +189,7 @@ class ToDoListState extends State<ToDoList>{
                     Container(
                       color: lightPrimary.withOpacity(0.1),
                       child: TextButton(
-                      child: const Opacity(
+                      child:  Opacity(
                             opacity: 0.3,
                             child: Text("More completed tasks",style: TextStyle(color: primaryText)),
                       ),
@@ -209,10 +209,10 @@ class ToDoListState extends State<ToDoList>{
   Widget makeCarddone(int index) {
     return Card ( //static cos otherwise implicit declaration
       elevation: 8.0,
-      shadowColor: Color.fromARGB(0, 0, 255, 255),
+      shadowColor: const Color.fromARGB(0, 0, 255, 255),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
-      decoration: const BoxDecoration(color: bg,borderRadius:BorderRadius.all(Radius.circular(50.0))),// function call check task urgency, select and return color!!!
+      decoration: BoxDecoration(color: bg,borderRadius:BorderRadius.all(Radius.circular(50.0))),// function call check task urgency, select and return color!!!
       child: makeListTile(index, itemsComp),
     ),
   );
@@ -224,7 +224,7 @@ class ToDoListState extends State<ToDoList>{
       //shape:ShapeBorder()/// ShapeDecoration(shape: Border.all(color:divider ))),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
-      decoration: const BoxDecoration(color:bg,borderRadius:BorderRadius.all(Radius.circular(50.0))),// function call check task urgency, select and return color!!!
+      decoration:  BoxDecoration(color:bg,borderRadius:BorderRadius.all(Radius.circular(50.0))),// function call check task urgency, select and return color!!!
       child: makeListTileUncomp(index, itemsUncomp),
     ),
   );
@@ -341,11 +341,11 @@ class ToDoListState extends State<ToDoList>{
           ),
         title: Text( // this needs to have task header!!!!! sample text here
             list[index].name,
-            style: const TextStyle(color:primaryText,  fontSize: 18),
+            style: TextStyle(color:primaryText,  fontSize: 18),
           ),
         subtitle: Row(
             children: <Widget>[
-              Text(shortenDescription(list[index].description), style: const TextStyle(color: secondaryText)),
+              Text(shortenDescription(list[index].description), style:  TextStyle(color: secondaryText)),
             // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
               // so set color thru a function??
             ],

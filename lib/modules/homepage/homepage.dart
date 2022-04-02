@@ -61,12 +61,13 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: primary,
         ),
         drawer: Drawer(
+          backgroundColor: bg,
           child: ListView(
             children: <Widget>[
-              const SizedBox(
+               SizedBox(
                 height: 80,
                 child: DrawerHeader(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: accent,
 
                 ),
@@ -82,8 +83,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ),
               ListTile(
-                leading: const Icon(Icons.settings),
-                title: const Text('Settings'),
+                selectedColor: bg,
+                leading: Icon(Icons.settings, color: secondaryText,),
+                title: Text('Settings', style: TextStyle(color: primaryText),),
                 onTap: ()=>{},
               ),
             ],
@@ -93,6 +95,8 @@ class _MyHomePageState extends State<MyHomePage> {
             child: _widgetOptions.elementAt(_selectedIndex)
         ),
         bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: bg,
+            type: BottomNavigationBarType.fixed,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.event_note,
                 color: _selectedIndex == 0 ? navColorSelected : navColor),
@@ -102,13 +106,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 label: "ToDo"),
             BottomNavigationBarItem(icon: Icon(Icons.timer,
                 color: _selectedIndex == 2 ? navColorSelected : navColor),
-                label: "pomodoro"),
+                label: "Pomodoro"),
             BottomNavigationBarItem(icon: Icon(Icons.show_chart,
                 color: _selectedIndex == 3 ? navColorSelected : navColor),
                 label: "Statistics"),
           ],
           currentIndex: _selectedIndex,
           selectedItemColor: navColorSelected,
+          unselectedItemColor: primaryText,
           onTap: _onItemTapped,
         ),
       );

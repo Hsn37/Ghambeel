@@ -21,7 +21,7 @@ class topBar extends AppBar {
     : super(
         key: key,
         leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: primaryText, ),           
+              icon: Icon(Icons.arrow_back, color: primaryText, ),
               onPressed: () {
                   Navigator.pop(
                     context,
@@ -30,7 +30,7 @@ class topBar extends AppBar {
             }
             
         ),
-      title: const Text('Add A Task',style: TextStyle(color: primaryText),),
+      title: Text('Add A Task',style: TextStyle(color: primaryText),),
       
       backgroundColor: bg,
     );

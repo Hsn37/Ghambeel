@@ -20,7 +20,7 @@ class _PomodoroHomeState extends State<PomodoroHome> {
       borderRadius: BorderRadius.all(Radius.circular(0)),
     ),
   );
-  final TextStyle myTextStyle = const TextStyle(
+  final TextStyle myTextStyle = TextStyle(
     color: primaryText,
   );
 
