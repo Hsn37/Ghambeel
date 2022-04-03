@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:html';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
@@ -20,7 +19,7 @@ class topBar extends AppBar {
     : super(
         key: key,
         leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: primaryText, ),           
+              icon:  Icon(Icons.arrow_back, color: primaryText[darkMode], ),
               onPressed: () {
                   Navigator.pop(
                     context,
@@ -28,7 +27,7 @@ class topBar extends AppBar {
             }
             
         ),
-      title: const Text('Pomodoro Timer',style: TextStyle(color: primaryText),),
+      title:  Text('Pomodoro Timer',style: TextStyle(color: primaryText[darkMode]),),
       actions: [
         IconButton(
             icon: const Icon(Icons.settings),
@@ -41,7 +40,7 @@ class topBar extends AppBar {
           ),
 
       ],
-      backgroundColor: bg,
+      backgroundColor: bg[darkMode],
     );
   }
 
