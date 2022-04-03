@@ -5,11 +5,11 @@ late var darkMode;
 
 var darkPrimary = [const Color(0xff0097A7), const Color(0xffb2ebf2)];
 var lightPrimary = [ const Color(0xffb2ebf2), const Color(0xff0097A7)];
-const Color primary = Color(0xff00bcd4);
+var  primary = [const Color(0xff00bcd4) , const Color(0xff0097A7)];
 const Color accent = Color(0xffffc107);
 
 var primaryText = [ const Color(0xff212121), const Color(0xffbdbdbd)];
-var secondaryText = [ const Color(0xff212121), const Color(0xffbdbdbd)];
+var secondaryText = [ const Color(0xff212121), const Color(0xffffffff)];
 
 const Color divider = Color(0xffbdbdbd);
 const Color icon = Colors.green;

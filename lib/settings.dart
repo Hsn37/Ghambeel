@@ -25,10 +25,12 @@ class _settings extends State<settings> {
       backgroundColor: bg[darkMode],
       appBar: AppBar(
         title: const Text("Settings"),
-        backgroundColor: primary,
+        backgroundColor: primary[darkMode],
       ),
       body: SwitchListTile(
-        title: const Text("Dark Mode"),
+        contentPadding: const EdgeInsets.symmetric(vertical:20, horizontal: 20),
+        subtitle: Text("You may need to switch pages for effects to take place.", style: TextStyle(color: primaryText[darkMode]),),
+        title: Text("Dark Mode", style: TextStyle(color: primaryText[darkMode]),),
         onChanged: (value){
           setState((){
             isDark = value;
@@ -36,7 +38,7 @@ class _settings extends State<settings> {
             print(darkMode);
             //
           });
-
+          // Navigator.pop(context);
         },
         value: isDark,
       ),
