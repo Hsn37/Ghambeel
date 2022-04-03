@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:ghambeel/modules/homepage/homepage.dart';
 import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:ghambeel/theme.dart';
-
 import 'signup.dart';
+import 'package:ghambeel/modules/login/signup.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 // import 'package:mysql1/mysql1.dart';
@@ -121,14 +121,13 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.blue, borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
                   onPressed: () async {
-                    // var success = await getData(email.text, password.text);
-                    if (true) { 
-                      
+                    var success = await getData(email.text, password.text);
+                    if (success['status'] == 'true') {
                       // redo after validation 
                       setState(() => {
                         loading = true
                       });
-                      // await Future.delayed(Duration(seconds: 2));
+                      await Future.delayed(const Duration(seconds: 2));
                       Navigator.push(context, MaterialPageRoute(
                           builder: (context) => const MyHomePage(
                               title: "FLutter")));
