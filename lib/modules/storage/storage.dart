@@ -62,12 +62,8 @@ class Storage {
     dynamic editedTask = {"name":task.name, "priority":task.priority, "description":task.description, "notes":task.notes, "status":task.status, "timeAdded":task.timeAdded, "deadline":task.deadline, "timeCompleted":task.timeCompleted, "imgname": task.imgname};
     
     dynamic tasks = await fetchTasks();
-    if (task.status == "incomplete") {
-      tasks["incomplete"][task.taskId] = editedTask;
-    }
-    else {
-      tasks["complete"][task.taskId] = editedTask;
-    }
+    
+    tasks[task.status][task.taskId] = editedTask;
 
     return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
   }
@@ -94,6 +90,14 @@ class Storage {
     t["status"] = "incomplete";
 
     tasks["incomplete"][task.taskId] = t;
+
+    return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
+  }
+
+  static Future<void> deleteTask (Task task) async {
+    dynamic tasks = await fetchTasks();
+
+    tasks[task.status].remove(task.taskId);
 
     return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
   }
