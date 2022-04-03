@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ghambeel/modules/pomodoro/pomodoro.dart';
 import 'package:ghambeel/theme.dart';
 import 'package:ghambeel/modules/generalTimer/timer.dart';
 
@@ -12,12 +13,12 @@ class PomodoroHome extends StatefulWidget {
 
 class _PomodoroHomeState extends State<PomodoroHome> {
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
-    onPrimary: Colors.red,
-    primary: Colors.blue,
-    minimumSize: const Size(120, 50),
+    onPrimary: Color.fromARGB(255, 46, 255, 92),
+    primary: lightPrimary,
+    minimumSize: const Size(250, 100),
     padding: const EdgeInsets.symmetric(horizontal: 16),
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(0)),
+      borderRadius: BorderRadius.all(Radius.circular(20)),
     ),
   );
   final TextStyle myTextStyle = TextStyle(
@@ -41,13 +42,16 @@ class _PomodoroHomeState extends State<PomodoroHome> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const PomodoroTimer(title:'Pomodoro Timer')));
+                  },
                   child: Text(
                     "Pomodoro",
                     style: myTextStyle,
                   ),
+
                   style: raisedButtonStyle
-              ),
+            ),
               ElevatedButton(
                   onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => CountdownTimer()));},
                   child: Text(

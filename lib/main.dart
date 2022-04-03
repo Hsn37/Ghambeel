@@ -6,8 +6,10 @@ import 'package:ghambeel/settings.dart';
 import 'package:ghambeel/modules/login/login.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:ghambeel/modules/utils.dart';
+import 'modules/calendar/calendar.dart';
 import 'modules/storage/storage.dart';
 import 'modules/homepage/homepage.dart';
+import 'modules/pomodoro/pomodoroHome.dart';
 import '../../theme.dart';
 
 // initial variables setup.
@@ -86,7 +88,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       // home: const MyHomePage(title: "TodoList"),
-      home: const LoginPage(),
+      home: const MyHomePage(title: "todod",),
     );
   }
 }

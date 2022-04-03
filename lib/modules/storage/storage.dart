@@ -67,6 +67,7 @@ class Storage {
 
     return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
   }
+  
 
   static Future<void> markTaskDone (Task task) async {
     dynamic tasks = await fetchTasks();
