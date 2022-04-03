@@ -16,9 +16,9 @@ class ToDoList extends StatefulWidget{
   const ToDoList({Key? key, required this.title}) : super(key: key);
   final String title;
   // static final topBar = AppBar(
-  //   leading: const Icon( Icons.menu, color: primaryText),
-  //   title: const Text('To- Do List',style:TextStyle(color: primaryText)),
-  //   backgroundColor: bg,
+  //   leading: const Icon( Icons.menu, color: primaryText[darkMode]),
+  //   title: const Text('To- Do List',style:TextStyle(color: primaryText[darkMode])),
+  //   backgroundColor: bg[darkMode],
   // );
 
   @override
@@ -80,7 +80,7 @@ class ToDoListState extends State<ToDoList>{
       //physics: const ClampingScrollPhysics(), 
       children:<Widget>[
         Container(
-          color: bg,
+          color: bg[darkMode],
           //mainAxisAlignment: MainAxisAlignment.start
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
           child:Column(
@@ -90,7 +90,7 @@ class ToDoListState extends State<ToDoList>{
                 children: [
                   Padding(
                       padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                      child: Text("Incomplete: ${incompleteTasks.length}, Complete: ${completedTasks.length}", style: TextStyle(fontSize: 12,color: primaryText)),
+                      child: Text("Incomplete: ${incompleteTasks.length}, Complete: ${completedTasks.length}", style: TextStyle(fontSize: 12,color: primaryText[darkMode])),
                     ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -115,7 +115,7 @@ class ToDoListState extends State<ToDoList>{
                 children: [
                   Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Text("Incomplete",style: TextStyle( fontWeight: FontWeight. bold,fontSize: 14,color: primaryText)),
+                      child: Text("Incomplete",style: TextStyle( fontWeight: FontWeight. bold,fontSize: 14,color: primaryText[darkMode])),
                     ),
                   ],
               ),            
@@ -123,7 +123,7 @@ class ToDoListState extends State<ToDoList>{
           )        
         ),  
         Container(
-            decoration: BoxDecoration(color:bg),
+            decoration: BoxDecoration(color:bg[darkMode]),
             padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
               child:ListView.builder(
                 scrollDirection: Axis.vertical,
@@ -134,11 +134,11 @@ class ToDoListState extends State<ToDoList>{
                 itemBuilder: (context, index) {
                   return (index == itemsUncomp.length) ?
                     Container(
-                      color: lightPrimary.withOpacity(0.1),
+                      color: lightPrimary[darkMode].withOpacity(0.1),
                       child: TextButton(
                           child: Opacity(
                             opacity: 0.3,
-                            child: Text("More incomplteed tasks",style: TextStyle(color: primaryText)),
+                            child: Text("More incomplteed tasks",style: TextStyle(color: primaryText[darkMode])),
                           ),
                         // child: const Text("Load More",style: TextStyle(color: Colors.black.withOpacity(0.5))
                         onPressed: () {
@@ -160,7 +160,7 @@ class ToDoListState extends State<ToDoList>{
 
         Container(
           //mainAxisAlignment: MainAxisAlignment.start
-          color: bg,
+          color: bg[darkMode],
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
           child:Column(
             children: [
@@ -168,7 +168,7 @@ class ToDoListState extends State<ToDoList>{
                 children:  [
                   Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Text("Complete",style: TextStyle( fontWeight: FontWeight. bold,fontSize: 14,color: primaryText)),
+                      child: Text("Complete",style: TextStyle( fontWeight: FontWeight. bold,fontSize: 14,color: primaryText[darkMode])),
                     ),
                   ],
               ),            
@@ -176,7 +176,7 @@ class ToDoListState extends State<ToDoList>{
           )        
         ),
         Container(
-            decoration: BoxDecoration(color:bg),
+            decoration: BoxDecoration(color:bg[darkMode]),
             padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
               child:ListView.builder(
                 scrollDirection: Axis.vertical,
@@ -187,11 +187,11 @@ class ToDoListState extends State<ToDoList>{
                 itemBuilder: (context, index) {
                   return (index == itemsComp.length) ?
                     Container(
-                      color: lightPrimary.withOpacity(0.1),
+                      color: lightPrimary[darkMode].withOpacity(0.1),
                       child: TextButton(
                       child:  Opacity(
                             opacity: 0.3,
-                            child: Text("More completed tasks",style: TextStyle(color: primaryText)),
+                            child: Text("More completed tasks",style: TextStyle(color: primaryText[darkMode])),
                       ),
                         onPressed: () {
                           loadMoreComp();
@@ -212,7 +212,7 @@ class ToDoListState extends State<ToDoList>{
       shadowColor: const Color.fromARGB(0, 0, 255, 255),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
-      decoration: BoxDecoration(color: bg,borderRadius:BorderRadius.all(Radius.circular(50.0))),// function call check task urgency, select and return color!!!
+      decoration: BoxDecoration(color: bg[darkMode],borderRadius:BorderRadius.all(Radius.circular(50.0))),// function call check task urgency, select and return color!!!
       child: makeListTile(index, itemsComp),
     ),
   );
@@ -224,7 +224,7 @@ class ToDoListState extends State<ToDoList>{
       //shape:ShapeBorder()/// ShapeDecoration(shape: Border.all(color:divider ))),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
-      decoration:  BoxDecoration(color: bg),// function call check task urgency, select and return color!!!
+      decoration:  BoxDecoration(color: bg[darkMode]),// function call check task urgency, select and return color!!!
       child: makeListTileUncomp(index, itemsUncomp),
     ),
   );
@@ -262,12 +262,12 @@ class ToDoListState extends State<ToDoList>{
         ),
       title: Row(
           children: <Widget>[ // this needs to have task header!!!!! sample text here
-            Text(shortenTitle(list[index].name), style: TextStyle(color: primaryText, fontSize: 18)),
+            Text(shortenTitle(list[index].name), style: TextStyle(color: primaryText[darkMode], fontSize: 18)),
             const SizedBox(width: 2,),
             Icon(Icons.timer, color: timerCol, size: 14)
           ]
         ),
-      subtitle: Text(shortenDescription(list[index].description), style: TextStyle(color: secondaryText)),
+      subtitle: Text(shortenDescription(list[index].description), style: TextStyle(color: secondaryText[darkMode])),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -359,11 +359,11 @@ class ToDoListState extends State<ToDoList>{
           ),
         title: Text( // this needs to have task header!!!!! sample text here
             list[index].name,
-            style: TextStyle(color:primaryText,  fontSize: 18),
+            style: TextStyle(color:primaryText[darkMode],  fontSize: 18),
           ),
         subtitle: Row(
             children: <Widget>[
-              Text(shortenDescription(list[index].description), style:  TextStyle(color: secondaryText)),
+              Text(shortenDescription(list[index].description), style:  TextStyle(color: secondaryText[darkMode])),
             // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
               // so set color thru a function??
             ],
@@ -419,7 +419,7 @@ class ToDoListState extends State<ToDoList>{
     else {
       return Scaffold (
       //appBar: ToDoList.topBar,
-      backgroundColor: bg,
+      backgroundColor: bg[darkMode],
       body:makeBody(context),
       floatingActionButton: FloatingActionButton(
         //splashColor: plusFloatCol,
@@ -436,7 +436,7 @@ class ToDoListState extends State<ToDoList>{
         },
         backgroundColor: toDoIconCols,//Colors.teal.shade800,
         focusColor: Colors.blue,
-        foregroundColor: bg, //Colors.amber,
+        foregroundColor: bg[darkMode], //Colors.amber,
         hoverColor: accent, //Colors.green,
         //splashColor: Colors.tealAccent,
 

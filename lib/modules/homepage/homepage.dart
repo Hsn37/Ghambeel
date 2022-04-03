@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ghambeel/theme.dart';
 import 'package:ghambeel/modules/login/login.dart';
 import 'package:ghambeel/modules/utils.dart';
+import 'package:ghambeel/settings.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:ghambeel/modules/calendar/calendar.dart';
 import 'package:ghambeel/modules/pomodoro/pomodoroHome.dart';
@@ -16,12 +17,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   static const Color navColor = Color(0xFF0097A7);
   static const Color navColorSelected = Color(0xFFFFC107);
 
   int _selectedIndex = 0;
   bool loggedin = true;
+  @override
+  void initState() {
+    super.initState();
+  }
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   /////////////////////////////////////////////////////////
@@ -57,11 +61,11 @@ class _MyHomePageState extends State<MyHomePage> {
       return Scaffold(
         appBar: AppBar(
           title: Text(appBarTitles[_selectedIndex]),
-          // leading: const Icon( Icons.menu, color: primaryText),
+          // leading: const Icon( Icons.menu, color: primaryText[darkMode]),
           backgroundColor: primary,
         ),
         drawer: Drawer(
-          backgroundColor: bg,
+          backgroundColor: bg[darkMode],
           child: ListView(
             children: <Widget>[
                SizedBox(
@@ -75,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text(
                   'Hello!',
                   style: TextStyle(
-                    color: primaryText,
+                    color: primaryText[darkMode],
                     fontSize: 24,
 
                   ),
@@ -83,10 +87,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ),
               ListTile(
-                selectedColor: bg,
-                leading: Icon(Icons.settings, color: secondaryText,),
-                title: Text('Settings', style: TextStyle(color: primaryText),),
-                onTap: ()=>{},
+                selectedColor: bg[darkMode],
+                leading: Icon(Icons.settings, color: secondaryText[darkMode],),
+                title: Text('Settings', style: TextStyle(color: primaryText[darkMode]),),
+                onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context) => settings())),
               ),
             ],
           ),
@@ -95,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: _widgetOptions.elementAt(_selectedIndex)
         ),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: bg,
+          backgroundColor: bg[darkMode],
             type: BottomNavigationBarType.fixed,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.event_note,
@@ -113,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
           currentIndex: _selectedIndex,
           selectedItemColor: navColorSelected,
-          unselectedItemColor: primaryText,
+          unselectedItemColor: primaryText[darkMode],
           onTap: _onItemTapped,
         ),
       );

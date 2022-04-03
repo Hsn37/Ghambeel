@@ -52,7 +52,7 @@ class _CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
     return
       Scaffold(
-        backgroundColor: bg,
+        backgroundColor: bg[darkMode],
         floatingActionButton: FloatingActionButton(
           //splashColor: plusFloatCol,
           onPressed: () {
@@ -70,7 +70,7 @@ class _CalendarState extends State<Calendar> {
           },
           backgroundColor: toDoIconCols,//Colors.teal.shade800,
           focusColor: Colors.blue,
-          foregroundColor: bg, //Colors.amber,
+          foregroundColor: bg[darkMode], //Colors.amber,
           hoverColor: accent, //Colors.green,
           //splashColor: Colors.tealAccent,
 
@@ -112,14 +112,14 @@ class _CalendarState extends State<Calendar> {
             _focusedDay = newday;
           },
           calendarStyle: CalendarStyle(
-            defaultTextStyle: TextStyle(color: primaryText),
+            defaultTextStyle: TextStyle(color: primaryText[darkMode]),
             weekendTextStyle: const TextStyle(color: accent),
             // highlighted color for today
             todayDecoration: BoxDecoration(
-              color: lightPrimary,
+              color: lightPrimary[darkMode],
               shape: BoxShape.circle,
             ),
-            todayTextStyle: TextStyle(color: primaryText),
+            todayTextStyle: TextStyle(color: primaryText[darkMode]),
             selectedDecoration: const BoxDecoration(
               color: accent,
               shape: BoxShape.circle,
@@ -147,7 +147,7 @@ class _CalendarState extends State<Calendar> {
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: lightPrimary
+                      color: lightPrimary[darkMode]
                     ),
                     child: ListTile(
                       onTap: () => viewTask(value[index], context),
@@ -158,7 +158,7 @@ class _CalendarState extends State<Calendar> {
                 },
                 );
               };
-              {return Text("No tasks here!", style: TextStyle(color: primaryText),);}},
+              {return Text("No tasks here!", style: TextStyle(color: primaryText[darkMode]),);}},
             )
           )]
         ),
@@ -189,6 +189,7 @@ class _CalendarState extends State<Calendar> {
   }
   sortEvents() {
     print(rawTasks);
+    print(darkMode);
     setState(() {
       for (var task in rawTasks) {
         DateFormat format = DateFormat("yyyy-MM-dd");

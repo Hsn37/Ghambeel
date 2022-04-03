@@ -15,7 +15,7 @@ class topBar extends AppBar {
     : super(
         key: key,
         leading: IconButton(
-              icon:  Icon(Icons.arrow_back, color: primaryText, ),
+              icon:  Icon(Icons.arrow_back, color: primaryText[darkMode], ),
               onPressed: () {
                   Navigator.pop(
                     context,
@@ -24,9 +24,9 @@ class topBar extends AppBar {
             }
             
         ),
-      title:  Text('Edit Task',style: TextStyle(color: primaryText),),
+      title:  Text('Edit Task',style: TextStyle(color: primaryText[darkMode]),),
       
-      backgroundColor: bg,
+      backgroundColor: bg[darkMode],
     );
   }
 
@@ -323,7 +323,7 @@ class _EditTaskState extends State<EditTask>{
         },
         backgroundColor: toDoIconCols,//Colors.teal.shade800,
         focusColor: Colors.blue,
-        foregroundColor: bg, //Colors.amber,
+        foregroundColor: bg[darkMode], //Colors.amber,
         hoverColor: accent,
         child: const Icon(Icons.check),
         

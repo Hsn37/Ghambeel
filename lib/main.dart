@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:ghambeel/theme.dart';
+import 'package:ghambeel/settings.dart';
 import 'package:ghambeel/modules/login/login.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:ghambeel/modules/utils.dart';
@@ -60,6 +62,8 @@ Future setup() {
 }
 
 void main() {
+  darkMode = 0;
+  isDark = false;
   WidgetsFlutterBinding.ensureInitialized();
 
   // Wait for the setup to finish first. then run the app

@@ -21,7 +21,7 @@ class topBar extends AppBar {
       : super(
     key: key,
     leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: primaryText, ),
+        icon: Icon(Icons.arrow_back, color: primaryText[darkMode], ),
         onPressed: () {
           Navigator.pop(
             context,
@@ -30,9 +30,9 @@ class topBar extends AppBar {
         }
 
     ),
-    title: Text('Add A Task',style: TextStyle(color: primaryText),),
+    title: Text('Add A Task',style: TextStyle(color: primaryText[darkMode]),),
 
-    backgroundColor: bg,
+    backgroundColor: bg[darkMode],
   );
 }
 class AddTask extends StatefulWidget {
@@ -373,7 +373,7 @@ class _AddTaskState extends State<AddTask>{
         },
         backgroundColor: toDoIconCols,//Colors.teal.shade800,
         focusColor: Colors.blue,
-        foregroundColor: bg, //Colors.amber,
+        foregroundColor: bg[darkMode], //Colors.amber,
         hoverColor: accent,
         child: const Icon(Icons.check),
 

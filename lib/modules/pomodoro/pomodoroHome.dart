@@ -21,7 +21,7 @@ class _PomodoroHomeState extends State<PomodoroHome> {
     ),
   );
   final TextStyle myTextStyle = TextStyle(
-    color: primaryText,
+    color: primaryText[darkMode],
   );
 
   @override
