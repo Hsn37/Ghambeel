@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/theme.dart';
-import 'package:settings_ui/settings_ui.dart';
 
 import 'modules/calendar/calendar.dart';
 import 'modules/todolist/todolist.dart';

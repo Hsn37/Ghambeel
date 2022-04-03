@@ -14,7 +14,9 @@ class PomodoroHome extends StatefulWidget {
 class _PomodoroHomeState extends State<PomodoroHome> {
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
     onPrimary: Color.fromARGB(255, 46, 255, 92),
-    primary: lightPrimary[darkMode],
+
+    //primary: lightPrimary[darkMode],
+
     minimumSize: const Size(250, 100),
     padding: const EdgeInsets.symmetric(horizontal: 16),
     shape: const RoundedRectangleBorder(
