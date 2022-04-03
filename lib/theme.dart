@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-var darkMode = true;
+var darkMode = false;
 
 Color darkPrimary = darkMode ? const Color(0xffb2ebf2):  const Color(0xff0097A7) ;
 Color lightPrimary = darkMode ? const Color(0xff0097A7) :const Color(0xffb2ebf2);

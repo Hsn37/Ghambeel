@@ -224,7 +224,7 @@ class ToDoListState extends State<ToDoList>{
       //shape:ShapeBorder()/// ShapeDecoration(shape: Border.all(color:divider ))),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
-      decoration:  BoxDecoration(color:bg,borderRadius:BorderRadius.all(Radius.circular(50.0))),// function call check task urgency, select and return color!!!
+      decoration:  BoxDecoration(color: bg),// function call check task urgency, select and return color!!!
       child: makeListTileUncomp(index, itemsUncomp),
     ),
   );
@@ -241,12 +241,9 @@ class ToDoListState extends State<ToDoList>{
 
     return ListTile( 
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10.0),
-      // tileColor: const Color.fromARGB(199, 152, 182, 17),
-      // shape: const RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(100.0))),
       dense: true, //assuming task title+description so keeping it true, check with false once text here
       enabled: true, //keep this false when task is completed so that object is not interactive. cant edit if task done from to do list.
       leading: Container(
-
           decoration: const BoxDecoration(
             border: const Border(
               right: const BorderSide(width: 1.0, color: toDoIconCols)),
@@ -260,37 +257,57 @@ class ToDoListState extends State<ToDoList>{
                 });
               });
             },
-            constraints: BoxConstraints(),
-            // padding: EdgeInsets.zero,
-            //  decoration: IconDecoration(
-            //    shadows: [Shadow(blurRadius: 0, offset: Offset(0,0))],
-            //   gradient: LinearGradient(colors:[Color.fromARGB(255, 202, 202, 202),Color.fromARGB(255, 160, 159, 159)] )
-            // ),
+            constraints: const BoxConstraints(),
            ),
         ),
-      title: Text( // this needs to have task header!!!!! sample text here
-          list[index].name,
-          style: TextStyle(color: primaryText, fontSize: 18),
+      title: Row(
+          children: <Widget>[ // this needs to have task header!!!!! sample text here
+            Text(shortenTitle(list[index].name), style: TextStyle(color: primaryText, fontSize: 18)),
+            const SizedBox(width: 2,),
+            Icon(Icons.timer, color: timerCol, size: 14)
+          ]
         ),
-      subtitle: Row(
-          children: <Widget>[
-            Text(shortenDescription(list[index].description), style: TextStyle(color: secondaryText)),
-           // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
-            // so set color thru a function??
-          ],
-        ),
-      trailing: Icon(Icons.timer, color: timerCol, size: 20.0), // not required as per our interface, or we can put that tmer here
-        // we can set color of this timer from red yellow to blue based on task importance? 
+      subtitle: Text(shortenDescription(list[index].description), style: TextStyle(color: secondaryText)),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          IconButton (
+            icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20.0),
+            constraints: const BoxConstraints(),
+            padding: EdgeInsets.zero,
+            onPressed: () => Storage.deleteTask(list[index]).then((T) => {
+                setState(() {
+                  fetchData = true;
+                })
+              }),
+          ),
+          IconButton(
+            icon: Icon(Icons.edit, color: Colors.green[300], size: 20.0),
+            constraints: const BoxConstraints(),
+            padding: EdgeInsets.zero,
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EditTask(title: 'Edit Task', task: list[index])),
+              ).then((T) => {
+                setState(() {
+                  fetchData = true;
+                })
+              }),
+          ),
+        ]
+      ),
       onTap: () => viewTask(list[index], context),
-      onLongPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EditTask(title: 'Add A Task', task: list[index])),
-        ).then((T) => {
-          setState(() {
-            fetchData = true;
-          })
-        }),
     );
   }
 
+  String shortenTitle(String x){
+    int stringLength = 12;
+
+    if (x.length > stringLength) {
+      return x.substring(0, stringLength) + "...";
+    }
+    else {
+      return x;
+    }
+  }
   String shortenDescription(String x){
     int stringLength = 25;
 
@@ -301,6 +318,7 @@ class ToDoListState extends State<ToDoList>{
       return x;
     }
   }
+  
   // see options for this.
   Widget makeListTile(int index, List<Task> list){
 
