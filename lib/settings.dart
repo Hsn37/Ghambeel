@@ -28,6 +28,7 @@ class _settings extends State<settings> {
         backgroundColor: primary[darkMode],
       ),
       body: SwitchListTile(
+        activeColor: accent,
         contentPadding: const EdgeInsets.symmetric(vertical:20, horizontal: 20),
         subtitle: Text("You may need to switch pages for effects to take place.", style: TextStyle(color: primaryText[darkMode]),),
         title: Text("Dark Mode", style: TextStyle(color: primaryText[darkMode]),),
@@ -35,7 +36,6 @@ class _settings extends State<settings> {
           setState((){
             isDark = value;
             darkMode = value ? 1 : 0;
-            print(darkMode);
             //
           });
           // Navigator.pop(context);

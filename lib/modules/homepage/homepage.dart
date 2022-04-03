@@ -116,6 +116,39 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 }),
               ),
+          ListTile(
+            selectedColor: bg[darkMode],
+            leading: Icon(Icons.logout, color: secondaryText[darkMode],),
+            title: Text('Logout', style: TextStyle(color: primaryText[darkMode]),),
+            onTap: () async {
+              bool status = await showDialog(context: context, builder: (context){
+                return AlertDialog(
+                  title: Text("Logout?", style: TextStyle(color: primaryText[darkMode])),
+                  backgroundColor: bg[darkMode],
+                  content: Text("You may want to backup first.", style: TextStyle(color: primaryText[darkMode])),
+
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context, rootNavigator: true).pop(true);
+                      },
+                      child:Text("Yes", style: TextStyle(color: primaryText[darkMode])),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context, rootNavigator: true).pop(false);
+                      },
+                      child:const Text("No", style: TextStyle(color: accent)),
+                    ),
+
+                  ]
+                );
+              });
+
+              print("Logout:");
+              print(status);
+            },
+          ),
             ],
           ),
         ),
