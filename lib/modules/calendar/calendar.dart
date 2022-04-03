@@ -80,6 +80,12 @@ class _CalendarState extends State<Calendar> {
         ),
         body: Column(
           children: [TableCalendar(
+            headerStyle: HeaderStyle(
+                titleTextStyle: TextStyle(color: primaryText[darkMode]),
+                formatButtonTextStyle: TextStyle(color: primaryText[darkMode]),
+                leftChevronIcon: Icon(Icons.chevron_left, color: primaryText[darkMode]),
+              rightChevronIcon: Icon(Icons.chevron_right, color: primaryText[darkMode]),
+            ),
           firstDay: firstDay,
           currentDay: DateTime.now(),
           // first day in calendar (defined in utils)
