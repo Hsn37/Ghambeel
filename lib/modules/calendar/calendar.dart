@@ -79,7 +79,20 @@ class _CalendarState extends State<Calendar> {
           child: const Icon(Icons.add ),
         ),
         body: Column(
-          children: [TableCalendar(
+          children: [Card(
+            color: bg[darkMode],
+          elevation:2.0,
+          shadowColor: bg[(darkMode+1)%2],
+            margin: EdgeInsets.only(left: 40.0, top: 40.0, right: 40.0, bottom: 20.0),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(30),
+              bottomRight: Radius.circular(30),
+              bottomLeft: Radius.circular(30),
+              topLeft: Radius.circular(30),
+            ),
+          ),
+          child: TableCalendar(
             headerStyle: HeaderStyle(
                 titleTextStyle: TextStyle(color: primaryText[darkMode]),
                 formatButtonTextStyle: TextStyle(color: primaryText[darkMode]),
@@ -120,6 +133,7 @@ class _CalendarState extends State<Calendar> {
             _focusedDay = newday;
           },
           calendarStyle: CalendarStyle(
+            markerDecoration: BoxDecoration(color: bg[(darkMode+1)%2], shape: BoxShape.circle),
             defaultTextStyle: TextStyle(color: primaryText[darkMode]),
             weekendTextStyle: const TextStyle(color: accent),
             // highlighted color for today
@@ -127,14 +141,14 @@ class _CalendarState extends State<Calendar> {
               color: lightPrimary[darkMode],
               shape: BoxShape.circle,
             ),
-            todayTextStyle: TextStyle(color: primaryText[darkMode]),
+            todayTextStyle: TextStyle(color: secondaryText[darkMode]),
             selectedDecoration: const BoxDecoration(
               color: accent,
               shape: BoxShape.circle,
             ),
            ),
 
-          ),
+          ),),
           // event box
 
 
@@ -154,10 +168,11 @@ class _CalendarState extends State<Calendar> {
                       vertical: 4.0,
                     ),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(20),
                       color: lightPrimary[darkMode]
                     ),
                     child: ListTile(
+
                       onTap: () => viewTask(value[index], context),
                       title: Text(value[index].name),
                       subtitle: Text(value[index].description),

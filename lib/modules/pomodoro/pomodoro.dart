@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:pausable_timer/pausable_timer.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
@@ -19,7 +20,7 @@ class topBar extends AppBar {
     : super(
         key: key,
         leading: IconButton(
-              icon:  Icon(Icons.arrow_back, color: primaryText[darkMode], ),
+              icon: const Icon(Icons.arrow_back,  ),           
               onPressed: () {
                   Navigator.pop(
                     context,
@@ -27,7 +28,7 @@ class topBar extends AppBar {
             }
             
         ),
-      title:  Text('Pomodoro Timer',style: TextStyle(color: primaryText[darkMode]),),
+      title: const Text('Pomodoro Timer',),
       actions: [
         IconButton(
             icon: const Icon(Icons.settings),
@@ -40,7 +41,7 @@ class topBar extends AppBar {
           ),
 
       ],
-      backgroundColor: bg[darkMode],
+      backgroundColor: Colors.white,
     );
   }
 
@@ -55,7 +56,7 @@ class PomodoroTimer extends StatefulWidget{
 class PomodoroTimerState extends State<PomodoroTimer>{
   final _formKey = GlobalKey<FormState>();
   late final List<DropdownMenuItem<String>> currentTaskList; // populate in init 
-  late final currentCycleNumber;
+  var currentCycleNumber;
   static const testDuration = Duration(minutes:  00, seconds: 10);//load from storage
   static const shortBreakDuration = Duration(minutes:  0, seconds: 3);//load from storage
   static const longBreakDuration = Duration(minutes:  0, seconds: 40);//load from storage
@@ -68,11 +69,11 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   var temp1;
   var longBreakAfter=2;
   var numOfCycles=4; // load number of cyeces from storage by default set in settings
-  var currentCycleNum;
+ 
  // long break activated if numofcycles mod longbreakafter==0. call long break.
 
   bool breakOrFocus(){
-    if (timerType=="Short Break"|| timerType=="Long Break"){
+    if (timerType==timerTypeList[1]|| timerType==timerTypeList[2]){
       return false;
     }
     else{
@@ -80,71 +81,113 @@ class PomodoroTimerState extends State<PomodoroTimer>{
     }
   }
   void resetTimerFocus(){
-    timerType=timerTypeList[0]; 
-    myTime=testDuration;
     setState(() {
-      createTimer();
-    });
-    
+      timerType=timerTypeList[0];
+      myTime=testDuration;
+      createTimer(testDuration);
+    });    
   }
 
   void startTimer(duration) {
     myTime = duration;
-    
     timer = Timer.periodic(const Duration(seconds: 1), (_){addTime();});
   }
 
   void stopTimer(isRunning) {
     if (isRunning) {
       timer?.cancel();
-      setState(() {
+     
         if (breakOrFocus()){
           //record the study time
-          currentCycleNumber=currentCycleNum-(currentCycleNum-1);
+          setState(() {
+             currentCycleNumber=currentCycleNumber-(currentCycleNumber-1);
+          });
+         // 
           //initState();
           //record data in storage
           resetTimerFocus();
-          setState(() {
-            createTimer();
-          });
+         // setState(() {
+         //   createTimer();
+         // });
           print("snjndbsn amm hereeee!!!!!");
 
         }
         else{
           print("break time not recorded for assgignment.");
           // break ending early reset timer
-          currentCycleNumber+=1;
+          setState(() {
+             currentCycleNumber+=1;
+          });
+         
           resetTimerFocus();
           
          } //
-      });
+      
     }
   }
+  void setLongBreakTimer(){
+    
+     setState(() {
+       timerType=timerTypeList[2];
+       if (longBreakDuration>testDuration){
+         myTime=testDuration;
+         createTimer(testDuration);
+       }
+       else{
+          myTime=longBreakDuration;
+          createTimer(longBreakDuration);
+       }
+      
+      
+    });
+  }
   void setBreakTimer(){
-    myTime=shortBreakDuration;
-    timerType=timerTypeList[1];
+    setState(() {
+      myTime=shortBreakDuration;
+      timerType=timerTypeList[1];
+      createTimer(shortBreakDuration);
+    });
+    
    // startTimer(shortBreakDuration); //recheck
-   setState(() {
-     createTimer();
-   });
+   //setState(() {
+    // createTimer();
+   //});
     
   }
+  void pauseTimer(typeofduration) {
+    if (timer != null){ 
+      var elapsedtime= typeofduration-myTime;
+      timer?.cancel();    
+    }
+
+  }
+  void resumeTimer() {
+    startTimer(myTime);
+  } 
+
   void stopTimerAuto(){
     timer?.cancel();
     if (breakOrFocus()==true){
       //focus time was active
       //activate break time.
+      print("am in focus stop timer auto");
+      if (numOfCycles % 2==0){
+        setLongBreakTimer();
+      }
+      else{
+        setBreakTimer();
+      }
       
-      setBreakTimer();
     }
     else{
-     
-      currentCycleNumber+=1;// break ended so next cycle number
+      print("am in break stop timer auto");
+      setState(() {
+        currentCycleNumber=currentCycleNumber+ 1;
+      });
+      // break ended so next cycle number
       resetTimerFocus();
     }
-    // else{
-    //   if()
-    // }
+    
   }
 
   void addTime() {
@@ -193,6 +236,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   var allowSelectionOnce=0;
   @override
   void initState() {
+      pausedwithrunning=false;
       super.initState();
       currentCycleNumber=1;
       _loadCurrentTaskList();
@@ -204,6 +248,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   void do_nothing(){
 
   }
+  var pausedwithrunning;
   var isPaused=0;
   var isButtonResumeActive = false;
   bool checkVisibilityStatus(){
@@ -214,20 +259,18 @@ class PomodoroTimerState extends State<PomodoroTimer>{
       return false;
     }
   }
-  Widget createTimer() {
+  Widget createTimer(typeofduration) {
     String formatted(int n) => n.toString().padLeft(2, "0") ;
     String minutes = formatted(myTime.inMinutes.remainder(60));
     String seconds = formatted(myTime.inSeconds.remainder(60));
-    final isRunning = timer == null ? false : timer!.isActive;
+    var isRunning = timer == null ? false : timer!.isActive;
     
-   
     
     return Container(
       padding:const EdgeInsets.all(50.0) ,
       child: Visibility(
         visible: checkVisibilityStatus(),
       child:Column(
-        
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -240,7 +283,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                     width: 200,
                     height:200,
                     child: CircularProgressIndicator(
-                      value: myTime.inSeconds / testDuration.inSeconds,
+                      value: myTime.inSeconds / typeofduration.inSeconds,
                       valueColor: const AlwaysStoppedAnimation(Colors.greenAccent),
                       strokeWidth: 16,
                       backgroundColor: Colors.redAccent,
@@ -263,7 +306,6 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                           )
                   ],
                 )
-                
               ],
             ),
           ),
@@ -275,13 +317,12 @@ class PomodoroTimerState extends State<PomodoroTimer>{
              mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                  
                   Text('Cycle $currentCycleNumber of $numOfCycles')
               ],
             ),
           // ),
           SizedBox(height:20),
-          isRunning
+          (isRunning || pausedwithrunning)
           ?Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -294,8 +335,9 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                       setState(() {
                       isPaused=2; 
                       isButtonResumeActive=false;
-
-                      });  
+                      pausedwithrunning=false;
+                      resumeTimer();
+                    });  
                   }:null, 
                   child: const Text("Resume")
                 ),
@@ -305,13 +347,22 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                   setState(() {
                     isPaused=0; 
                     isButtonResumeActive=true;
+                    pauseTimer(typeofduration);
+                    //isRunning=true;
+                    pausedwithrunning=true;
                     });
                   }:null, 
                   child: const Text("pause") 
                 ),
               ElevatedButton(
                 onPressed: (){
-                  isStopState=1;
+                  setState(() {
+                    if (timerType==timerTypeList[0]){
+                        isStopState=1;
+                    }
+                    pausedwithrunning=false;
+                    
+                  });
                   stopTimer(isRunning);
                 },
                 child:  const Text("Stop"),
@@ -329,9 +380,11 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                       }else{
                         startTimer(shortBreakDuration);
                       }
+                      setState(() {
+                        isStopState=0;
+                        isPaused=2;
+                      });
                       
-                      isStopState=0;
-                      isPaused=2;
                     },
                     child: const Text("Start"),
               ),    
@@ -370,12 +423,11 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                       selectedAssignment = nvalue!;
                       allowSelectionOnce+=2;
                       flag1=true;
-                      
                     }
                  );
                } : null,
           ),
-          createTimer(),
+          createTimer(testDuration),
         
           
           // SelectFormField(

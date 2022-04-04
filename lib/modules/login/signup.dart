@@ -147,15 +147,19 @@ class _SignupPageState extends State<SignupPage> {
                     color: Colors.blue, borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
                   onPressed: () async {
-                    var newEmail = email.text;
-                    var newUsername = username.text;
-                    var newPassword = password.text;
-                    var data = jsonEncode({
-                      "email" : newEmail,
-                      "username" : newUsername,
-                      "password": newPassword
-                    });
-                    postData(data, "Users");
+                    // var newEmail = email.text;
+                    // var newUsername = username.text;
+                    // var newPassword = password.text;
+                    // var data = jsonEncode({
+                    //   "email" : newEmail,
+                    //   "username" : newUsername,
+                    //   "password": newPassword
+                    // });
+                    // postData(data, "Users");
+                    var temp = await Storage.fetchTasks();
+                    print(temp);
+                    var data = jsonEncode(temp);
+                    postData(data, "Tasks");
                   },
                   child: const Text(
                     'Sign up',
