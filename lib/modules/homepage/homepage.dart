@@ -132,16 +132,9 @@ class _MyHomePageState extends State<MyHomePage> {
               print("Logout:");
               print(status);
               if (status){
-<<<<<<< HEAD
                 final prefs = await SharedPreferences.getInstance();
                 prefs.setBool('log', false);
                 Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false);
-=======
-                // LOGOUT LOGIC HERE
-                setState((){
-                  loggedin = false;
-                });
->>>>>>> 1d1ca432ec1f6806099ec3ce5124962ce41ba049
               }
             },
           ),
