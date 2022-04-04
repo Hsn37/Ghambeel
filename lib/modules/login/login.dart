@@ -80,6 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                 appBar: AppBar(
                   title: const Text("Login Page"),
                 ),
+<<<<<<< HEAD
                 body: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
@@ -167,6 +168,58 @@ class _LoginPageState extends State<LoginPage> {
                           )
                       )
                     ],
+=======
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 15.0, right: 15.0, top: 15, bottom: 0),
+                //padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextField(
+                  controller: password,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.password),
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.5),
+                      labelText: 'Password',
+                      hintText: 'Enter secure password'),
+                ),
+              ),
+              TextButton(
+                onPressed: (){
+                  print(":)");
+                },
+                child: const Text(
+                  'Forgot Password',
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
+                ),
+              ),
+              Container(
+                height: 50,
+                width: 250,
+                decoration: BoxDecoration(
+                    color: Colors.blue, borderRadius: BorderRadius.circular(20)),
+                child: TextButton(
+                  onPressed: () async {
+                    var success = await getData(email.text, password.text);
+                    print(success);
+                    if (success['status'] == 'true') {
+                      // redo after validation 
+                      setState(() => {
+                        loading = true
+                      });
+                      await Future.delayed(const Duration(seconds: 2));
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => const MyHomePage(
+                              title: "FLutter")));
+                          // loading = false;
+                    }
+                  },
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+>>>>>>> 1d1ca432ec1f6806099ec3ce5124962ce41ba049
                   ),
                 ),
               );
