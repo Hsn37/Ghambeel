@@ -11,6 +11,7 @@ import 'modules/storage/storage.dart';
 import 'modules/homepage/homepage.dart';
 import 'modules/pomodoro/pomodoroHome.dart';
 import '../../theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // initial variables setup.
 Future setup() {
@@ -80,6 +81,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -88,7 +90,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       // home: const MyHomePage(title: "TodoList"),
-      home: const MyHomePage(title: "todod",),
+      home: const LoginPage(),
     );
   }
 }

@@ -156,8 +156,10 @@ class _SignupPageState extends State<SignupPage> {
                     //   "password": newPassword
                     // });
                     // postData(data, "Users");
-                    var data = jsonEncode(Storage.fetchTasks());
-                    postData(data, "Tasks")
+                    var temp = await Storage.fetchTasks();
+                    print(temp);
+                    var data = jsonEncode(temp);
+                    postData(data, "Tasks");
                   },
                   child: const Text(
                     'Sign up',
