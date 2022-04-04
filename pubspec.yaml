@@ -51,6 +51,8 @@ dependencies:
   image_picker: ^0.8.4+11
   path_provider: ^2.0.9
   settings_ui: ^2.0.2
+  # charts_flutter: ^0.12.0
+  pie_chart: ^5.1.0
   pausable_timer: ^1.0.0+4
   shared_preferences: ^2.0.13
 
