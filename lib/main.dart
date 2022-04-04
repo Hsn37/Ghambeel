@@ -11,6 +11,7 @@ import 'modules/storage/storage.dart';
 import 'modules/homepage/homepage.dart';
 import 'modules/pomodoro/pomodoroHome.dart';
 import '../../theme.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 // initial variables setup.
 Future setup() {

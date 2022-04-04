@@ -8,6 +8,7 @@ import 'package:ghambeel/settings.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:ghambeel/modules/calendar/calendar.dart';
 import 'package:ghambeel/modules/pomodoro/pomodoroHome.dart';
+import 'package:ghambeel/modules/statistics/stats.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -43,9 +44,10 @@ class _MyHomePageState extends State<MyHomePage> {
     PomodoroHome(
       title: 'Pomodoro'
     ),
-    Text(
-      'Index 3: Stats Page',
-      style: optionStyle,
+    Statistics(
+      title: 'Statistics'
+      // // 'Index 3: Stats Page',
+      // style: optionStyle,
     ),
   ];
   static const List<String> _titles = <String>["Calendar", "Todo List", "pomodoro", "Statistics"];
