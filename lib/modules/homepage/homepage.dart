@@ -8,6 +8,7 @@ import 'package:ghambeel/settings.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:ghambeel/modules/calendar/calendar.dart';
 import 'package:ghambeel/modules/pomodoro/pomodoroHome.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -66,8 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     if (loggedin) {
       return Scaffold(
         appBar: AppBar(
@@ -133,10 +132,9 @@ class _MyHomePageState extends State<MyHomePage> {
               print("Logout:");
               print(status);
               if (status){
-                // LOGOUT LOGIC HERE
-                setState((){
-                  loggedin = false;
-                });
+                final prefs = await SharedPreferences.getInstance();
+                prefs.setBool('log', false);
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false);
               }
             },
           ),

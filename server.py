@@ -15,7 +15,9 @@ def database(query, post=False):
 
         return result
     else:
+        result = cursor.fetchall()
         db.commit()
+    cursor.close()
 
 def addUser(data):
     username = data['username']
@@ -26,7 +28,7 @@ def addUser(data):
     database(query, True)
 
 def addTask(data):
-    print(data)
+    # {'incomplete': {'task0': {'name': 'First Task', 'priority': '0', 'description': 'Take a tour of our app', 'notes': '', 'status': 'incomplete', 'timeAdded': '2022-04-04 16:03:05', 'deadline': '2022-04-04 16:03:05', 'timeCompleted': '', 'imgname': ''}}, 'complete': {}}
 
 hostName = "0.0.0.0"
 serverPort = 8080
@@ -44,7 +46,8 @@ class MyServer(BaseHTTPRequestHandler):
             query = dict(parse_qsl(self.path[2:])) ## This is where the url parameters are gotten
             username = query['username']
             password = query['password']
-            data = database(fr"SELECT * FROM Users WHERE Name='{username}' AND Pass='{password}'", True)
+            print(query)
+            data = database(fr"SELECT * FROM Users WHERE Name='{username}' AND Pass='{password}'")
             if len(data) > 0:
                 response = {"status":"true"}
                 self.wfile.write(bytes(dumps(response), "utf8"))
@@ -63,8 +66,8 @@ class MyServer(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('Content-Length'))
         post_data = loads(self.rfile.read(content_len))
         self.send_response(200)
-        print(post_data)
-        print(loads(post_data['data']))
+        # print(post_data)
+        # print(loads(post_data['data']))
         if post_data['table'] == 'Users':
             addUser(loads(post_data['data']))
         if post_data['table'] == "Tasks":
