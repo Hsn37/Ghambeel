@@ -25,6 +25,9 @@ def addUser(data):
     print(query)
     database(query, True)
 
+def addTask(data):
+    print(data)
+
 hostName = "0.0.0.0"
 serverPort = 8080
 
@@ -64,6 +67,8 @@ class MyServer(BaseHTTPRequestHandler):
         print(loads(post_data['data']))
         if post_data['table'] == 'Users':
             addUser(loads(post_data['data']))
+        if post_data['table'] == "Tasks":
+            addTask(loads(post_data['data']))
 
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), MyServer)

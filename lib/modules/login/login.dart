@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<Map> getData(email, pwd) async {
     // Replace the url inside with https://localhost:{port}/?username=admin&password=123 (try either localhost or 10.0.0.2)
-    Response response = await get(Uri.parse("http://10.0.2.2:8080/?username="+email + "&password=" + pwd));
+    Response response = await get(Uri.parse("http://74.207.234.113:8080/?username="+email + "&password=" + pwd));
     Map data = jsonDecode(response.body);
     return data;
   }
