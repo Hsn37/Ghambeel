@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:html';
 import 'package:pausable_timer/pausable_timer.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';

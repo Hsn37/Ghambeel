@@ -122,6 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: TextButton(
                   onPressed: () async {
                     var success = await getData(email.text, password.text);
+                    print(success);
                     if (success['status'] == 'true') {
                       // redo after validation 
                       setState(() => {

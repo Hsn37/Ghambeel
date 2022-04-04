@@ -76,10 +76,17 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: primary[darkMode],
         ),
         drawer: Drawer(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+            ),
+          ),
           backgroundColor: bg[darkMode],
           child: ListView(
             children: <Widget>[
                const SizedBox(
+
                 height: 80,
                 child: DrawerHeader(
                 decoration: BoxDecoration(
@@ -102,14 +109,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text('Settings', style: TextStyle(color: primaryText[darkMode]),),
                 onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context) => settings())).then((_) {
                   setState(() {
-                    // Call setState to refresh the page.
+                    // refresh the page.
 
                     // _onItemTapped(return_index);
                   });
                   var return_index = _selectedIndex;
                   Navigator.pop(context);
                   _onItemTapped((return_index+1)%4);
-                  Future.delayed(const Duration(milliseconds: 10), () {
+                  Future.delayed(const Duration(milliseconds: 50), () {
                     _onItemTapped((return_index));
                   });
 
@@ -127,6 +134,9 @@ class _MyHomePageState extends State<MyHomePage> {
               print(status);
               if (status){
                 // LOGOUT LOGIC HERE
+                setState((){
+                  loggedin = false;
+                });
               }
             },
           ),
