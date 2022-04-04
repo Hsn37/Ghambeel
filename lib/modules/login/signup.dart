@@ -157,7 +157,7 @@ class _SignupPageState extends State<SignupPage> {
                     // });
                     // postData(data, "Users");
                     var data = jsonEncode(Storage.fetchTasks());
-                    postData(data, "Tasks")
+                    postData(data, "Tasks");
                   },
                   child: const Text(
                     'Sign up',

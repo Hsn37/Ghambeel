@@ -127,6 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                       // redo after validation 
                       setState(() => {
                         loading = true
+
                       });
                       await Future.delayed(const Duration(seconds: 2));
                       Navigator.push(context, MaterialPageRoute(
