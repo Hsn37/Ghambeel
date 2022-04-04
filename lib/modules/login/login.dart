@@ -166,8 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                               "New User? Sign up!"
                           )
                       )
-                    ],
-                  ),
+                  ]),
                 ),
               );
             }

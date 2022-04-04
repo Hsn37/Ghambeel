@@ -23,10 +23,16 @@ class topBar extends AppBar {
         leading: IconButton(
               icon: Icon(Icons.arrow_back, color: primaryText[darkMode], ),
               onPressed: () {
+                var currentFocus = FocusScope.of(context);
+                if (!currentFocus.hasPrimaryFocus) {
+                  currentFocus.unfocus();
+                }
                   Navigator.pop(
                     context,
+
                   MaterialPageRoute(builder: (context) => const ToDoList(title: 'To-Do List',)),
                 );
+
             }
             
         ),
