@@ -14,6 +14,8 @@ import '../../theme.dart';
 // import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+
 // initial variables setup.
 Future setup() {
   // the flag for whether the user is logged in or not.

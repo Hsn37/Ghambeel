@@ -40,18 +40,31 @@ List<Color> mycolorList = [
       
       backgroundColor: bg[darkMode],
       body: Center(
-        child: PieChart(
-          dataMap: pieData,
-          colorList: mycolorList,
-          chartRadius: MediaQuery.of(context).size.width /2,
-          chartType: ChartType.ring,
-          ringStrokeWidth: 50,
-          chartValuesOptions: ChartValuesOptions(
-          showChartValuesOutside: true,
-          // showChartValueBackground: false
-          ),
-          ),
+        child: Column(
+          // Text("Title")
+          
+          children: <Widget>[
+            Text("Time spent on tasks over the week:"),
+            Expanded(
+            child: PieChart(
+            dataMap: pieData,
+            colorList: mycolorList,
+            chartRadius: MediaQuery.of(context).size.width /2,
+            chartType: ChartType.ring,
+            ringStrokeWidth: 70,
+            chartValuesOptions: ChartValuesOptions(
+            showChartValuesOutside: true,
+            // showChartValueBackground: false
+            ),
+            )
+            
+            )
+            ],
+        )
         ),
     );
 }
 }
+
+
+

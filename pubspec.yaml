@@ -55,6 +55,7 @@ dependencies:
   pie_chart: ^5.1.0
   pausable_timer: ^1.0.0+4
   shared_preferences: ^2.0.13
+  
 
 dev_dependencies:
   flutter_test:
