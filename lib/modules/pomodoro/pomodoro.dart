@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:pausable_timer/pausable_timer.dart';
 
-import 'dart:html';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';

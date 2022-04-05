@@ -264,8 +264,11 @@ class _CalendarState extends State<Calendar> {
 
   getColor(String priority) {
     Color timerCol;
-    if (priority == "0")
+    if (priority == "0") {
+      if (darkMode == 1)
+        return Color.fromRGBO(0,0, 111, 0.6);
       return Colors.blue;
+    }
     else if (priority == "1")
       return accent;
     else
