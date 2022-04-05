@@ -149,6 +149,15 @@ class _AddTaskState extends State<AddTask>{
 
   var priorityIcon = Icon(Icons.priority_high, color: accent);
   
+  Widget imageDisplay() {
+    return Column (
+      children: [
+        Image.file(image!, width:160, height:160),
+        IconButton(onPressed: () => {setState(() {image = null; filename = "";})}, icon: const Icon(Icons.delete, size: 28, color: Colors.red,))
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -340,7 +349,7 @@ class _AddTaskState extends State<AddTask>{
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: image != null ? Image.file(image!, width:160, height:160) : const Text("No image uploaded"),
+            child: image != null ? imageDisplay() : const Text("No image uploaded"),
           ),
 
         ],

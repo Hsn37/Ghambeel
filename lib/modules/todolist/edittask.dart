@@ -100,11 +100,18 @@ class _EditTaskState extends State<EditTask>{
     taskDesc = widget.task.description;
     taskNotes = widget.task.notes;
 
-    previousDate = DateTime.parse(widget.task.deadline);
-    previousTime = TimeOfDay.fromDateTime(DateTime.parse(widget.task.deadline));
+    try {
+      previousDate = DateTime.parse(widget.task.deadline);
+      previousTime = TimeOfDay.fromDateTime(DateTime.parse(widget.task.deadline));
+    
+      dateinput.text = DateFormat('yyyy-MM-dd').format(previousDate);
+      timeinput.text = DateFormat('HH:mm:ss').format(DateTime.parse(widget.task.deadline));
+    }
+    catch (e) {
 
-    dateinput.text = DateFormat('yyyy-MM-dd').format(previousDate);
-    timeinput.text = DateFormat('HH:mm:ss').format(DateTime.parse(widget.task.deadline));
+      dateinput.text = "";
+      timeinput.text = "";
+    }
 
     //load the image
     if (widget.task.imgname != "") {
@@ -165,6 +172,15 @@ class _EditTaskState extends State<EditTask>{
       final File? localImage = await image?.copy('$path/$filename');
       print('$path/$filename');
     }
+  }
+
+  Widget imageDisplay() {
+    return Column (
+      children: [
+        Image.file(image!, width:160, height:160),
+        IconButton(onPressed: () => {setState(() {image = null; filename = "";})}, icon: const Icon(Icons.delete, size: 28, color: Colors.red,))
+      ],
+    );
   }
 
   @override
@@ -335,7 +351,7 @@ class _EditTaskState extends State<EditTask>{
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: image != null ? Image.file(image!, width:160, height:160) : const Text("No image uploaded"),
+            child: image != null ? imageDisplay() : const Text("No image uploaded"),
           ),
 
         ],
@@ -357,7 +373,13 @@ class _EditTaskState extends State<EditTask>{
             t.priority = "0";
           }
 
-          t.deadline = DateTime(previousDate.year, previousDate.month, previousDate.day, previousTime.hour, previousTime.minute).toString().split(".")[0];
+          try {
+            t.deadline = DateTime(previousDate.year, previousDate.month, previousDate.day, previousTime.hour, previousTime.minute).toString().split(".")[0];
+          }
+          catch (e) {
+            t.deadline = "";
+          }
+
           t.imgname = filename;
           saveImg();
           Storage.EditTask(t).then((c) {
