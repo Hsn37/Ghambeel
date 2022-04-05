@@ -90,6 +90,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.green,
+        disabledColor: Colors.grey,
       ),
       // home: const MyHomePage(title: "TodoList"),
       home: LoginPage(),

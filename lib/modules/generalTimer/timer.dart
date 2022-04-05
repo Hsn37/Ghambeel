@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ghambeel/main.dart';
 import 'dart:async';
 import 'package:simple_timer/simple_timer.dart';
 
@@ -34,10 +35,11 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
     //
   }
 
+  final TextStyle buttonText = TextStyle(color:bg[darkMode]);
+  final TextStyle mainText = TextStyle(color:primaryText[darkMode]);
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
-      onPrimary: primary[darkMode],
-
-      primary: lightPrimary[darkMode],
+      primary: darkPrimary[darkMode],
+      onPrimary: lightPrimary[darkMode],
       minimumSize: const Size(50, 50),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       shape: const RoundedRectangleBorder(
@@ -94,6 +96,7 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: bg[darkMode],
       body: Center(
         child: createTimer(),
       )
@@ -110,12 +113,14 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.max,
           children: [
-            const Text('You are currently working on: '),
+            Text('You are currently working on: ', style: mainText),
             DropdownButton(items:currentTaskList,
+                style: mainText,
+                dropdownColor: bg[darkMode],
                 value:selectedAssignment,
                 iconDisabledColor: accent,
-                hint: const Text("Select Task"),
-                disabledHint: Text(selectedAssignment),
+                hint: const Text("Select Task", style:TextStyle(color: accent)),
+                disabledHint: Text(selectedAssignment, style:TextStyle(color: accent)),
                 onChanged: (!isRunning) ? (String ?nvalue)
                 {
                   setState(()
@@ -154,12 +159,12 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
               children: [
                 ElevatedButton(
                   onPressed: (){pauseTimer();},
-                  child: !isPaused ? const Text("Pause") : const Text("Resume"),
+                  child: !isPaused ?  Text("Pause", style:buttonText) :  Text("Resume", style:buttonText),
                   style: raisedButtonStyle,
                 ),
                 ElevatedButton(
                   onPressed: (){stopTimer();},
-                  child: const Text("Stop"),
+                  child: Text("Stop", style:buttonText),
                   style: raisedButtonStyle,
                 )
               ],
@@ -170,7 +175,7 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
                 children: [
                   ElevatedButton(
                     onPressed: (){startTimer();},
-                    child: const Text("Start"),
+                    child: Text("Start", style:buttonText),
                     style: raisedButtonStyle,
                   ),
                 ]
