@@ -21,7 +21,7 @@ class topBar extends AppBar {
     : super(
         key: key,
         leading: IconButton(
-              icon: const Icon(Icons.arrow_back,  ),           
+              icon:  Icon(Icons.arrow_back,color: primaryText[darkMode],  ),           
               onPressed: () {
                   Navigator.pop(
                     context,
@@ -29,11 +29,11 @@ class topBar extends AppBar {
             }
             
         ),
-      title: const Text('Pomodoro Timer',),
+      title: Text('Pomodoro Timer',style: TextStyle(color: primaryText[darkMode]),),
       actions: [
         IconButton(
-            icon: const Icon(Icons.settings),
-            color: accent,
+            icon: Icon(Icons.settings),
+            color: primaryText[darkMode],
             tooltip: 'Open Pomodoro Settings',
          
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PomodoroSettings())),
@@ -44,7 +44,7 @@ class topBar extends AppBar {
           ),
 
       ],
-      backgroundColor: Colors.white,
+      backgroundColor: bg[darkMode],
     );
   }
 
@@ -267,6 +267,20 @@ class PomodoroTimerState extends State<PomodoroTimer>{
       return false;
     }
   }
+  final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
+    //onPrimary: lightPrimary[darkMode],
+
+    primary: lightPrimary[darkMode],
+
+   // minimumSize: const Size(250, 100),
+    //padding: const EdgeInsets.symmetric(horizontal: 16),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(20)),
+    ),
+  );
+  final TextStyle myTextStyle = TextStyle(
+    color: primaryText[darkMode],
+  );
   Widget createTimer(typeofduration) {
     String formatted(int n) => n.toString().padLeft(2, "0") ;
     String minutes = formatted(myTime.inMinutes.remainder(60));
@@ -292,7 +306,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                     height:200,
                     child: CircularProgressIndicator(
                       value: myTime.inSeconds / typeofduration.inSeconds,
-                      valueColor: const AlwaysStoppedAnimation(Colors.greenAccent),
+                      valueColor:  AlwaysStoppedAnimation(lightPrimary[darkMode]),
                       strokeWidth: 16,
                       backgroundColor: Colors.redAccent,
                     ),
@@ -338,7 +352,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
               // Container(
               //   child:(isPaused>0) ?
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(onSurface: Colors.blue),
+                 style: raisedButtonStyle,
                   onPressed: isButtonResumeActive ? (){
                       setState(() {
                       isPaused=2; 
@@ -347,10 +361,11 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                       resumeTimer();
                     });  
                   }:null, 
-                  child: const Text("Resume")
+                  child:  Text("Resume",style: myTextStyle,)
                 ),
              //    :
                 ElevatedButton(
+                  style: raisedButtonStyle,
                 onPressed: (isPaused>0)? (){
                   setState(() {
                     isPaused=0; 
@@ -360,9 +375,10 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                     pausedwithrunning=true;
                     });
                   }:null, 
-                  child: const Text("pause") 
+                  child: Text("pause",style: myTextStyle,) 
                 ),
               ElevatedButton(
+                style: raisedButtonStyle,
                 onPressed: (){
                   setState(() {
                     if (timerType==timerTypeList[0]){
@@ -373,7 +389,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                   });
                   stopTimer(isRunning);
                 },
-                child:  const Text("Stop"),
+                child: Text("Stop",style: myTextStyle,),
               ),
             ],
           )
@@ -382,6 +398,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ElevatedButton(
+                style: raisedButtonStyle,
                     onPressed: (){
                       if(timerType==timerTypeList[0]){
                         startTimer(testDuration);
@@ -394,7 +411,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                       });
                       
                     },
-                    child: const Text("Start"),
+                    child: Text("Start",style: myTextStyle,),
               ),    
             ]
           ),
@@ -416,14 +433,16 @@ class PomodoroTimerState extends State<PomodoroTimer>{
           const SizedBox(
                 height: 10,
             ),
-          const Text('You are currently working on: '),
+          Text('You are currently working on: ',style: TextStyle(color:(allowSelectionOnce>1)? subtleGrey:primaryText[darkMode] )  ),
           const SizedBox( height: 10, ),
-          DropdownButton(
+          DropdownButtonHideUnderline(
+            child: DropdownButton(
+              iconEnabledColor: lightPrimary[darkMode],
               items:currentTaskList,
               value:selectedAssignment,
-              iconDisabledColor: accent,
-              hint: const Text("Select Task"),
-              disabledHint: Text(selectedAssignment),
+              iconDisabledColor: subtleGrey,
+              hint: Text("Select Task",style: TextStyle(color: subtleGrey),),
+              disabledHint: Text(selectedAssignment,style: TextStyle(color: subtleGrey),),
                onChanged: (allowSelectionOnce<1) ? (String ?nvalue)
                { 
                  setState(() 
@@ -435,6 +454,8 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                  );
                } : null,
           ),
+          ),
+          
           createTimer(testDuration),
         
           

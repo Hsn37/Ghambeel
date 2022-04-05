@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
         disabledColor: Colors.grey,
       ),
       // home: const MyHomePage(title: "TodoList"),
-      home: LoginPage(),
+      home: MyHomePage(title: '',),
     );
   }
 }
