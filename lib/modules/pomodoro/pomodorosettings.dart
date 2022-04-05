@@ -75,7 +75,7 @@ class _Pomodorosettings extends State<PomodoroSettings> {
     return Card ( //static cos otherwise implicit declaration
         elevation: 8.0,
         shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(50), ),
-        shadowColor:lightPrimary[darkMode], // const Color.fromARGB(0, 0, 255, 255),
+       // shadowColor:lightPrimary[darkMode], // const Color.fromARGB(0, 0, 255, 255),
         color: bg[darkMode],
         margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
         child: Container(
@@ -103,7 +103,7 @@ class _Pomodorosettings extends State<PomodoroSettings> {
     return Card ( //static cos otherwise implicit declaration
         elevation: 8.0,
         shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(50), ),
-        shadowColor:lightPrimary[darkMode], // const Color.fromARGB(0, 0, 255, 255),
+        //shadowColor:lightPrimary[darkMode], // const Color.fromARGB(0, 0, 255, 255),
         color: bg[darkMode],
         margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
         child: Container(
@@ -158,6 +158,8 @@ class _Pomodorosettings extends State<PomodoroSettings> {
     return Scaffold(
       appBar: topBar(context:context, myTitle: '', ),
       body:SafeArea(
+
+        child:Container(
         child:ListView(
           
           padding: EdgeInsets.all(24),
@@ -184,6 +186,7 @@ class _Pomodorosettings extends State<PomodoroSettings> {
            
           ],
         ) 
+      ),
       ),
       
       
