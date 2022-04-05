@@ -59,3 +59,22 @@ Future youSure(title, content , context) {
     );
   });
 }
+
+Future alertDialog(title, message, context) {
+  return showDialog(context: context, builder: (context){
+    return AlertDialog(
+        title: Text(title, style: TextStyle(color: primaryText[darkMode])),
+        backgroundColor: bg[darkMode],
+        content: Text(message, style: TextStyle(color: primaryText[darkMode])),
+
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child:Text("Close", style: TextStyle(color: primaryText[darkMode])),
+          ),
+        ]
+    );
+  });
+}

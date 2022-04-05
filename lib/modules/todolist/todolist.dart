@@ -168,7 +168,7 @@ class ToDoListState extends State<ToDoList>{
                 children:  [
                   Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Text("Complete",style: TextStyle( fontWeight: FontWeight. bold,fontSize: 14,color: primaryText[darkMode])),
+                      child: Text("Complete", style: TextStyle( fontWeight: FontWeight. bold, fontSize: 14, color: primaryText[darkMode])),
                     ),
                   ],
               ),            
@@ -211,24 +211,27 @@ class ToDoListState extends State<ToDoList>{
       elevation: 8.0,
       shadowColor: const Color.fromARGB(0, 0, 255, 255),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+      shape: const RoundedRectangleBorder(borderRadius:  const BorderRadius.all(Radius.circular(50))),
       child: Container(
-      decoration: BoxDecoration(color: bg[darkMode],borderRadius:BorderRadius.all(Radius.circular(50.0))),// function call check task urgency, select and return color!!!
-      child: makeListTile(index, itemsComp),
-    ),
-  );
-}
+        decoration:  BoxDecoration(color: bg[darkMode], borderRadius:  const BorderRadius.all(Radius.circular(50))),
+        child: makeListTile(index, itemsComp),
+      ),
+    );
+  }
+
   Widget makeCardundone(int index){
     return Card ( //static cos otherwise implicit declaration
       elevation: 8.0,
       shadowColor: Color.fromARGB(0, 0, 255, 255),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-      shape: const RoundedRectangleBorder(borderRadius:  const BorderRadius.all(Radius.circular(25))),
+      shape: const RoundedRectangleBorder(borderRadius:  const BorderRadius.all(Radius.circular(50))),
       child: Container(
-      decoration:  BoxDecoration(color: bg[darkMode]),// function call check task urgency, select and return color!!!
-      child: makeListTileUncomp(index, itemsUncomp),
-    ),
-  );
-}
+        decoration:  BoxDecoration(color: bg[darkMode], borderRadius:  const BorderRadius.all(Radius.circular(50))),// function call check task urgency, select and return color!!!
+        child: makeListTileUncomp(index, itemsUncomp),
+      ),
+    );
+  }
+
   Widget makeListTileUncomp(int index, List<Task> list) {
     
     Color timerCol;
@@ -243,7 +246,6 @@ class ToDoListState extends State<ToDoList>{
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10.0),
       dense: true, //assuming task title+description so keeping it true, check with false once text here
       enabled: true, //keep this false when task is completed so that object is not interactive. cant edit if task done from to do list.
-      shape: const RoundedRectangleBorder(borderRadius:  const BorderRadius.all(Radius.circular(25))),
       leading: Container(
           decoration: const BoxDecoration(
             border: const Border(
@@ -358,21 +360,36 @@ class ToDoListState extends State<ToDoList>{
             // ),
             ),
           ),
-        title: Text( // this needs to have task header!!!!! sample text here
-            list[index].name,
-            style: TextStyle(color:primaryText[darkMode],  fontSize: 18),
+      title: Row(
+        children: <Widget>[ // this needs to have task header!!!!! sample text here
+          Text(shortenTitle(list[index].name), style: TextStyle(color: primaryText[darkMode], fontSize: 18)),
+          const SizedBox(width: 2,),
+          Icon(Icons.timer, color: timerCol, size: 14)
+        ]
+      ),
+      subtitle: Row(
+          children: <Widget>[
+            Text(shortenDescription(list[index].description), style:  TextStyle(color: secondaryText[darkMode])),
+          // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
+            // so set color thru a function??
+          ],
+        ),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          IconButton (
+            icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20.0),
+            constraints: const BoxConstraints(),
+            padding: EdgeInsets.zero,
+            onPressed: () => Storage.deleteTask(list[index]).then((T) => {
+                setState(() {
+                  fetchData = true;
+                })
+              }),
           ),
-        subtitle: Row(
-            children: <Widget>[
-              Text(shortenDescription(list[index].description), style:  TextStyle(color: secondaryText[darkMode])),
-            // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
-              // so set color thru a function??
-            ],
-          ),
-        trailing: Icon(Icons.timer, color: timerCol, size: 20.0), // not required as per our interface, or we can put that tmer here
-          // we can set color of this timer from red yellow to blue based on task importance? 
-        onTap: () => print(index.toString() + "pressed"),
-      
+        ]
+      ),
+      onTap: () => print(index.toString() + "pressed"),
     );
   } 
 
