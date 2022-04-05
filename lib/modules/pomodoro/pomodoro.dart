@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:pausable_timer/pausable_timer.dart';
+
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
@@ -11,7 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../theme.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'pomodorosettings.dart';
 
 
 class topBar extends AppBar {
@@ -34,10 +35,12 @@ class topBar extends AppBar {
             icon: const Icon(Icons.settings),
             color: accent,
             tooltip: 'Open Pomodoro Settings',
-            onPressed: () {
+         
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PomodoroSettings())),
+
               // handle the press leads to settings page prefilled with default. 
               //store these settings even if app closes.
-            },
+ 
           ),
 
       ],
@@ -267,7 +270,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
     
     
     return Container(
-      padding:const EdgeInsets.all(50.0) ,
+      padding:const EdgeInsets.all(20.0) ,
       child: Visibility(
         visible: checkVisibilityStatus(),
       child:Column(
@@ -466,7 +469,6 @@ class PomodoroTimerState extends State<PomodoroTimer>{
       appBar: (isStopState>0)? topBar(context: context, myTitle: '',):null,
       key: _formKey,
       body: makeBody(),
-
     );
   }
 

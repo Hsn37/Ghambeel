@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:ghambeel/modules/pomodoro/pomodorosettings.dart';
 import 'package:ghambeel/theme.dart';
 import 'package:ghambeel/settings.dart';
 import 'package:ghambeel/modules/login/login.dart';
@@ -91,9 +92,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.green,
+        disabledColor: Colors.grey,
       ),
       // home: const MyHomePage(title: "TodoList"),
-      home: const LoginPage(),
+      home: LoginPage(),
     );
   }
 }

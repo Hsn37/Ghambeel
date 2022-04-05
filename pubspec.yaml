@@ -55,7 +55,12 @@ dependencies:
   pie_chart: ^5.1.0
   pausable_timer: ^1.0.0+4
   shared_preferences: ^2.0.13
+<<<<<<< HEAD
   
+=======
+  flutter_settings_screens: ^0.2.2+1
+  simple_timer: ^2.0.0
+>>>>>>> 0dca6008c96113a93e8c8e97a878a2d88aefd674
 
 dev_dependencies:
   flutter_test:
