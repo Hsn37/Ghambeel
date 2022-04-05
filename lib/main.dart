@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:ghambeel/modules/pomodoro/pomodorosettings.dart';
 import 'package:ghambeel/theme.dart';
 import 'package:ghambeel/settings.dart';
 import 'package:ghambeel/modules/login/login.dart';
@@ -11,6 +12,10 @@ import 'modules/storage/storage.dart';
 import 'modules/homepage/homepage.dart';
 import 'modules/pomodoro/pomodoroHome.dart';
 import '../../theme.dart';
+// import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:shared_preferences/shared_preferences.dart';
+
+
 
 // initial variables setup.
 Future setup() {
@@ -80,15 +85,17 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.green,
+        disabledColor: Colors.grey,
       ),
       // home: const MyHomePage(title: "TodoList"),
-      home: const MyHomePage(title: "todod",),
+      home: LoginPage(),
     );
   }
 }

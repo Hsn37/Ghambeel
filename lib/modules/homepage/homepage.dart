@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:ghambeel/theme.dart';
 import 'package:ghambeel/modules/login/login.dart';
@@ -6,6 +8,8 @@ import 'package:ghambeel/settings.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:ghambeel/modules/calendar/calendar.dart';
 import 'package:ghambeel/modules/pomodoro/pomodoroHome.dart';
+import 'package:ghambeel/modules/statistics/stats.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -41,9 +45,10 @@ class _MyHomePageState extends State<MyHomePage> {
     PomodoroHome(
       title: 'Pomodoro'
     ),
-    Text(
-      'Index 3: Stats Page',
-      style: optionStyle,
+    Statistics(
+      title: 'Statistics'
+      // // 'Index 3: Stats Page',
+      // style: optionStyle,
     ),
   ];
   static const List<String> _titles = <String>["Calendar", "Todo List", "pomodoro", "Statistics"];
@@ -55,6 +60,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _onReturn() {
+    setState(() {
+      print("here");
+      // refresh
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (loggedin) {
@@ -62,24 +74,30 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title: Text(appBarTitles[_selectedIndex]),
           // leading: const Icon( Icons.menu, color: primaryText[darkMode]),
-          backgroundColor: primary,
+          backgroundColor: primary[darkMode],
         ),
         drawer: Drawer(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+            ),
+          ),
           backgroundColor: bg[darkMode],
           child: ListView(
             children: <Widget>[
-               SizedBox(
+               const SizedBox(
+
                 height: 80,
                 child: DrawerHeader(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: accent,
-
                 ),
 
                 child: Text(
                   'Hello!',
                   style: TextStyle(
-                    color: primaryText[darkMode],
+                    color: Colors.white,
                     fontSize: 24,
 
                   ),
@@ -90,8 +108,38 @@ class _MyHomePageState extends State<MyHomePage> {
                 selectedColor: bg[darkMode],
                 leading: Icon(Icons.settings, color: secondaryText[darkMode],),
                 title: Text('Settings', style: TextStyle(color: primaryText[darkMode]),),
-                onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context) => settings())),
+                onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context) => settings())).then((_) {
+                  setState(() {
+                    // refresh the page.
+
+                    // _onItemTapped(return_index);
+                  });
+                  var return_index = _selectedIndex;
+                  Navigator.pop(context);
+                  _onItemTapped((return_index+1)%4);
+                  Future.delayed(const Duration(milliseconds: 50), () {
+                    _onItemTapped((return_index));
+                  });
+
+
+                }),
               ),
+          ListTile(
+            selectedColor: bg[darkMode],
+            leading: Icon(Icons.logout, color: secondaryText[darkMode],),
+            title: Text('Logout', style: TextStyle(color: primaryText[darkMode]),),
+            onTap: () async {
+              bool status = await youSure("Logout?", "You may want to backup first.", context);
+
+              print("Logout:");
+              print(status);
+              if (status){
+                final prefs = await SharedPreferences.getInstance();
+                prefs.setBool('log', false);
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false);
+              }
+            },
+          ),
             ],
           ),
         ),
