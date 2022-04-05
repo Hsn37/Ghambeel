@@ -109,3 +109,6 @@ class Keys {
   static String tasks = "tasks";
   static String taskNum = "globalTaskNum";
 }
+
+// initialized in the app setup function.
+String AppDirectoryPath = "";
