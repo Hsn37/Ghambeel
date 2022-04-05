@@ -92,7 +92,7 @@ class _AddTaskState extends State<AddTask>{
     final tempImage = File(img.path);
     setState(()=>{
       image = tempImage,
-      filename = tasktitle + "_" + getNowDateTime()
+      filename = (tasktitle + "_" + getNowDateTime()).replaceAll(" ", "")
     });} on PlatformException catch(e){
       print("Permission denied");
     }
@@ -100,8 +100,7 @@ class _AddTaskState extends State<AddTask>{
 
   Future saveImg() async {
     if (image!= null) {
-      Directory dir = await getApplicationDocumentsDirectory();
-      String path = dir.path;
+      String path = AppDirectoryPath;
       final File? localImage = await image?.copy('$path/$filename');
       print('$path/$filename');
     }

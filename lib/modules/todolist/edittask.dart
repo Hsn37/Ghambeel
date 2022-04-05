@@ -1,13 +1,20 @@
 
 
+import 'dart:io';
+
+import 'package:flutter/services.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:ghambeel/sharedfolder/task.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../theme.dart';
 import 'package:select_form_field/select_form_field.dart';
+
+import '../utils.dart';
 
 class topBar extends AppBar {
     final String myTitle;
@@ -38,13 +45,6 @@ class EditTask extends StatefulWidget {
   @override
   _EditTaskState createState() => _EditTaskState();
 }
-
-//class customTextBox extends TextFormField{
-//   customTextBox({required this.title)
-//   Widget build (){
-
-//   }
-// }
 
 class _EditTaskState extends State<EditTask>{
   //see what data type showDate/time pickers have. will need that to store it and display calendar as is
@@ -106,6 +106,14 @@ class _EditTaskState extends State<EditTask>{
     dateinput.text = DateFormat('yyyy-MM-dd').format(previousDate);
     timeinput.text = DateFormat('HH:mm:ss').format(DateTime.parse(widget.task.deadline));
 
+    //load the image
+    if (widget.task.imgname != "") {
+      String path = AppDirectoryPath + "/" + widget.task.imgname;
+      image = File(path);
+
+      filename = widget.task.imgname;
+    }
+
     super.initState();
   }
 
@@ -130,6 +138,35 @@ class _EditTaskState extends State<EditTask>{
 
   late var priorityIcon;
   
+  File? image;
+  String filename = "";
+  
+  Future pickImg() async {
+    try{
+      final img = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (img == null){
+        return;
+      }
+
+      final tempImage = File(img.path);
+      setState(()=>{
+        image = tempImage,
+        filename = tasktitle + "_" + getNowDateTime()
+      });
+    } 
+    on PlatformException catch(e){
+      print("Permission denied");
+    }
+  }
+
+  Future saveImg() async {
+    if (image!= null) {
+      String path = AppDirectoryPath;
+      final File? localImage = await image?.copy('$path/$filename');
+      print('$path/$filename');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -289,6 +326,17 @@ class _EditTaskState extends State<EditTask>{
              )
           )
         ),
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: TextButton(
+              child: const Text("Upload image"),
+              onPressed: ()=>{pickImg()},
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: image != null ? Image.file(image!, width:160, height:160) : const Text("No image uploaded"),
+          ),
 
         ],
       ),
@@ -298,7 +346,7 @@ class _EditTaskState extends State<EditTask>{
 
           t.name = tasktitle;
           t.description = taskDesc;
-          t.notes = t.notes;
+          t.notes = taskNotes;
           if (dropdownValuePriority == "high") {
             t.priority = "2";
           }
@@ -310,7 +358,8 @@ class _EditTaskState extends State<EditTask>{
           }
 
           t.deadline = DateTime(previousDate.year, previousDate.month, previousDate.day, previousTime.hour, previousTime.minute).toString().split(".")[0];
-          
+          t.imgname = filename;
+          saveImg();
           Storage.EditTask(t).then((c) {
             Navigator.pop(context);
           });
