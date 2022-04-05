@@ -1,6 +1,8 @@
+import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/main.dart';
+import 'package:ghambeel/sharedfolder/task.dart';
 import 'dart:async';
 import 'package:simple_timer/simple_timer.dart';
 
@@ -25,12 +27,21 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
   late final List<DropdownMenuItem<String>> currentTaskList;
 
   _loadCurrentTaskList(){
-    currentTaskList = [
-      DropdownMenuItem(child: Text("No task"),value: "No task"),
-      DropdownMenuItem(child: Text("USA"),value: "USA"),
-      DropdownMenuItem(child: Text("Canada"),value: "Canada"),
-      DropdownMenuItem(child: Text("Brazil"),value: "Brazil"),
-    ];
+
+    List<Task> rawTasks;
+    currentTaskList = [DropdownMenuItem(child: Text("No task"),value: "No task")];
+    Storage.fetchTasks().then((v) =>
+    {
+      rawTasks = Task.parseTasksCal(v["incomplete"], null),
+
+      setState(() {
+        for (var task in rawTasks) {
+          currentTaskList.add(
+              DropdownMenuItem(child: Text(task.name),value: task.name)
+          );
+        }
+      })
+    });
 
     //
   }
