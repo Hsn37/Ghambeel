@@ -1,0 +1,2 @@
+
+        finalquery = finalquery[:-1]

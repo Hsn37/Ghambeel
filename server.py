@@ -1,3 +1,5 @@
+from typing import final
+from unittest import result
 from urllib import response
 import mysql.connector
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -26,9 +28,60 @@ def addUser(data):
     query = fr"INSERT INTO Users VALUES ('{username}', '{password}', '{email}')"
     print(query)
     database(query, True)
+    
+def getTask(user):
+    query = fr"SELECT Task FROM Tasks WHERE Users='{user}'"
+    tasks = database(query)
+    print(tasks)
+    result = []
+    for item in tasks:
+        result.append(item[0])
+    print(result)
+    return result
 
-def addTask(data):
-    # {'incomplete': {'task0': {'name': 'First Task', 'priority': '0', 'description': 'Take a tour of our app', 'notes': '', 'status': 'incomplete', 'timeAdded': '2022-04-04 16:03:05', 'deadline': '2022-04-04 16:03:05', 'timeCompleted': '', 'imgname': ''}}, 'complete': {}}
+def addTask(data, user):
+    incomplete = list(data['incomplete'].keys())
+    complete = list(data['complete'].keys())
+    alreadyin = getTask(user)
+    finalquery = ""
+    for item in incomplete:
+        if item not in alreadyin:
+            temp = dumps(data['incomplete'][item])
+            finalquery = finalquery + fr"('{user}', '{item}', 'incomplete', '{temp}'),"
+    for item in complete:
+        if item not in alreadyin:
+            temp = dumps(data['complete'][item])
+            finalquery = finalquery + fr"('{user}', '{item}', 'incomplete', '{temp}'),"
+    if finalquery != "":
+        finalquery = finalquery[:-1]
+        finalquery = fr"INSERT INTO Tasks VALUES {finalquery}"
+        database(finalquery, True)
+    else:
+        print("Already updated")
+
+def getRecovery(username):
+    data = database(fr"SELECT * FROM Tasks WHERE Users='{username}'")
+    incomplete = []
+    complete = []
+    for item in data:
+        taskNum = item[1]
+        status = item[2]
+        details = item[3]
+        if status == "incomplete":
+            incomplete.append({
+                "taskNum" : taskNum,
+                "details" : details
+            })
+        if status == "complete":
+            complete.append({
+                "taskNum" : taskNum,
+                "details" : details
+            })
+    result = {
+        "incomplete" : incomplete,
+        "complete" : complete
+    }
+    return result
 
 hostName = "0.0.0.0"
 serverPort = 8080
@@ -44,15 +97,20 @@ class MyServer(BaseHTTPRequestHandler):
         self.end_headers()
         if "?" in self.path:
             query = dict(parse_qsl(self.path[2:])) ## This is where the url parameters are gotten
-            username = query['username']
-            password = query['password']
-            print(query)
-            data = database(fr"SELECT * FROM Users WHERE Name='{username}' AND Pass='{password}'")
-            if len(data) > 0:
-                response = {"status":"true"}
-                self.wfile.write(bytes(dumps(response), "utf8"))
-            else:
-                response = {"status":"false"}
+            if 'password' in query.keys():
+                username = query['username']
+                password = query['password']
+                print(query)
+                data = database(fr"SELECT * FROM Users WHERE Name='{username}' AND Pass='{password}'")
+                if len(data) > 0:
+                    response = {"status":"true"}
+                    self.wfile.write(bytes(dumps(response), "utf8"))
+                else:
+                    response = {"status":"false"}
+                    self.wfile.write(bytes(dumps(response), "utf8"))
+            if 'recovery' in query.keys():
+                username = query['username']
+                response = getRecovery(username)
                 self.wfile.write(bytes(dumps(response), "utf8"))
     
     def do_POST(self):
@@ -66,14 +124,15 @@ class MyServer(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('Content-Length'))
         post_data = loads(self.rfile.read(content_len))
         self.send_response(200)
-        # print(post_data)
-        # print(loads(post_data['data']))
+        print(post_data)
+        print(loads(post_data['data']))
         if post_data['table'] == 'Users':
             addUser(loads(post_data['data']))
         if post_data['table'] == "Tasks":
-            addTask(loads(post_data['data']))
+            temp = loads(post_data['data'])
+            addTask(loads(temp['data']), temp['username'])
 
-if __name__ == "__main__":        
+if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
 

@@ -4,6 +4,7 @@ import 'package:ghambeel/modules/login/login.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:ghambeel/modules/storage/storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:mysql1/mysql1.dart';
 // import 'package:ghambeel/modules/utils.dart';
 
@@ -157,8 +158,11 @@ class _SignupPageState extends State<SignupPage> {
                     // });
                     // postData(data, "Users");
                     var temp = await Storage.fetchTasks();
-                    print(temp);
-                    var data = jsonEncode(temp);
+                    final prefs = await SharedPreferences.getInstance();
+                    var data = jsonEncode({
+                      "username" : prefs.getString("username"),
+                      "data" : jsonEncode(temp)
+                    });
                     postData(data, "Tasks");
                   },
                   child: const Text(

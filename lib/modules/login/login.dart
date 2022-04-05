@@ -137,10 +137,12 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextButton(
                           onPressed: () async {
                             var success = await getData(email.text, password.text);
+
                             if (success['status'] == 'true') {
                               // redo after validation
                               final prefs = await SharedPreferences.getInstance();
                               prefs.setBool('log', true);
+                              prefs.setString('username', email.text);
                               setState(() => {
                                 loading = true
                               });
