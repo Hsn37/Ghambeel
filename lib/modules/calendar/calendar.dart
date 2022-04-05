@@ -75,7 +75,7 @@ class _CalendarState extends State<Calendar> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const AddTask(title: 'Add A Task')),
+                  builder: (context) => const AddTask(title: 'Add A Task', deadlineMust: true,)),
             ).then((T) =>
             {
               setState(() {
