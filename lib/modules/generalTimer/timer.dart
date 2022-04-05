@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:simple_timer/simple_timer.dart';
@@ -19,11 +20,12 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
   var isRunning = false;
   var isPaused = false;
   late TimerController _timerController;
-  var selectedAssignment="USA";// select default assignment here.
+  var selectedAssignment="No task";// select default assignment here.
   late final List<DropdownMenuItem<String>> currentTaskList;
 
   _loadCurrentTaskList(){
     currentTaskList = [
+      DropdownMenuItem(child: Text("No task"),value: "No task"),
       DropdownMenuItem(child: Text("USA"),value: "USA"),
       DropdownMenuItem(child: Text("Canada"),value: "Canada"),
       DropdownMenuItem(child: Text("Brazil"),value: "Brazil"),
@@ -102,83 +104,80 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
     String formatted(int n) => n.toString().padLeft(2, "0") ;
     // final isRunning = timer == null ? false : timer!.isActive;
 
-    return Scaffold(
-      backgroundColor: bg[darkMode],
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          const SizedBox(
-            height: 0,
-          ),
-          const Text('You are currently working on: '),
-          const SizedBox( height: 0, ),
-          DropdownButton(items:currentTaskList,
-            value:selectedAssignment,
-            iconDisabledColor: accent,
-            hint: const Text("Select Task"),
-            disabledHint: Text(selectedAssignment),
-            onChanged: (!isRunning) ? (String ?nvalue)
-            {
-              setState(()
-              {
-                selectedAssignment = nvalue!;
-              }
-              );
-            }: null),
+    return SafeArea(
+      child: Center(
+        child:Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const Text('You are currently working on: '),
+            DropdownButton(items:currentTaskList,
+                value:selectedAssignment,
+                iconDisabledColor: accent,
+                hint: const Text("Select Task"),
+                disabledHint: Text(selectedAssignment),
+                onChanged: (!isRunning) ? (String ?nvalue)
+                {
+                  setState(()
+                  {
+                    selectedAssignment = nvalue!;
+                  }
+                  );
+                }: null),
 
-          SizedBox(
-            height: 200,
-            child: Stack(
-              children: [
-                Center(
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    child: SimpleTimer(
-                      controller: _timerController,
-                      duration: const Duration(seconds: 1000),
-                      displayProgressIndicator: false,
-                      backgroundColor: Colors.grey,
-                      progressTextCountDirection: TimerProgressTextCountDirection.count_up,
-                      progressTextStyle: const TextStyle(color: accent, fontSize: 60),
+            SizedBox(
+              height: 200,
+              child: Stack(
+                children: [
+                  Center(
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      child: SimpleTimer(
+                        controller: _timerController,
+                        duration: const Duration(seconds: 1000),
+                        displayProgressIndicator: false,
+                        backgroundColor: Colors.grey,
+                        progressTextCountDirection: TimerProgressTextCountDirection.count_up,
+                        progressTextStyle: const TextStyle(color: accent, fontSize: 60),
+                      ),
                     ),
                   ),
-                ),
 
-              ],
+                ],
+              ),
             ),
-          ),
-          isRunning
-          ?Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: (){pauseTimer();},
-                child: !isPaused ? const Text("Pause") : const Text("Resume"),
-                style: raisedButtonStyle,
-              ),
-              ElevatedButton(
-                onPressed: (){stopTimer();},
-                child: const Text("Stop"),
-                style: raisedButtonStyle,
-              )
-            ],
-          )
-          :Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: (){startTimer();},
-                child: const Text("Start"),
-                style: raisedButtonStyle,
-              ),
-            ]
-          ),
-        ],
-      ),
+            isRunning
+                ?Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: (){pauseTimer();},
+                  child: !isPaused ? const Text("Pause") : const Text("Resume"),
+                  style: raisedButtonStyle,
+                ),
+                ElevatedButton(
+                  onPressed: (){stopTimer();},
+                  child: const Text("Stop"),
+                  style: raisedButtonStyle,
+                )
+              ],
+            )
+                :Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: (){startTimer();},
+                    child: const Text("Start"),
+                    style: raisedButtonStyle,
+                  ),
+                ]
+            ),
+          ],
+        ),
+      )
     );
   }
 
