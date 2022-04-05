@@ -7,6 +7,7 @@ import 'package:ghambeel/settings.dart';
 import 'package:ghambeel/modules/login/login.dart';
 import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:ghambeel/modules/utils.dart';
+import 'package:path_provider/path_provider.dart';
 import 'modules/calendar/calendar.dart';
 import 'modules/storage/storage.dart';
 import 'modules/homepage/homepage.dart';
@@ -65,7 +66,9 @@ Future setup() {
   //     },
   // );
 
-  return Future.wait(<Future>[p1, p2, p3]);
+  var p4 = getApplicationDocumentsDirectory().then((v) => AppDirectoryPath = v.path);
+
+  return Future.wait(<Future>[p1, p2, p3, p4]);
 }
 
 void main() {
@@ -95,7 +98,7 @@ class MyApp extends StatelessWidget {
         disabledColor: Colors.grey,
       ),
       // home: const MyHomePage(title: "TodoList"),
-      home: LoginPage(),
+      home: MyHomePage(title: '',),
     );
   }
 }

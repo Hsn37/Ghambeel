@@ -13,9 +13,9 @@ class PomodoroHome extends StatefulWidget {
 
 class _PomodoroHomeState extends State<PomodoroHome> {
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
-    onPrimary: Color.fromARGB(255, 46, 255, 92),
+    onPrimary: lightPrimary[darkMode],
 
-    //primary: lightPrimary[darkMode],
+    primary: lightPrimary[darkMode],
 
     minimumSize: const Size(250, 100),
     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -30,14 +30,16 @@ class _PomodoroHomeState extends State<PomodoroHome> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Colors.white, Color.fromRGBO(197, 244, 250, 1), Color.fromRGBO(255, 223, 126, 1)]
-        )
-      ),
+      color: bg[darkMode],
+      // decoration: const BoxDecoration(
+      //   gradient: LinearGradient(
+      //     begin: Alignment.topCenter,
+      //     end: Alignment.bottomCenter,
+      //     colors: [Color.fromARGB(255, 255, 0, 0), Color.fromARGB(255, 243, 0, 0), Color.fromRGBO(255, 223, 126, 1)]
+      //   )
+      // ),
       child: Scaffold(
+        backgroundColor: bg[darkMode],
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.max,

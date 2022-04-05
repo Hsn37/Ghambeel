@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:ghambeel/sharedfolder/task.dart';
 import 'package:ghambeel/theme.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,8 +24,7 @@ Future<void> displayImg(Task task) async{
     return;
   }
   try {
-    Directory dir = await getApplicationDocumentsDirectory();
-    String path = dir.path + "/" + task.imgname;
+    String path = AppDirectoryPath + "/" + task.imgname;
     final File? localImage = File(path);
     print(path);
     image = localImage;

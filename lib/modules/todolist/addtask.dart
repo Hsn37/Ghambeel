@@ -10,6 +10,8 @@ import 'package:path_provider/path_provider.dart';
 import '../../theme.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../utils.dart';
 // import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
 //import 'package:smart_select/smart_select.dart';
 // import 'package:flutter_awesome_select/flutter_awesome_select.dart';
@@ -29,8 +31,7 @@ class topBar extends AppBar {
                 }
                   Navigator.pop(
                     context,
-
-                  MaterialPageRoute(builder: (context) => const ToDoList(title: 'To-Do List',)),
+                    MaterialPageRoute(builder: (context) => const ToDoList(title: 'To-Do List',)),
                 );
 
             }
@@ -41,19 +42,14 @@ class topBar extends AppBar {
       backgroundColor: bg[darkMode],
     );
   }
+
 class AddTask extends StatefulWidget {  
-  const AddTask({Key? key, required this.title}) : super(key: key);
+  const AddTask({Key? key, required this.title, this.deadlineMust = false}) : super(key: key);
   final String title;
+  final bool deadlineMust;
   @override
   _AddTaskState createState() => _AddTaskState();
 }
-
-//class customTextBox extends TextFormField{
-//   customTextBox({required this.title)
-//   Widget build (){
-
-//   }
-// }
 
 class _AddTaskState extends State<AddTask>{
   TextEditingController timeinput = TextEditingController();
@@ -88,15 +84,15 @@ class _AddTaskState extends State<AddTask>{
 
   Future pickImg() async {
     try{
-    final img = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (img == null){
-      return;
+      final img = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (img == null){
+        return;
     }
 
     final tempImage = File(img.path);
     setState(()=>{
       image = tempImage,
-      filename = tasktitle + "_" + formattedDate
+      filename = (tasktitle + "_" + getNowDateTime()).replaceAll(" ", "")
     });} on PlatformException catch(e){
       print("Permission denied");
     }
@@ -104,15 +100,14 @@ class _AddTaskState extends State<AddTask>{
 
   Future saveImg() async {
     if (image!= null) {
-      Directory dir = await getApplicationDocumentsDirectory();
-      String path = dir.path;
+      String path = AppDirectoryPath;
       final File? localImage = await image?.copy('$path/$filename');
       print('$path/$filename');
     }
   }
 
   final _formKey = GlobalKey<FormState>();
-  String dropdownValuePriority = 'high';
+  String dropdownValuePriority = 'medium';
   final TimeOfDay _time = const TimeOfDay(hour: 11, minute: 55);
   var tasktitle="";
   var taskDesc="";
@@ -154,6 +149,15 @@ class _AddTaskState extends State<AddTask>{
 
   var priorityIcon = Icon(Icons.priority_high, color: accent);
   
+  Widget imageDisplay() {
+    return Column (
+      children: [
+        Image.file(image!, width:160, height:160),
+        IconButton(onPressed: () => {setState(() {image = null; filename = "";})}, icon: const Icon(Icons.delete, size: 28, color: Colors.red,))
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -328,7 +332,8 @@ class _AddTaskState extends State<AddTask>{
                       setState(() {
                         timeinput.text = formattedTime; //set the value of text field. 
                       });
-                  }else{
+                  }
+                  else{
                       print("Time is not selected");
                   }
                 },
@@ -344,7 +349,7 @@ class _AddTaskState extends State<AddTask>{
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: image != null ? Image.file(image!, width:160, height:160) : const Text("No image uploaded"),
+            child: image != null ? imageDisplay() : const Text("No image uploaded"),
           ),
 
         ],
@@ -353,6 +358,7 @@ class _AddTaskState extends State<AddTask>{
         onPressed: () {
           
           if (tasktitle == "") {
+            alertDialog("Error", "You must add a title.", context);
             return;
           }
 
@@ -370,9 +376,14 @@ class _AddTaskState extends State<AddTask>{
           try {
             deadline = DateTime(date.year, date.month, date.day, time.hour, time.minute).toString().split(".")[0];
           }
-          catch (LateInitializationError) {
+          catch (e) {
+            if (widget.deadlineMust) {
+              alertDialog("Error", "You must add a deadline for this task as you are adding via calendar", context);
+              return;
+            }
             deadline = "";
           }
+
           Storage.AddTask(tasktitle, taskDesc, taskNotes, pr, deadline, filename).then((v) => {Navigator.pop(this.context)});
           saveImg();
           print(filename);
