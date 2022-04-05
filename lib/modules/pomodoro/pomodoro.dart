@@ -62,7 +62,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   var currentCycleNumber;
   static const testDuration = Duration(minutes:  00, seconds: 10);//load from storage
   static const shortBreakDuration = Duration(minutes:  0, seconds: 3);//load from storage
-  static const longBreakDuration = Duration(minutes:  0, seconds: 40);//load from storage
+  static const longBreakDuration = Duration(minutes:  0, seconds: 5);//load from storage
   Duration myTime = const Duration();
   Timer? timer;
   var isStopState=1;
@@ -173,11 +173,16 @@ class PomodoroTimerState extends State<PomodoroTimer>{
     if (breakOrFocus()==true){
       //focus time was active
       //activate break time.
-      print("am in focus stop timer auto");
-      if (numOfCycles % 2==0){
+      print("am in focus stop timer auto, ");
+      print(currentCycleNumber);
+      print(longBreakAfter);
+      if (currentCycleNumber%longBreakAfter ==0){
+       
         setLongBreakTimer();
       }
       else{
+        print("short call");
+        print(longBreakAfter % currentCycleNumber);
         setBreakTimer();
       }
       
