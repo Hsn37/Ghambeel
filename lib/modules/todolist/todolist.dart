@@ -221,8 +221,8 @@ class ToDoListState extends State<ToDoList>{
     return Card ( //static cos otherwise implicit declaration
       elevation: 8.0,
       shadowColor: Color.fromARGB(0, 0, 255, 255),
-      //shape:ShapeBorder()/// ShapeDecoration(shape: Border.all(color:divider ))),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+      shape: const RoundedRectangleBorder(borderRadius:  const BorderRadius.all(Radius.circular(25))),
       child: Container(
       decoration:  BoxDecoration(color: bg[darkMode]),// function call check task urgency, select and return color!!!
       child: makeListTileUncomp(index, itemsUncomp),
@@ -243,6 +243,7 @@ class ToDoListState extends State<ToDoList>{
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10.0),
       dense: true, //assuming task title+description so keeping it true, check with false once text here
       enabled: true, //keep this false when task is completed so that object is not interactive. cant edit if task done from to do list.
+      shape: const RoundedRectangleBorder(borderRadius:  const BorderRadius.all(Radius.circular(25))),
       leading: Container(
           decoration: const BoxDecoration(
             border: const Border(
