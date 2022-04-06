@@ -8,8 +8,27 @@ import 'package:simple_timer/simple_timer.dart';
 
 import '../../theme.dart';
 
+class topBar extends AppBar {
+  final String myTitle;
+  topBar({Key? key, required BuildContext context,required this.myTitle})
+      : super(
+  key: key,
+  leading: IconButton(
+  icon:  Icon(Icons.arrow_back,color: primaryText[darkMode],  ),
+  onPressed: () {
+  Navigator.pop(
+  context,
+  );
+  }
+
+  ),
+  title: Text('Timer',style: TextStyle(color: primaryText[darkMode]),),
+    backgroundColor: bg[darkMode],
+  );
+}
+
 class CountdownTimer extends StatefulWidget {
-  const CountdownTimer({Key? key}) : super(key: key);
+  const CountdownTimer({Key? key, required String title}) : super(key: key);
 
   @override
   _CountdownTimerState createState() => _CountdownTimerState();
@@ -107,6 +126,7 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: (!isRunning)? topBar(context: context, myTitle: '',):null,
       backgroundColor: bg[darkMode],
       body: Center(
         child: createTimer(),

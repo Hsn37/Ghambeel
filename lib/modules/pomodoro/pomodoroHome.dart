@@ -57,7 +57,7 @@ class _PomodoroHomeState extends State<PomodoroHome> {
                   style: raisedButtonStyle
             ),
               ElevatedButton(
-                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => CountdownTimer()));},
+                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => const CountdownTimer(title:'Timer')));},
                   child: Text(
                     "Timer",
                     style: myTextStyle,
