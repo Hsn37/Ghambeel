@@ -5,7 +5,7 @@ import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:ghambeel/theme.dart';
 import 'signup.dart';
 import 'package:ghambeel/modules/login/signup.dart';
-import 'package:http/http.dart';
+import 'package:ghambeel/modules/utils.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:mysql1/mysql1.dart';
@@ -35,13 +35,6 @@ class _LoginPageState extends State<LoginPage> {
   //     connection.close();
   //   });
   // }
-
-  Future<Map> getData(email, pwd) async {
-    // Replace the url inside with https://localhost:{port}/?username=admin&password=123 (try either localhost or 10.0.0.2)
-    Response response = await get(Uri.parse("http://74.207.234.113:8080/?username="+email + "&password=" + pwd));
-    Map data = jsonDecode(response.body);
-    return data;
-  }
 
   Future<bool> loggedStatus() async {
     final prefs = await SharedPreferences.getInstance();
@@ -136,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.blue, borderRadius: BorderRadius.circular(20)),
                         child: TextButton(
                           onPressed: () async {
-                            var success = await getData(email.text, password.text);
+                            var success = await getData("http://74.207.234.113:8080/?username="+email.text + "&password=" + password.text);
 
                             if (success['status'] == 'true') {
                               // redo after validation
@@ -177,29 +170,6 @@ class _LoginPageState extends State<LoginPage> {
             return const CircularProgressIndicator();
           }
         },
-      ),
-    );
-  }
-}
-
-
-
-class SecondRoute extends StatelessWidget {
-  const SecondRoute({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Second Route'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('Go back!'),
-        ),
       ),
     );
   }

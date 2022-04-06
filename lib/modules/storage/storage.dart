@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ghambeel/sharedfolder/task.dart';
 import 'dart:convert';
+import 'package:ghambeel/modules/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils.dart';
 
@@ -99,6 +101,36 @@ class Storage {
     dynamic tasks = await fetchTasks();
 
     tasks[task.status].remove(task.taskId);
+
+    return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
+  }
+
+  static Future<void> recoverTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    String user = prefs.getString('username') ?? "";
+    Map data = await getData("http://74.207.234.113:8080/?username="+user+"&recovery=1");
+    var complete = data['complete'];
+    var incomplete = data['incomplete'];
+    int newTotal = complete.length + incomplete.length;
+    await Storage.setValue(Keys.taskNum, (newTotal).toString());
+
+    dynamic tasks = await fetchTasks();
+
+    if (complete.length > 0) {
+      for (var i = 0; i < complete.length; i++) {
+        var taskNum = complete[i]['taskNum'];
+        var details = jsonDecode(complete[i]['details']);
+        tasks["complete"][taskNum] = details;
+      }
+    }
+
+    if (incomplete.length > 0) {
+      for (var i = 0; i < incomplete.length; i++) {
+        var taskNum = incomplete[i]['taskNum'];
+        var details = jsonDecode(incomplete[i]['details']);
+        tasks["incomplete"][taskNum] = details;
+      }
+    }
 
     return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
   }

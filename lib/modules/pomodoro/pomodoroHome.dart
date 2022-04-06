@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:ghambeel/modules/pomodoro/pomodoro.dart';
 import 'package:ghambeel/theme.dart';
 import 'package:ghambeel/modules/generalTimer/timer.dart';
+import 'package:ghambeel/modules/storage/storage.dart';
+import 'package:ghambeel/modules/utils.dart';
 
 class PomodoroHome extends StatefulWidget {
   const PomodoroHome({Key? key, required this.title}) : super(key: key);
@@ -12,6 +15,8 @@ class PomodoroHome extends StatefulWidget {
 }
 
 class _PomodoroHomeState extends State<PomodoroHome> {
+  String serverUrl = 'http://74.207.234.113:8080';
+
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
     onPrimary: lightPrimary[darkMode],
 
@@ -66,6 +71,25 @@ class _PomodoroHomeState extends State<PomodoroHome> {
               ),
             ],
           ),
+        ),
+        floatingActionButton: SpeedDial(
+          icon: Icons.share,
+          backgroundColor: Colors.blue,
+          overlayColor: Colors.black,
+          overlayOpacity: 0.4,
+          spaceBetweenChildren: 12,
+          children: [
+            SpeedDialChild(
+              child: Icon(Icons.cloud_download),
+              label: "Recover",
+              onTap: () => Storage.recoverTasks()
+            ),
+            SpeedDialChild(
+                child: Icon(Icons.cloud_download),
+                label: "Backup",
+                onTap: () => doBackup(serverUrl)
+            )
+          ],
         ),
       ),
     );

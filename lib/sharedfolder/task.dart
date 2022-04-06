@@ -9,10 +9,13 @@ class Task {
   static List<Task> parseTasks(tasks) {
     var l = <Task>[];
     Task t;
+    print(tasks.runtimeType);
     tasks.forEach((k, v) => {
-      t = Task(v["name"], v["priority"], v["description"], v["notes"], v["status"], v["timeAdded"], v["deadline"], v["timeCompleted"], v["imgname"]),
-      t.taskId = k,
-      l.add(t),
+      if (v["name"] != null) {
+        t = Task(v["name"], v["priority"], v["description"], v["notes"], v["status"], v["timeAdded"], v["deadline"], v["timeCompleted"], v["imgname"]),
+        t.taskId = k,
+        l.add(t),
+      }
     });
 
     return l;

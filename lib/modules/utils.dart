@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
+import 'package:http/http.dart';
+import 'package:ghambeel/modules/storage/storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../theme.dart';
 
@@ -77,4 +82,39 @@ Future alertDialog(title, message, context) {
         ]
     );
   });
+}
+
+Future<Response> makePost(data, table, serverUrl) async {
+  return post(
+    Uri.parse(serverUrl),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'table' : table,
+      'data' : data
+    }),
+  );
+}
+
+void postData(data, table, serverUrl) async {
+  var response = await makePost(data, table, serverUrl);
+  Map responseData = jsonDecode(response.body);
+}
+
+Future<Map> getData(url) async {
+  // Replace the url inside with https://localhost:{port}/?username=admin&password=123 (try either localhost or 10.0.0.2)
+  Response response = await get(Uri.parse(url));
+  Map data = jsonDecode(response.body);
+  return data;
+}
+
+void doBackup(serverUrl) async {
+  var temp = await Storage.fetchTasks();
+  final prefs = await SharedPreferences.getInstance();
+  var data = jsonEncode({
+    "username" : prefs.getString("username"),
+    "data" : jsonEncode(temp)
+  });
+  postData(data, "Tasks", serverUrl);
 }
