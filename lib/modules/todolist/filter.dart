@@ -25,6 +25,7 @@ Future<int?> filterTasks(BuildContext context, int currentFilter) {
       return AlertDialog(
         title: const Text("Sort Tasks"),
         content: Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               for (int i = 1; i <= options.length; i++)
                 listOption(context, options[i-1], i, currentFilter) 
