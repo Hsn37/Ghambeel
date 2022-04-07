@@ -127,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ListTile(
                 selectedColor: bg[darkMode],
-                leading: Icon(Icons.scoreboard, color: secondaryText[darkMode],),
+                leading: Icon(Icons.score, color: secondaryText[darkMode],),
                 title: Text('Leaderboard', style: TextStyle(color: primaryText[darkMode]),),
                 onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context) => Leaderboard(title: '',))).then((_) {
                   setState(() {

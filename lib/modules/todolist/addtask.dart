@@ -118,6 +118,9 @@ class _AddTaskState extends State<AddTask>{
   late String formattedTime;
   late DateTime date;
   late TimeOfDay time;
+  
+  bool dateChosen = false;
+  bool timeChosen = false;
   /*
   void _selectTime() async {
     final TimeOfDay? newTime = await showTimePicker(
@@ -243,31 +246,6 @@ class _AddTaskState extends State<AddTask>{
           ),
           ),
           ),
-          // )
-          //  DropdownButton <String>(   
-          //     value: dropdownValuePriority,
-          //     icon: const Icon(Icons.arrow_downward_outlined),
-          //     elevation: 16,
-              
-          //     style: const TextStyle(color: Colors.deepPurple),
-          //     underline: Container(
-          //       height: 5,
-          //       width: 40,
-          //       color: Colors.deepPurpleAccent,
-          //     ),
-          //     onChanged: (String? newValue) {
-          //       setState(() {
-          //         dropdownValuePriority = newValue!;
-          //       });
-          //     },
-          //     items: <String>['High', 'Medium', 'Low']
-          //         .map<DropdownMenuItem<String>>((String value) {
-          //       return DropdownMenuItem<String>(
-          //         value: value,
-          //         child: Text(value),
-          //       );
-          //     }).toList(),         
-          //   ),
          
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
@@ -281,12 +259,14 @@ class _AddTaskState extends State<AddTask>{
                 readOnly: true,  //set it true, so that user will not able to edit text
                 onTap: () async {
                   DateTime? pickedDate = await showDatePicker(
-                      context: context, initialDate: DateTime.now(),
+                      context: context, 
+                      initialDate: DateTime.now(),
                       firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
                       lastDate: DateTime(2101)
                   );
                   
                   if(pickedDate != null ){
+                      dateChosen = true;
                       date = pickedDate;
                       print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
                       formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); 
@@ -320,6 +300,7 @@ class _AddTaskState extends State<AddTask>{
                       );
                   
                   if(pickedTime != null ){
+                      timeChosen = true;
                       time = pickedTime;
                       print(pickedTime.format(context));   //output 10:51 PM
                       DateTime parsedTime = DateFormat.jm().parse(pickedTime.format(context).toString());
@@ -381,6 +362,12 @@ class _AddTaskState extends State<AddTask>{
               alertDialog("Error", "You must add a deadline for this task as you are adding via calendar", context);
               return;
             }
+
+            if ((dateChosen && !timeChosen) || (!dateChosen && timeChosen)) {
+              alertDialog("Error", "You must choose both a date and time", context);
+              return;
+            }
+            
             deadline = "";
           }
 

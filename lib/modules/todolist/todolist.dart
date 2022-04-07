@@ -222,14 +222,21 @@ class ToDoListState extends State<ToDoList>{
   }
 
   Widget makeCardundone(int index){
+    
+    Color col;
+    if (itemsUncomp[index].dline.difference(DateTime.now()).inDays.abs() < 1)
+      col = listTileColPriority[darkMode];
+    else
+      col = listTileCol[darkMode];
+
     return Card ( //static cos otherwise implicit declaration
       elevation: 7.0,
       shadowColor: Color.fromARGB(255, 0, 0, 0),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       shape: const RoundedRectangleBorder(borderRadius:  const BorderRadius.all(Radius.circular(50))),
-      color: listTileCol[darkMode],
+      color: col,
       child: Container(
-        decoration:  BoxDecoration(color: listTileCol[darkMode], borderRadius:  const BorderRadius.all(Radius.circular(50))),// function call check task urgency, select and return color!!!
+        decoration:  BoxDecoration(color: col, borderRadius:  const BorderRadius.all(Radius.circular(50))),// function call check task urgency, select and return color!!!
         child: makeListTileUncomp(index, itemsUncomp),
       ),
     );
@@ -387,11 +394,14 @@ class ToDoListState extends State<ToDoList>{
             icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20.0),
             constraints: const BoxConstraints(),
             padding: EdgeInsets.zero,
-            onPressed: () => Storage.deleteTask(list[index]).then((T) => {
-                setState(() {
-                  fetchData = true;
-                })
-              }),
+            onPressed: () => youSure("Alert", "Are you sure you want to delete?", context).then((value) {
+                    if (value) {
+                      Storage.deleteTask(list[index]).then((T) => {
+                        setState(() { fetchData = true; }) 
+                    });
+                  }
+                },
+              )
           ),
         ]
       ),

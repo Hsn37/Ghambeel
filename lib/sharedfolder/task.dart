@@ -3,7 +3,7 @@
 class Task {
   String name, priority, description, notes, status, timeAdded, deadline, timeCompleted, imgname;
   late String taskId;
-  DateTime dline = DateTime.now();
+  DateTime dline = DateTime(1990);
   
   Task(this.name, this.priority, this.description, this.notes, this.status, this.timeAdded, this.deadline, this.timeCompleted, this.imgname) {
     if (deadline != "") {
