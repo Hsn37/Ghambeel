@@ -21,3 +21,5 @@ var navColor = [ const Color(0xff00bcd4), const Color(0xff006a74) ];
 const Color toDoIconCols= Color(0xFF00695C);
 
 const Color subText = Color(0x01666666);
+
+var listTileCol = [Color(0xfff8f8f8), Color(0xff2e2e2e)];

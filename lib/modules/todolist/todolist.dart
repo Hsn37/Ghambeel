@@ -208,12 +208,13 @@ class ToDoListState extends State<ToDoList>{
   }
   Widget makeCarddone(int index) {
     return Card ( //static cos otherwise implicit declaration
-      elevation: 8.0,
-      shadowColor: const Color.fromARGB(0, 0, 255, 255),
+      elevation: 7.0,
+      shadowColor: Color.fromARGB(255, 0, 0, 0),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       shape: const RoundedRectangleBorder(borderRadius:  const BorderRadius.all(Radius.circular(50))),
+      color: listTileCol[darkMode],
       child: Container(
-        decoration:  BoxDecoration(color: bg[darkMode], borderRadius:  const BorderRadius.all(Radius.circular(50))),
+        decoration:  BoxDecoration(color: listTileCol[darkMode], borderRadius:  const BorderRadius.all(Radius.circular(50))),
         child: makeListTile(index, itemsComp),
       ),
     );
@@ -221,12 +222,13 @@ class ToDoListState extends State<ToDoList>{
 
   Widget makeCardundone(int index){
     return Card ( //static cos otherwise implicit declaration
-      elevation: 8.0,
-      shadowColor: Color.fromARGB(0, 0, 255, 255),
+      elevation: 7.0,
+      shadowColor: Color.fromARGB(255, 0, 0, 0),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       shape: const RoundedRectangleBorder(borderRadius:  const BorderRadius.all(Radius.circular(50))),
+      color: listTileCol[darkMode],
       child: Container(
-        decoration:  BoxDecoration(color: bg[darkMode], borderRadius:  const BorderRadius.all(Radius.circular(50))),// function call check task urgency, select and return color!!!
+        decoration:  BoxDecoration(color: listTileCol[darkMode], borderRadius:  const BorderRadius.all(Radius.circular(50))),// function call check task urgency, select and return color!!!
         child: makeListTileUncomp(index, itemsUncomp),
       ),
     );
