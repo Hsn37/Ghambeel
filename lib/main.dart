@@ -79,9 +79,9 @@ void main() {
   // Wait for the setup to finish first. then run the app
   
   // when you want to refresh the storage, run this
-  Storage.deleteAll().then((v) => Storage.recoverTasks()).then((value) => runApp(const MyApp()));
+  // Storage.deleteAll().then((v) => Storage.recoverTasks()).then((value) => runApp(const MyApp()));
   // else this one.
-  // setup().then((v) => runApp(const MyApp()));
+  setup().then((v) => runApp(const MyApp()));
 }
 
 
@@ -98,7 +98,7 @@ class MyApp extends StatelessWidget {
         disabledColor: Colors.grey,
       ),
       // home: const MyHomePage(title: "TodoList"),
-      home: MyHomePage(title: '',),
+      home: LoginPage(),
     );
   }
 }

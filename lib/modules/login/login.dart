@@ -8,6 +8,7 @@ import 'package:ghambeel/modules/login/signup.dart';
 import 'package:ghambeel/modules/utils.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ghambeel/modules/storage/storage.dart';
 // import 'package:mysql1/mysql1.dart';
 // import 'package:ghambeel/modules/utils.dart';
 
@@ -39,6 +40,9 @@ class _LoginPageState extends State<LoginPage> {
   Future<bool> loggedStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final status = prefs.getBool('log') ?? false;
+    if (status == true) {
+      await Storage.recoverTasks();
+    }
     return status;
   }
 
