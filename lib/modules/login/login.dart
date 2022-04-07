@@ -40,9 +40,6 @@ class _LoginPageState extends State<LoginPage> {
   Future<bool> loggedStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final status = prefs.getBool('log') ?? false;
-    if (status == true) {
-      await Storage.recoverTasks();
-    }
     return status;
   }
 
@@ -140,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                               final prefs = await SharedPreferences.getInstance();
                               prefs.setBool('log', true);
                               prefs.setString('username', email.text);
+                              await Storage.recoverTasks();
                               setState(() => {
                                 loading = true
                               });
