@@ -58,6 +58,7 @@ dependencies:
   flutter_settings_screens: ^0.2.2+1
   simple_timer: ^2.0.0
   flutter_speed_dial: ^5.1.0
+  flutter_local_notifications: ^9.4.0
 
 dev_dependencies:
   flutter_test:
