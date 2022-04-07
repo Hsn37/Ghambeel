@@ -39,25 +39,30 @@ def getTask(user):
     print(result)
     return result
 
+def deleteTask(user):
+    query = fr"DELETE FROM Tasks WHERE Users='{user}'"
+    database(query, True)
+
 def addTask(data, user):
     incomplete = list(data['incomplete'].keys())
     complete = list(data['complete'].keys())
-    alreadyin = getTask(user)
+    # alreadyin = getTask(user)
+    deleteTask(user)
     finalquery = ""
     for item in incomplete:
-        if item not in alreadyin:
-            temp = dumps(data['incomplete'][item])
-            finalquery = finalquery + fr"('{user}', '{item}', 'incomplete', '{temp}'),"
+        #if item not in alreadyin:
+        temp = dumps(data['incomplete'][item])
+        finalquery = finalquery + fr"('{user}', '{item}', 'incomplete', '{temp}'),"
     for item in complete:
-        if item not in alreadyin:
-            temp = dumps(data['complete'][item])
-            finalquery = finalquery + fr"('{user}', '{item}', 'incomplete', '{temp}'),"
+        # if item not in alreadyin:
+        temp = dumps(data['complete'][item])
+        finalquery = finalquery + fr"('{user}', '{item}', 'complete', '{temp}'),"
     if finalquery != "":
         finalquery = finalquery[:-1]
         finalquery = fr"INSERT INTO Tasks VALUES {finalquery}"
         database(finalquery, True)
     else:
-        print("Already updated")
+        print("Nothing to add")
 
 def getRecovery(username):
     data = database(fr"SELECT * FROM Tasks WHERE Users='{username}'")

@@ -105,16 +105,37 @@ class Storage {
     return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
   }
 
+  static int getMax(data) {
+    int max = 0;
+    var complete = data['complete'];
+    var incomplete = data['incomplete'];
+    for (var i = 0; i < complete.length; i++) {
+      var taskNum = complete[i]['taskNum'];
+      var current = int.parse(taskNum[taskNum.length-1]);
+      if (current > max) {
+        max = current;
+      }
+    }
+    for (var i = 0; i < incomplete.length; i++) {
+      var taskNum = incomplete[i]['taskNum'];
+      var current = int.parse(taskNum[taskNum.length-1]);
+      if (current > max) {
+        max = current;
+      }
+    }
+    return max;
+  }
+
   static Future<void> recoverTasks() async {
     final prefs = await SharedPreferences.getInstance();
     String user = prefs.getString('username') ?? "";
     Map data = await getData("http://74.207.234.113:8080/?username="+user+"&recovery=1");
     var complete = data['complete'];
     var incomplete = data['incomplete'];
-    int newTotal = complete.length + incomplete.length;
+    int newTotal = getMax(data);
     await Storage.setValue(Keys.taskNum, (newTotal).toString());
 
-    dynamic tasks = await fetchTasks();
+    dynamic tasks = {"complete" : {}, "incomplete" : {}};
 
     if (complete.length > 0) {
       for (var i = 0; i < complete.length; i++) {

@@ -79,7 +79,7 @@ void main() {
   // Wait for the setup to finish first. then run the app
   
   // when you want to refresh the storage, run this
-  Storage.deleteAll().then((v) => setup()).then((value) => runApp(const MyApp()));
+  Storage.deleteAll().then((v) => Storage.recoverTasks()).then((value) => runApp(const MyApp()));
   // else this one.
   // setup().then((v) => runApp(const MyApp()));
 }
