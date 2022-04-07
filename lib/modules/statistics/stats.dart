@@ -37,28 +37,32 @@ List<Color> mycolorList = [
 
     Widget build(BuildContext context) {
     return Scaffold(
-      
       backgroundColor: bg[darkMode],
       body: Center(
         child: Column(
-          // Text("Title")
-          
           children: <Widget>[
-            Text("Time spent on tasks over the week:"),
-            Expanded(
-            child: PieChart(
-            dataMap: pieData,
-            colorList: mycolorList,
-            chartRadius: MediaQuery.of(context).size.width /2,
-            chartType: ChartType.ring,
-            ringStrokeWidth: 70,
-            chartValuesOptions: ChartValuesOptions(
-            showChartValuesOutside: true,
-            // showChartValueBackground: false
+            Card(
+              child: Column(
+                children: [
+                  Text("This is the first graph"),
+                  PieChart(
+                    dataMap: pieData,
+                    colorList: mycolorList,
+                    chartRadius: MediaQuery.of(context).size.width /2,
+                    chartType: ChartType.ring,
+                    ringStrokeWidth: 70,
+                    chartValuesOptions: ChartValuesOptions(
+                      showChartValuesOutside: true,
+// showChartValueBackground: false
+                    ),
+                  )
+                ],
+              ),
+
             ),
-            )
-            
-            )
+            Card(
+
+            ),
             ],
         )
         ),
@@ -66,5 +70,21 @@ List<Color> mycolorList = [
 }
 }
 
+
+// Text("Time spent on tasks over the week:"),
+// Expanded(
+// child: PieChart(
+// dataMap: pieData,
+// colorList: mycolorList,
+// chartRadius: MediaQuery.of(context).size.width /2,
+// chartType: ChartType.ring,
+// ringStrokeWidth: 70,
+// chartValuesOptions: ChartValuesOptions(
+// showChartValuesOutside: true,
+// // showChartValueBackground: false
+// ),
+// )
+//
+// )
 
 
