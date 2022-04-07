@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:ghambeel/modules/scoreboard/scoreboard.dart';
 import 'package:ghambeel/theme.dart';
 import 'package:ghambeel/modules/login/login.dart';
 import 'package:ghambeel/modules/utils.dart';
@@ -120,6 +121,26 @@ class _MyHomePageState extends State<MyHomePage> {
                   Future.delayed(const Duration(milliseconds: 50), () {
                     _onItemTapped((return_index));
                   });
+
+
+                }),
+              ),
+              ListTile(
+                selectedColor: bg[darkMode],
+                leading: Icon(Icons.scoreboard, color: secondaryText[darkMode],),
+                title: Text('Leaderboard', style: TextStyle(color: primaryText[darkMode]),),
+                onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context) => Leaderboard(title: '',))).then((_) {
+                  setState(() {
+                    // refresh the page.
+
+                    // _onItemTapped(return_index);
+                  });
+                  // var return_index = _selectedIndex;
+                  // Navigator.pop(context);
+                  // _onItemTapped((return_index+1)%4);
+                  // Future.delayed(const Duration(milliseconds: 50), () {
+                  //   _onItemTapped((return_index));
+                  // });
 
 
                 }),
