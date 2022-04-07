@@ -99,7 +99,8 @@ Future<Response> makePost(data, table, serverUrl) async {
 
 void postData(data, table, serverUrl) async {
   var response = await makePost(data, table, serverUrl);
-  Map responseData = jsonDecode(response.body);
+  if (response.body != "")
+    Map responseData = jsonDecode(response.body);
 }
 
 Future<Map> getData(url) async {

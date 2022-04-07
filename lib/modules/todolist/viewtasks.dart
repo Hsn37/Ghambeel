@@ -72,7 +72,7 @@ Future<void> viewTask(Task task, BuildContext context) async {
               subHeading(task.deadline, Icons.timer, timerCol),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-              child: (image == null) ? const Text("No image found") : Image.file(image!, width:160, height:160),
+              child: (image == null) ? null : Image.file(image!, width:160, height:160),
             )]
           ),
         ),

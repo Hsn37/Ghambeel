@@ -6,6 +6,7 @@ import 'package:ghambeel/modules/todolist/addtask.dart';
 import 'package:ghambeel/modules/todolist/edittask.dart';
 import 'package:ghambeel/modules/todolist/filter.dart';
 import 'package:ghambeel/modules/todolist/viewtasks.dart';
+import 'package:ghambeel/modules/utils.dart';
 import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
@@ -280,11 +281,14 @@ class ToDoListState extends State<ToDoList>{
             icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20.0),
             constraints: const BoxConstraints(),
             padding: EdgeInsets.zero,
-            onPressed: () => Storage.deleteTask(list[index]).then((T) => {
-                setState(() {
-                  fetchData = true;
-                })
-              }),
+            onPressed: () => youSure("Alert", "Are you sure you want to delete?", context).then((value) {
+                  if (value) {
+                    Storage.deleteTask(list[index]).then((T) => {
+                      setState(() { fetchData = true; }) 
+                  });
+                }
+              },
+            )
           ),
           IconButton(
             icon: Icon(Icons.edit, color: Colors.green[300], size: 20.0),
@@ -391,19 +395,38 @@ class ToDoListState extends State<ToDoList>{
           ),
         ]
       ),
-      onTap: () => print(index.toString() + "pressed"),
+      onTap: () => viewTask(list[index], context),
     );
   } 
 
+  
+
   void sortTasks() {
     if (currentFilter == 1) {
-      // sort by deadlines
+      incompleteTasks.sort((a, b) => a.dline.compareTo(b.dline));
+      completedTasks.sort((a, b) => a.dline.compareTo(b.dline));
     }
     else if (currentFilter == 2) {
-      // sort by priorities
+      
+      // helper function declared inside.
+      int comparePriority(String a, String b) {
+        int n = int.parse(a);
+        int m = int.parse(b);
+
+        if (n > m)
+          return 1;
+        else if (n == m)
+          return 0;
+        else
+          return -1;
+      }
+      
+      incompleteTasks.sort((a, b) => comparePriority(b.priority, a.priority));
+      completedTasks.sort((a, b) => comparePriority(b.priority, a.priority));
     }
     else if (currentFilter == 3) {
-      // do nothing. this is the "None option"
+      // do nothing. this is the "None" option
+      // keep the list unsorted
     }
   }
 

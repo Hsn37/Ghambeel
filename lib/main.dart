@@ -9,13 +9,13 @@ import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:ghambeel/modules/utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'modules/calendar/calendar.dart';
+import 'modules/notifications/notifications.dart';
 import 'modules/storage/storage.dart';
 import 'modules/homepage/homepage.dart';
 import 'modules/pomodoro/pomodoroHome.dart';
 import '../../theme.dart';
 // import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 
 // initial variables setup.
@@ -54,21 +54,11 @@ Future setup() {
       Storage.setValue(Keys.taskNum, 0.toString())
   });
 
-  // String today;
-  // dynamic decoded;
-  // var p4 = Storage.getValue(Keys.tasks).then((v) => {
-  //     if (v != null) {
-  //       today = DateTime.now().toString(),
-  //       decoded = Storage.jsonDec(v),
-  //         decoded["days"][today] = {},
-  //         Storage.setValue(Keys.tasks, Storage.jsonEnc(decoded)),
-  //       },
-  //     },
-  // );
-
   var p4 = getApplicationDocumentsDirectory().then((v) => AppDirectoryPath = v.path);
 
-  return Future.wait(<Future>[p1, p2, p3, p4]);
+  var p5 = Notifications.init();
+
+  return Future.wait(<Future>[p1, p2, p3, p4, p5]);
 }
 
 void main() {
@@ -79,9 +69,11 @@ void main() {
   // Wait for the setup to finish first. then run the app
   
   // when you want to refresh the storage, run this
-  // Storage.deleteAll().then((v) => Storage.recoverTasks()).then((value) => runApp(const MyApp()));
+  Storage.deleteAll().then((v) => Storage.recoverTasks()).then((value) => runApp(const MyApp()));
+  Notifications.show("Mot Quote", "Kaam karlo bhai", NotifID.motquote);
+  
   // else this one.
-  setup().then((v) => runApp(const MyApp()));
+  // setup().then((v) => runApp(const MyApp()));
 }
 
 
