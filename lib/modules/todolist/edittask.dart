@@ -51,8 +51,13 @@ class _EditTaskState extends State<EditTask>{
  //  this as initial valye/time 
   TextEditingController timeinput = TextEditingController(); // format and input time here from storage
   TextEditingController dateinput = TextEditingController();// format and input date here from storage
+  late DateTime chosenDate; // set this variable
+  late TimeOfDay chosenTime; // set this variable.
   late DateTime previousDate; // set this variable
   late TimeOfDay previousTime; // set this variable.
+
+  bool dateChosen = false;
+  bool timeChosen = false;
   //final TimeOfDay _time = const TimeOfDay(hour: 11, minute: 55); // sample how to set
   // again read existing value for priority of task.
   late String dropdownValuePriority; //rn default is high here  but also declared as initial value
@@ -101,14 +106,19 @@ class _EditTaskState extends State<EditTask>{
     taskNotes = widget.task.notes;
 
     try {
-      previousDate = DateTime.parse(widget.task.deadline);
-      previousTime = TimeOfDay.fromDateTime(DateTime.parse(widget.task.deadline));
+      chosenDate = DateTime.parse(widget.task.deadline);
+      chosenTime = TimeOfDay.fromDateTime(DateTime.parse(widget.task.deadline));
     
-      dateinput.text = DateFormat('yyyy-MM-dd').format(previousDate);
+      dateinput.text = DateFormat('yyyy-MM-dd').format(chosenDate);
       timeinput.text = DateFormat('HH:mm:ss').format(DateTime.parse(widget.task.deadline));
+
+      previousDate = chosenDate;
+      previousTime = chosenTime;
     }
     catch (e) {
 
+      previousDate = DateTime.now();
+      previousTime = TimeOfDay.now();
       dateinput.text = "";
       timeinput.text = "";
     }
@@ -295,11 +305,12 @@ class _EditTaskState extends State<EditTask>{
                   );
                   
                   if(pickedDate != null ){
+                      dateChosen = true;
                       print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
                       String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); 
                       print(formattedDate); //formatted date output using intl package =>  2021-03-16
                         //you can implement different kind of Date Format here according to your requirement
-                      previousDate = pickedDate;
+                      chosenDate = pickedDate;
                       setState(() {
                          dateinput.text = formattedDate; //set output date to TextField value. 
                       });
@@ -327,11 +338,12 @@ class _EditTaskState extends State<EditTask>{
                       );
                   
                   if(pickedTime != null ){
+                      timeChosen = true;
                       DateTime parsedTime = DateFormat.jm().parse(pickedTime.format(context).toString());
                       //converting to DateTime so that we can further format on different pattern.
                       String formattedTime = DateFormat('HH:mm:ss').format(parsedTime);
                       //DateFormat() is from intl package, you can format the time on any pattern you need.
-                      previousTime = TimeOfDay.fromDateTime(parsedTime);
+                      chosenTime = TimeOfDay.fromDateTime(parsedTime);
                       setState(() {
                         timeinput.text = formattedTime; //set the value of text field. 
                       });
@@ -374,9 +386,14 @@ class _EditTaskState extends State<EditTask>{
           }
 
           try {
-            t.deadline = DateTime(previousDate.year, previousDate.month, previousDate.day, previousTime.hour, previousTime.minute).toString().split(".")[0];
+            t.deadline = DateTime(chosenDate.year, chosenDate.month, chosenDate.day, chosenTime.hour, chosenTime.minute).toString().split(".")[0];
           }
           catch (e) {
+            if ((dateChosen && !timeChosen) || (!dateChosen && timeChosen)) {
+              alertDialog("Error", "You must choose both a date and time", context);
+              return;
+            }
+
             t.deadline = "";
           }
 

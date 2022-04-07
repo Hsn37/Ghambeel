@@ -23,3 +23,4 @@ const Color toDoIconCols= Color(0xFF00695C);
 const Color subText = Color(0x01666666);
 
 var listTileCol = [Color(0xfff8f8f8), Color(0xff2e2e2e)];
+var listTileColPriority = [Colors.red.shade50, Color(0xff4a0000)];
