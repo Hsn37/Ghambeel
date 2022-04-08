@@ -41,24 +41,60 @@ List<Color> mycolorList = [
       body: Center(
         child: Column(
           children: <Widget>[
-            Card(
-              child: Column(
-                children: [
-                  Text("This is the first graph"),
-                  PieChart(
-                    dataMap: pieData,
-                    colorList: mycolorList,
-                    chartRadius: MediaQuery.of(context).size.width /2,
-                    chartType: ChartType.ring,
-                    ringStrokeWidth: 70,
-                    chartValuesOptions: ChartValuesOptions(
-                      showChartValuesOutside: true,
-// showChartValueBackground: false
-                    ),
-                  )
-                ],
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Card(
+              color: bg[darkMode],
+              elevation: 2.0,
+              shadowColor: bg[(darkMode + 1) % 2],
+              margin: EdgeInsets.only(
+                  left: 10.0, top: 10.0, right: 10.0, bottom: 10.0),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                  bottomLeft: Radius.circular(30),
+                  topLeft: Radius.circular(30),
+                ),
               ),
+                // color: Colors.white,
+                // shadowColor: Colors.grey,
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Time spent on tasks:",
+                      style: TextStyle(
+                        fontFamily: "Nunito",
+                        fontWeight: FontWeight.bold,
+                        color: primaryText[darkMode],
+                        fontSize: 16,
+                      ),),
+                    ),
+                    SizedBox(height: 18.0,),
+                    PieChart(
+                      legendOptions: LegendOptions(
+                        legendPosition: LegendPosition.bottom,
+                        legendTextStyle: TextStyle(
+                          color: primaryText[darkMode],
+                          fontFamily: "Nunito",
+                          fontWeight: FontWeight.bold,
+                        )
+                      ),
+                      dataMap: pieData,
+                      colorList: mycolorList,
+                      chartRadius: MediaQuery.of(context).size.width /2,
+                      chartType: ChartType.ring,
+                      // ringStrokeWidth: 50,
+                      chartValuesOptions: ChartValuesOptions(
+                        showChartValuesOutside: true,
+// showChartValueBackground: false
+                      ),
+                    )
+                  ],
+                ),
 
+              ),
             ),
             Card(
 
