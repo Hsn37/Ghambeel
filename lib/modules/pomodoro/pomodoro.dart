@@ -7,6 +7,7 @@ import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
+import 'package:ghambeel/modules/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../theme.dart';
@@ -63,6 +64,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   static const testDuration = Duration(minutes:  00, seconds: 10);//load from storage
   static const shortBreakDuration = Duration(minutes:  0, seconds: 3);//load from storage
   static const longBreakDuration = Duration(minutes:  0, seconds: 5);//load from storage
+  var currentDuartion;// 
   Duration myTime = const Duration();
   Timer? timer;
   var isStopState=1;
@@ -87,6 +89,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
     setState(() {
       timerType=timerTypeList[0];
       myTime=testDuration;
+      currentDuartion=testDuration;
       createTimer(testDuration);
     });    
   }
@@ -96,6 +99,9 @@ class PomodoroTimerState extends State<PomodoroTimer>{
     timer = Timer.periodic(const Duration(seconds: 1), (_){addTime();});
   }
 
+  void storeTimeForTask(){
+
+  }
   void stopTimer(isRunning) {
     if (isRunning) {
       timer?.cancel();
@@ -107,11 +113,24 @@ class PomodoroTimerState extends State<PomodoroTimer>{
           });
          // 
           //initState();
-          //record data in storage
+          //record data in storage // time calculation processing tobe done here
+          // my time has the time remaining. focus cycle length already store in var
+          //subtract to get that
+          // call  a function here
+          storeTimeForTask(); // see if you need to pass variables here.
+          setState(() {
+            //initState();
+              currentDuartion=testDuration;
+            pausedwithrunning=false;
+            currentCycleNumber=1;
+          // _loadCurrentTaskList();
+            allowSelectionOnce=0;
+            timerType=timerTypeList[0];
+            myTime=testDuration;
+            isStopState=2;
+          });
           resetTimerFocus();
-         // setState(() {
-         //   createTimer();
-         // });
+        
           print("snjndbsn amm hereeee!!!!!");
 
         }
@@ -129,9 +148,11 @@ class PomodoroTimerState extends State<PomodoroTimer>{
     }
   }
   void setLongBreakTimer(){
-    
+    // _buildPopupDialog(context,"Take a Long break");
+    alertDialog("Pomodoro", "Take a long break.",context);
      setState(() {
        timerType=timerTypeList[2];
+       currentDuartion=longBreakDuration;
        if (longBreakDuration>testDuration){
          myTime=testDuration;
          createTimer(testDuration);
@@ -145,8 +166,11 @@ class PomodoroTimerState extends State<PomodoroTimer>{
     });
   }
   void setBreakTimer(){
+   // _buildPopupDialog(context,"Take a short break");
+    alertDialog("Pomodoro", "Take a short break.",context);
     setState(() {
       myTime=shortBreakDuration;
+      currentDuartion=shortBreakDuration;
       timerType=timerTypeList[1];
       createTimer(shortBreakDuration);
     });
@@ -176,9 +200,13 @@ class PomodoroTimerState extends State<PomodoroTimer>{
       print("am in focus stop timer auto, ");
       print(currentCycleNumber);
       print(longBreakAfter);
+
+      storeTimeForTask(); 
+      
       if (currentCycleNumber%longBreakAfter ==0){
        
         setLongBreakTimer();
+
       }
       else{
         print("short call");
@@ -189,9 +217,30 @@ class PomodoroTimerState extends State<PomodoroTimer>{
     }
     else{
       print("am in break stop timer auto");
+       if(currentCycleNumber==numOfCycles){
+        alertDialog("Pomodoro", "Pomodoro Run Complete.",context);
+        // Navigator.pop(
+        //             context,
+        //         );
+        setState(() {
+          //initState();
+          currentDuartion=testDuration;
+          pausedwithrunning=false;
+          currentCycleNumber=1;
+         // _loadCurrentTaskList();
+          allowSelectionOnce=0;
+          timerType=timerTypeList[0];
+          myTime=testDuration;
+          isStopState=2;
+        });
+        // now re render the entire page as the last cycles break has also completed.
+        
+      }
       setState(() {
         currentCycleNumber=currentCycleNumber+ 1;
       });
+      // check if the last cycle's break has completed. now re render entire page and variabels etc.
+     
       // break ended so next cycle number
       resetTimerFocus();
     }
@@ -220,30 +269,12 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                                
     //
   }
-  Widget _buildPopupDialog(BuildContext context, String contents) {
-  return  AlertDialog(
-    title: const Text('Popup example'),
-    content:  Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(contents),
-      ],
-    ),
-    actions: <Widget>[
-       TextButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        child: const Text('Close'),
-      ),
-    ],
-  );
-}
+  
 
   var allowSelectionOnce=0;
   @override
   void initState() {
+      currentDuartion=testDuration;
       pausedwithrunning=false;
       super.initState();
       currentCycleNumber=1;
@@ -251,6 +282,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
       allowSelectionOnce=0;
       timerType=timerTypeList[0];
       myTime=testDuration;
+      isStopState=2;
       //currentcyclenum=0;
   }
   void do_nothing(){
