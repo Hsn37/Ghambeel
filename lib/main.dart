@@ -69,7 +69,8 @@ void main() {
   // Wait for the setup to finish first. then run the app
   
   // when you want to refresh the storage, run this
-  Storage.deleteAll().then((v) => Storage.recoverTasks()).then((value) => runApp(const MyApp()));
+  // Storage.deleteAll().then((v) => Storage.recoverTasks()).then((value) => runApp(const MyApp()));
+  Storage.deleteAll().then((v) => setup()).then((v) => runApp(const MyApp()));
   Notifications.show("Mot Quote", "Kaam karlo bhai", NotifID.motquote);
   
   // else this one.
@@ -89,8 +90,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         disabledColor: Colors.grey,
       ),
-      home: const MyHomePage(title: "TodoList"),
-      // home: LoginPage(),
+      // home: const MyHomePage(title: "TodoList"),
+      home: LoginPage(),
+      // home: ToDoList(title: "TodoList"),
     );
   }
 }
