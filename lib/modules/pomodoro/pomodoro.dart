@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:ghambeel/sharedfolder/loading.dart';
+import 'package:ghambeel/sharedfolder/task.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 
 import 'dart:io';
@@ -59,7 +61,7 @@ class PomodoroTimer extends StatefulWidget{
 
 class PomodoroTimerState extends State<PomodoroTimer>{
   final _formKey = GlobalKey<FormState>();
-  late final List<DropdownMenuItem<String>> currentTaskList; // populate in init 
+  late final List<DropdownMenuItem<Task>> currentTaskList; // populate in init 
   var currentCycleNumber;
   static const testDuration = Duration(minutes:  00, seconds: 10);//load from storage
   static const shortBreakDuration = Duration(minutes:  0, seconds: 3);//load from storage
@@ -68,13 +70,17 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   Duration myTime = const Duration();
   Timer? timer;
   var isStopState=1;
-  var selectedAssignment="USA";// select default assignment here.
+  late Task selectedAssignment;// select default assignment here.
   var timerTypeList=["Focus Time","Short Break","Long Break","None"];
   var timerType;
   var temp1;
   var longBreakAfter=2;
   var numOfCycles=4; // load number of cyeces from storage by default set in settings
- 
+
+  
+  bool noTasks = false;
+  bool fetchData = true;
+
  // long break activated if numofcycles mod longbreakafter==0. call long break.
 
   bool breakOrFocus(){
@@ -100,8 +106,9 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   }
 
   void storeTimeForTask(){
-
+    Storage.AddTimeSpent(selectedAssignment, Duration(minutes: 5));
   }
+
   void stopTimer(isRunning) {
     if (isRunning) {
       timer?.cancel();
@@ -260,14 +267,9 @@ class PomodoroTimerState extends State<PomodoroTimer>{
     }
   }
   
-  _loadCurrentTaskList(){//load assignment list. use index for vallue and display title as text
-     currentTaskList = [
-       DropdownMenuItem(child: Text("USA"),value: "USA"),
-       DropdownMenuItem(child: Text("Canada"),value: "Canada"),
-      DropdownMenuItem(child: Text("Brazil"),value: "Brazil"),
-     ];
-                               
-    //
+  _loadCurrentTaskList(List<Task> list){//load assignment list. use index for vallue and display title as text
+     currentTaskList = list.map((e) => DropdownMenuItem(child: Text(e.name), value: e)).toList();
+     selectedAssignment = list[0];
   }
   
 
@@ -278,7 +280,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
       pausedwithrunning=false;
       super.initState();
       currentCycleNumber=1;
-      _loadCurrentTaskList();
+      // _loadCurrentTaskList();
       allowSelectionOnce=0;
       timerType=timerTypeList[0];
       myTime=testDuration;
@@ -474,18 +476,18 @@ class PomodoroTimerState extends State<PomodoroTimer>{
               value:selectedAssignment,
               iconDisabledColor: subtleGrey,
               hint: Text("Select Task",style: TextStyle(color: subtleGrey),),
-              disabledHint: Text(selectedAssignment,style: TextStyle(color: subtleGrey),),
-               onChanged: (allowSelectionOnce<1) ? (String ?nvalue)
+              disabledHint: Text(selectedAssignment.name,style: TextStyle(color: subtleGrey),),
+               onChanged: (allowSelectionOnce<1) ? (Task? nvalue)
                { 
                  setState(() 
                     {
                       selectedAssignment = nvalue!;
-                      allowSelectionOnce+=2;
+                      allowSelectionOnce += 2;
                       flag1=true;
                     }
                  );
                } : null,
-          ),
+            ),
           ),
           
           createTimer(testDuration),
@@ -522,12 +524,36 @@ class PomodoroTimerState extends State<PomodoroTimer>{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      appBar: (isStopState>0)? topBar(context: context, myTitle: '',):null,
-      key: _formKey,
-      body: makeBody(),
-    );
-  }
+    if (fetchData) {
+      var start = DateTime.now();
+      Storage.fetchTasks().then((v) {
+        var list = Task.parseTasks(v["incomplete"]);
+        
+        if (list.length == 0) {
+          noTasks = true;          
+        }
+        else {
+          _loadCurrentTaskList(list);
+        }
+        
+        if (noTasks) {
+            Navigator.pop(context);
+            alertDialog("Voila", "You currently have no tasks to work on", context);
+        }
+        else
+          Timer(Duration(milliseconds: 1000 - DateTime.now().difference(start).inMilliseconds), () => setState(() => {
+            fetchData = false,
+          }));
+      });
 
+      return Loading();
+    }
+    else {
+      return Scaffold(
+        appBar: (isStopState>0)? topBar(context: context, myTitle: '',):null,
+        key: _formKey,
+        body: makeBody(),
+      );
+    }
+  }
 }
