@@ -68,7 +68,11 @@ Future youSure(title, content , context) {
 Future alertDialog(title, message, context) {
   return showDialog(context: context, builder: (context){
     return AlertDialog(
-        title: Text(title, style: TextStyle(color: primaryText[darkMode])),
+        elevation: 8.0,
+        title:Container(
+                  child:  Text(title, style: TextStyle(color: accent)),
+                  //scolor: Colors.yellow,
+          ),
         backgroundColor: bg[darkMode],
         content: Text(message, style: TextStyle(color: primaryText[darkMode])),
 
@@ -77,7 +81,15 @@ Future alertDialog(title, message, context) {
             onPressed: () {
               Navigator.pop(context);
             },
-            child:Text("Close", style: TextStyle(color: primaryText[darkMode])),
+            child: Container(
+                decoration: BoxDecoration(
+                //border: Border.all(color: lightPrimary[darkMode]),
+                //color: lightPrimary[darkMode],
+              ),
+              
+              child:Text("OK", style: TextStyle(color: accent)),
+            )
+            
           ),
         ]
     );
