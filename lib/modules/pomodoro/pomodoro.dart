@@ -106,7 +106,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   }
 
   void storeTimeForTask(){
-    Storage.AddTimeSpent(selectedAssignment, Duration(minutes: 5));
+    Storage.AddTimeSpent(selectedAssignment, testDuration - myTime);
   }
 
   void stopTimer(isRunning) {

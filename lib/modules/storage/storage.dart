@@ -71,7 +71,7 @@ class Storage {
   }
   
   static Future<void> AddTimeSpent(Task task, Duration duration) async{
-    var total = duration.inSeconds;
+    var total = duration.inMinutes;
 
     var times = await getValue(Keys.timespent).then((v) => jsonDec(v));
 
@@ -79,7 +79,7 @@ class Storage {
       times[task.taskId] = 0;
     
     int k = times[task.taskId];
-    // print("K" + k.toString() + " " + total.toString());
+
     times[task.taskId] = k + total;
 
     print("Updated times for tasks");
