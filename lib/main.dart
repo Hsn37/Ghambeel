@@ -14,7 +14,7 @@ import 'modules/storage/storage.dart';
 import 'modules/homepage/homepage.dart';
 import 'modules/pomodoro/pomodoroHome.dart';
 import '../../theme.dart';
-// import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -36,14 +36,9 @@ Future setup() {
             "tasks":{
               "incomplete":{
                   "task0":{"name":"First Task", "priority":"0", "description":"Take a tour of our app", "notes": "", "status":"incomplete", "timeAdded":getNowDateTime(), "deadline":getNowDateTime(), "timeCompleted":"", "imgname":""},
-                  // "task2":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
-                  // "task3":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
-                  // "task4":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
-                  // "task5":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
                 },
               "complete":{},
-              // "days":{DateTime.now().toString():{},}
-              }
+              },
             }))
       }
     });
@@ -58,7 +53,12 @@ Future setup() {
 
   var p5 = Notifications.init();
 
-  return Future.wait(<Future>[p1, p2, p3, p4, p5]);
+  var p6 = Storage.getValue(Keys.timespent).then((v) => {
+    if (v == null)
+      Storage.setValue(Keys.timespent, Storage.jsonEnc({}))
+  });
+
+  return Future.wait(<Future>[p1, p2, p3, p4, p5, p6]);
 }
 
 void main() {
