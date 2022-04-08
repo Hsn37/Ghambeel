@@ -127,9 +127,11 @@ Future<Map> getData(url) async {
 
 void doBackup(serverUrl) async {
   var temp = await Storage.fetchTasks();
+  print(temp);
   final prefs = await SharedPreferences.getInstance();
+  final username = await prefs.getString("username");
   var data = jsonEncode({
-    "username" : prefs.getString("username"),
+    "username" : username,
     "data" : jsonEncode(temp)
   });
   postData(data, "Tasks", serverUrl);
