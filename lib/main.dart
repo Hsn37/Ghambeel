@@ -36,14 +36,9 @@ Future setup() {
             "tasks":{
               "incomplete":{
                   "task0":{"name":"First Task", "priority":"0", "description":"Take a tour of our app", "notes": "", "status":"incomplete", "timeAdded":getNowDateTime(), "deadline":getNowDateTime(), "timeCompleted":"", "imgname":""},
-                  // "task2":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
-                  // "task3":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
-                  // "task4":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
-                  // "task5":{"name":"SampleTask2", "priority":"1", "description":"Sample description", "status":"incomplete", "timeAdded":DateTime.now().toString(), "timeCompleted":""},
                 },
               "complete":{},
-              // "days":{DateTime.now().toString():{},}
-              }
+              },
             }))
       }
     });
@@ -57,6 +52,11 @@ Future setup() {
   var p4 = getApplicationDocumentsDirectory().then((v) => AppDirectoryPath = v.path);
 
   var p5 = Notifications.init();
+
+  var p6 = Storage.getValue(Keys.timespent).then((v) => {
+    if (v == null)
+      Storage.setValue(Keys.timespent, Storage.jsonEnc({}))
+  });
 
   return Future.wait(<Future>[p1, p2, p3, p4, p5]);
 }
