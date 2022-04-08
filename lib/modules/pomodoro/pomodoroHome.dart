@@ -15,7 +15,7 @@ class PomodoroHome extends StatefulWidget {
 }
 
 class _PomodoroHomeState extends State<PomodoroHome> {
-  String serverUrl = 'http://74.207.234.113:8080';
+
 
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
     onPrimary: lightPrimary[darkMode],

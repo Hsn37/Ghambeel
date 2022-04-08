@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/theme.dart';
+import 'modules/utils.dart';
+import 'package:ghambeel/modules/storage/storage.dart';
 
 import 'modules/calendar/calendar.dart';
 import 'modules/todolist/todolist.dart';
@@ -16,7 +18,8 @@ class settings extends StatefulWidget {
 
 
 class _settings extends State<settings> {
-
+  bool backing_up = false;
+  bool recovering = false;
   @override
   Widget build(BuildContext context) {
     // darkMode = isDark ? 1 : 0;
@@ -26,7 +29,8 @@ class _settings extends State<settings> {
         title: const Text("Settings"),
         backgroundColor: primary[darkMode],
       ),
-      body: SwitchListTile(
+      body: Column(
+          children:[SwitchListTile(
         activeColor: accent,
         contentPadding: const EdgeInsets.symmetric(vertical:20, horizontal: 20),
         subtitle: Text("You may need to switch pages for effects to take place.", style: TextStyle(color: primaryText[darkMode]),),
@@ -41,6 +45,38 @@ class _settings extends State<settings> {
         },
         value: isDark,
       ),
+
+        !backing_up ? ListTile(
+          title: Text("Backup", style: TextStyle(color: primaryText[darkMode]),),
+            contentPadding: const EdgeInsets.symmetric(vertical:10, horizontal: 20),
+          onTap: () async {
+            setState(() {
+              backing_up = true;
+            });
+            await doBackup(serverUrl);
+            setState(() {
+              backing_up = false;
+            });
+          }
+        ): CircularProgressIndicator(),
+            !recovering ? ListTile(
+                title: Text("Recover", style: TextStyle(color: primaryText[darkMode]),),
+                contentPadding: const EdgeInsets.symmetric(vertical:10, horizontal: 20),
+                onTap: () async {
+                  var status = await youSure("Recover?", "This may overwrite your current data." , context);
+                  if (status){
+                    setState(() {
+                      recovering = true;
+                    });
+                    await Storage.recoverTasks();
+                    setState(() {
+                      recovering = false;
+                    });
+
+                  }}) :
+            CircularProgressIndicator()
+          ]
+      )
     );
   }
 }
