@@ -14,7 +14,7 @@ import 'modules/storage/storage.dart';
 import 'modules/homepage/homepage.dart';
 import 'modules/pomodoro/pomodoroHome.dart';
 import '../../theme.dart';
-// import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:shared_preferences/shared_preferences.dart';
 
 
