@@ -608,11 +608,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< Updated upstream
-    version: "0.4.3"
-=======
     version: "0.4.9"
->>>>>>> Stashed changes
   timezone:
     dependency: transitive
     description:
