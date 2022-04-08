@@ -70,6 +70,22 @@ class Storage {
     return await Storage.setValue(Keys.tasks, jsonEnc({"tasks":tasks}));
   }
   
+  static Future<void> AddTimeSpent(Task task, Duration duration) async{
+    var total = duration.inSeconds;
+
+    var times = await getValue(Keys.timespent).then((v) => jsonDec(v));
+
+    if (times[task.taskId] == null)
+      times[task.taskId] = 0;
+    
+    int k = times[task.taskId];
+    // print("K" + k.toString() + " " + total.toString());
+    times[task.taskId] = k + total;
+
+    print("Updated times for tasks");
+    print(times);
+    return setValue(Keys.timespent, jsonEnc(times));
+  }
 
   static Future<void> markTaskDone (Task task) async {
     dynamic tasks = await fetchTasks();
@@ -161,6 +177,7 @@ class Keys {
   static String login = "loginStatus";
   static String tasks = "tasks";
   static String taskNum = "globalTaskNum";
+  static String timespent = "timespent";
 }
 
 // initialized in the app setup function.

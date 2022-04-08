@@ -58,7 +58,7 @@ Future setup() {
       Storage.setValue(Keys.timespent, Storage.jsonEnc({}))
   });
 
-  return Future.wait(<Future>[p1, p2, p3, p4, p5]);
+  return Future.wait(<Future>[p1, p2, p3, p4, p5, p6]);
 }
 
 void main() {
