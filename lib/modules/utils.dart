@@ -11,6 +11,7 @@ import '../theme.dart';
 final today = DateTime.now();
 final firstDay = DateTime(today.year, today.month - 10, today.day);
 final lastDay = DateTime(today.year, today.month + 10, today.day);
+final String serverUrl = 'http://74.207.234.113:8080';
 
 class Mysql {
   static String host = '74.207.234.113',
@@ -125,7 +126,7 @@ Future<Map> getData(url) async {
   return data;
 }
 
-void doBackup(serverUrl) async {
+Future<void> doBackup(serverUrl) async {
   var temp = await Storage.fetchTasks();
   print(temp);
   final prefs = await SharedPreferences.getInstance();
