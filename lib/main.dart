@@ -89,8 +89,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         disabledColor: Colors.grey,
       ),
-      // home: const MyHomePage(title: "TodoList"),
-      home: LoginPage(),
+      home: const MyHomePage(title: "TodoList"),
+      // home: LoginPage(),
     );
   }
 }
