@@ -119,7 +119,7 @@ Future<Map> getData(url) async {
   // Replace the url inside with https://localhost:{port}/?username=admin&password=123 (try either localhost or 10.0.0.2)
   Response response = await get(Uri.parse(url));
   Map data = {};
-  if (response.body != " ") {
+  if (response.body != "") {
     data = jsonDecode(response.body);
   }
   return data;
