@@ -34,6 +34,10 @@ class Mysql {
   }
 }
 
+String getFormattedDatetime(DateTime t) {
+  return t.toString().split(".")[0];
+}
+
 String getNowDateTime() {
   return DateTime.now().toString().split(".")[0];
 }
