@@ -7,9 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:pie_chart/pie_chart.dart';
 import '../../theme.dart';
-// import 'package:heatmap_calendar/heatmap_calendar.dart';
-// import 'package:heatmap_calendar/time_utils.dart';
-import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
+import 'package:heatmap_calendar/heatmap_calendar.dart';
+import 'package:heatmap_calendar/time_utils.dart';
 
 
 class Statistics extends StatefulWidget {
@@ -210,29 +209,38 @@ final List<DailyWork> data = [
                     //   ),
                     // ),
                     HeatMapCalendar(
-            defaultColor: Colors.white,
-            flexible: true,
-            colorMode: ColorMode.color,
-            datasets: {
-              DateTime(2021, 1, 6): 3,
-              DateTime(2021, 1, 7): 7,
-              DateTime(2021, 1, 8): 10,
-              DateTime(2021, 1, 9): 13,
-              DateTime(2021, 1, 13): 6,
-            },
-            colorsets: const {
-              1: Colors.red,
-              3: Colors.orange,
-              5: Colors.yellow,
-              7: Colors.green,
-              9: Colors.blue,
-              11: Colors.indigo,
-              13: Colors.purple,
-            },
-            onClick: (value) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.toString())));
-            },
-            )         
+                    input: {
+                      TimeUtils.removeTime(DateTime.now().subtract(Duration(days: 3))): 5,
+                      TimeUtils.removeTime(DateTime.now().subtract(Duration(days: 2))): 35,
+                      TimeUtils.removeTime(DateTime.now().subtract(Duration(days: 1))): 14,
+                      TimeUtils.removeTime(DateTime.now()): 5,
+                    },
+                    colorThresholds: {
+                      1: Colors.green.shade100,
+                      10: Colors.green.shade300,
+                      30: Colors.green.shade500,
+                    },
+                    weekDaysLabels: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+                    monthsLabels: [
+                      "",
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ],
+                    squareSize: 16.0,
+                    textOpacity: 0.3,
+                    labelTextColor: Colors.blueGrey,
+                    dayTextColor: Colors.blue[500],
+                    )
                   ],
                 ),
               ),
