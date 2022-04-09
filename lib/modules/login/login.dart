@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<bool> loggedStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    final status = prefs.getBool('log') ?? false;
+    final status = await prefs.getBool('log') ?? false;
     return status;
   }
 
