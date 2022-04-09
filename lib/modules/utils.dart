@@ -175,10 +175,22 @@ Future<void> sendScores(serverUrl) async {
   postData(data, "Stats", serverUrl);
 }
 
-Future<void> getScores() async {
+Future<Map> getScores() async {
   final prefs = await SharedPreferences.getInstance();
   String user = prefs.getString('username') ?? "";
-  month = DateTime.now().month - 1
+  var month = DateTime.now().month - 1;
   Map data = await getData("http://74.207.234.113:8080/?username="+user+"&scores="+month.toString());
-  return data
+  return data;
+}
+
+Future<void> changePass(password) async {
+  final prefs = await SharedPreferences.getInstance();
+  String username = prefs.getString('username') ?? "";
+  var data = jsonEncode({
+    "username" : username,
+    "data" : jsonEncode({
+      "password" : password
+    })
+  });
+  postData(data, "Password", serverUrl);
 }

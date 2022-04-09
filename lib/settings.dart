@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ghambeel/theme.dart';
 import 'modules/utils.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
+import 'package:ghambeel/modules/login/changepass.dart';
 
 import 'modules/calendar/calendar.dart';
 import 'modules/todolist/todolist.dart';
@@ -86,7 +87,14 @@ class _settings extends State<settings> {
                 title: Text("GetScoreBoard", style: TextStyle(color: primaryText[darkMode]),),
                 contentPadding: const EdgeInsets.symmetric(vertical:10, horizontal: 20),
                 onTap: () async {
-                  getScores(serverUrl);
+                  getScores();
+                }
+            ),
+            ListTile(
+                title: Text("Change Password", style: TextStyle(color: primaryText[darkMode]),),
+                contentPadding: const EdgeInsets.symmetric(vertical:10, horizontal: 20),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ChangePage()));
                 }
             )
           ]

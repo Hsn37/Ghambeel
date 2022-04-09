@@ -147,6 +147,11 @@ def getScores(month):
         })
     return result
 
+def changePass(data, user):
+    password = data['password']
+    query = fr"UPDATE Users SET pass='{password}' WHERE Name='{user}'"
+    database(query, True)
+
 
 hostName = "0.0.0.0"
 serverPort = 8080
@@ -204,6 +209,9 @@ class MyServer(BaseHTTPRequestHandler):
         if post_data['table'] == "Stats":
             temp = loads(post_data['data'])
             addScore(loads(temp['data']), temp['username'])
+        if post_data['table'] == "Password":
+            temp = loads(post_data['data'])
+            changePass(loads(temp['data']), temp['username'])
 
 if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)
