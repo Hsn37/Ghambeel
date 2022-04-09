@@ -94,6 +94,7 @@ class Storage {
     tasks["incomplete"].remove(task.taskId);
 
     t["status"] = "complete";
+    t["timeCompleted"] = getNowDateTime();
 
     tasks["complete"][task.taskId] = t;
 
@@ -107,6 +108,12 @@ class Storage {
     tasks["complete"].remove(task.taskId);
 
     t["status"] = "incomplete";
+    t["timeCompleted"] = "";
+    t["timeAdded"] = getNowDateTime();
+    
+    // remove the deadline.
+    t["deadline"] = "";
+    
 
     tasks["incomplete"][task.taskId] = t;
 

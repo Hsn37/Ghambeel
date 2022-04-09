@@ -1,25 +1,30 @@
-import 'dart:convert';
-
+import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
-import 'package:ghambeel/modules/pomodoro/pomodorosettings.dart';
 import 'package:ghambeel/theme.dart';
 import 'package:ghambeel/settings.dart';
 import 'package:ghambeel/modules/login/login.dart';
-import 'package:ghambeel/modules/todolist/todolist.dart';
 import 'package:ghambeel/modules/utils.dart';
 import 'package:path_provider/path_provider.dart';
-import 'modules/calendar/calendar.dart';
 import 'modules/notifications/notifications.dart';
 import 'modules/storage/storage.dart';
-import 'modules/homepage/homepage.dart';
-import 'modules/pomodoro/pomodoroHome.dart';
 import '../../theme.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:shared_preferences/shared_preferences.dart';
 
+
+void backgroundService (HeadlessTask task) async {
+  String taskId = task.taskId;
+  bool isTimeout = task.timeout;
+  if (isTimeout) {
+    BackgroundFetch.finish(taskId);
+    return;
+  }  
+  
+  Notifications.show(taskId, getNowDateTime(), NotifID.deadline);
+
+  BackgroundFetch.finish(taskId);
+}
 
 // initial variables setup.
-Future setup() {
+Future setup() async {
   // the flag for whether the user is logged in or not.
   var p1 = Storage.getValue(Keys.login).then((v) => {
       if (v == null) 
@@ -58,7 +63,26 @@ Future setup() {
       Storage.setValue(Keys.timespent, Storage.jsonEnc({}))
   });
 
-  return Future.wait(<Future>[p1, p2, p3, p4, p5, p6]);
+  var p7 = BackgroundFetch.configure(BackgroundFetchConfig(
+        minimumFetchInterval: 1,
+        stopOnTerminate: false,
+        enableHeadless: true,
+        requiresBatteryNotLow: false,
+        requiresCharging: false,
+        requiresStorageNotLow: false,
+        requiresDeviceIdle: false,
+        requiredNetworkType: NetworkType.NONE
+    ), (String taskId) async {  // <-- Event handler
+      Notifications.show("helo", "awdawd", NotifID.motquote);
+      print("[BackgroundFetch] Event received $taskId");
+      BackgroundFetch.finish(taskId);
+    }, (String taskId) async {  // <-- Task timeout handler.
+      // This task has exceeded its allowed running-time.  You must stop what you're doing and immediately .finish(taskId)
+      print("[BackgroundFetch] TASK TIMEOUT taskId: $taskId");
+      BackgroundFetch.finish(taskId);
+    }).then((v) => BackgroundFetch.start());
+
+  return Future.wait(<Future>[p1, p2, p3, p4, p5, p6, p7]);
 }
 
 void main() {
@@ -66,15 +90,11 @@ void main() {
   isDark = false;
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Wait for the setup to finish first. then run the app
-  
-  // when you want to refresh the storage, run this
-  // Storage.deleteAll().then((v) => Storage.recoverTasks()).then((value) => runApp(const MyApp()));
   Storage.deleteAll().then((v) => setup()).then((v) => runApp(const MyApp()));
   Notifications.show("Mot Quote", "Kaam karlo bhai", NotifID.motquote);
   
-  // else this one.
-  // setup().then((v) => runApp(const MyApp()));
+  // the function that runs in the background when app is closed;
+  BackgroundFetch.registerHeadlessTask(backgroundService);
 }
 
 
