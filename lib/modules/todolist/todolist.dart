@@ -224,7 +224,9 @@ class ToDoListState extends State<ToDoList>{
   Widget makeCardundone(int index){
     
     Color col;
-    if (itemsUncomp[index].dline.difference(DateTime.now()).inDays.abs() < 1)
+    int days = itemsUncomp[index].dline.difference(DateTime.now()).inDays;
+    
+    if (days < 1)
       col = listTileColPriority[darkMode];
     else
       col = listTileCol[darkMode];

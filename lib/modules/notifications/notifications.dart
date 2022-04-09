@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
@@ -31,7 +32,9 @@ class Notifications {
             importance: Importance.max,
             priority: Priority.max,
             ticker: 'ticker',
-            playSound: true);
+            playSound: true,
+            styleInformation: BigTextStyleInformation(''),
+            );
     
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
@@ -46,4 +49,5 @@ class Notifications {
 enum NotifID {
   motquote,
   deadline,
+  backup,
 }

@@ -185,6 +185,7 @@ class Keys {
   static String tasks = "tasks";
   static String taskNum = "globalTaskNum";
   static String timespent = "timespent";
+  static String bgservice = "bgservice";
 }
 
 // initialized in the app setup function.
