@@ -137,3 +137,27 @@ Future<void> doBackup(serverUrl) async {
   });
   postData(data, "Tasks", serverUrl);
 }
+
+Future<void> sendScores(serverUrl) async {
+  var temp = await Storage.fetchTasks();
+  final prefs = await SharedPreferences.getInstance();
+  final username = await prefs.getString("username");
+  final complete = temp['complete'];
+  print(complete);
+  for (var key in complete.keys) {
+    var current = complete[key];
+    print(current['timeAdded']);
+    print(current['timeCompleted']);
+  }
+
+  // var data = jsonEncode({
+  //   "username" : username,
+  //   "data" : jsonEncode(temp)
+  // });
+  // postData(data, "Stats", serverUrl);
+}
+
+Future<void> getScores(serverUrl) async {
+  // dynamic data = getData(serverUrl);
+  // print(data);
+}
