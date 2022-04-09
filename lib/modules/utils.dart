@@ -148,20 +148,37 @@ Future<void> sendScores(serverUrl) async {
   final username = await prefs.getString("username");
   final complete = temp['complete'];
   print(complete);
+  var total = 0;
+  var cumPriority = [];
+  var cumTimeTaken = [];
+  var cumMonth = [];
   for (var key in complete.keys) {
     var current = complete[key];
-    print(current['timeAdded']);
-    print(current['timeCompleted']);
+    var added = DateTime.parse(current['timeAdded']);
+    var completed = DateTime.parse(current['timeCompleted']);
+    var priority = current['priority'];
+    var month = completed.month;
+    var timeTaken = completed.difference(added).inSeconds;
+    cumPriority.add(priority);
+    cumTimeTaken.add(timeTaken);
+    cumMonth.add(month);
   }
 
-  // var data = jsonEncode({
-  //   "username" : username,
-  //   "data" : jsonEncode(temp)
-  // });
-  // postData(data, "Stats", serverUrl);
+  var data = jsonEncode({
+    "username" : username,
+    "data" : jsonEncode({
+      "priority" : cumPriority,
+      "timeTaken" : cumTimeTaken,
+      "month" : cumMonth
+    })
+  });
+  postData(data, "Stats", serverUrl);
 }
 
-Future<void> getScores(serverUrl) async {
-  // dynamic data = getData(serverUrl);
-  // print(data);
+Future<void> getScores() async {
+  final prefs = await SharedPreferences.getInstance();
+  String user = prefs.getString('username') ?? "";
+  month = DateTime.now().month - 1
+  Map data = await getData("http://74.207.234.113:8080/?username="+user+"&scores="+month.toString());
+  return data
 }

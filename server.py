@@ -39,15 +39,15 @@ def getTask(user):
     print(result)
     return result
 
-def deleteTask(user):
-    query = fr"DELETE FROM Tasks WHERE Users='{user}'"
+def deleteTable(user, Table):
+    query = fr"DELETE FROM {Table} WHERE Users='{user}'"
     database(query, True)
 
 def addTask(data, user):
     incomplete = list(data['incomplete'].keys())
     complete = list(data['complete'].keys())
     # alreadyin = getTask(user)
-    deleteTask(user)
+    deleteTable(user, "Tasks")
     finalquery = ""
     for item in incomplete:
         #if item not in alreadyin:
@@ -88,6 +88,66 @@ def getRecovery(username):
     }
     return result
 
+#     "username" : username,
+#     "data" : jsonEncode({
+#       "priority" : cumPriority,
+#       "timeTaken" : cumTimeTaken,
+#       "month" : cumMonth
+#     })
+#   });
+
+def calcProd(stats):
+    result = []
+    if stats == None:
+        return 0
+    
+    psum = 0
+    tsum = 0
+
+    for item in stats:
+        psum = psum + int(item[0])
+        tsum = tsum + int(item[1])    
+    return psum*3600/tsum
+
+def addScore(data, user):
+    deleteTable(user, "Scoreboard")
+    priority = data['priority']
+    timeTaken = data['timeTaken']
+    month = data["month"]
+    result = [None]*12
+    monthlyProductivity = []
+    for i in range(len(month)):
+        m = int(month[i])
+        if result[m-1] == None:
+            result[m-1] = []
+        result[m-1].append((priority[i], timeTaken[i]))
+    for item in result:
+        monthlyProductivity.append(calcProd(item))
+    
+    finalquery = ""
+    for i, val in enumerate(monthlyProductivity):
+        if val == 0:
+            continue
+        finalquery = finalquery + fr"('{user}', '{i}', '{val}'),"
+    
+    if finalquery != "":
+        finalquery = finalquery[:-1]
+        finalquery = fr"INSERT INTO Scoreboard VALUES {finalquery}"
+        database(finalquery, True)
+    else:
+        print("Nothing to add")
+
+def getScores(month):
+    data = database(fr"SELECT * FROM Scoreboard WHERE Month='{month}'")
+    result = []
+    for item in data:
+        result.append({
+            "username" : item[0],
+            "score" : round(float(item[2]), 3)
+        })
+    return result
+
+
 hostName = "0.0.0.0"
 serverPort = 8080
 
@@ -117,6 +177,11 @@ class MyServer(BaseHTTPRequestHandler):
                 username = query['username']
                 response = getRecovery(username)
                 self.wfile.write(bytes(dumps(response), "utf8"))
+            if 'scores' in query.keys():
+                username = query['username']
+                scores = query['scores'] # This stores the month for which data is required
+                response = getScores(scores)
+                self.wfile.write(bytes(dumps(response), "utf8"))
     
     def do_POST(self):
         self.send_response(200)
@@ -136,6 +201,9 @@ class MyServer(BaseHTTPRequestHandler):
         if post_data['table'] == "Tasks":
             temp = loads(post_data['data'])
             addTask(loads(temp['data']), temp['username'])
+        if post_data['table'] == "Stats":
+            temp = loads(post_data['data'])
+            addScore(loads(temp['data']), temp['username'])
 
 if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)
