@@ -22,7 +22,7 @@ class Notifications {
 
   static void onSelectNotification(String? payload) async {
     // Function where we handle the notification clicks. check the payload.
-    print("Clicked on notification");
+    print("Clicked on ${payload}");
   }
 
   static Future<void> show(String title, String content, NotifID id) async {
@@ -31,7 +31,6 @@ class Notifications {
             channelDescription: 'ghambeelNotif',
             importance: Importance.max,
             priority: Priority.max,
-            ticker: 'ticker',
             playSound: true,
             styleInformation: BigTextStyleInformation(''),
             );
@@ -50,4 +49,5 @@ enum NotifID {
   motquote,
   deadline,
   backup,
+  alert,
 }
