@@ -66,6 +66,13 @@ final List<DailyWork> data = [
 //     measureFn:,
 //   )
 // ];
+    Map<DateTime, int> heatMapDatasets = {
+              DateTime(2022, 4, 6): 3,
+              DateTime(2022, 4, 7): 7,
+              DateTime(2022, 4, 8): 10,
+              DateTime(2022, 4, 9): 13,
+              DateTime(2022, 4, 13): 6,
+    };
 
 
     Widget build(BuildContext context) {
@@ -213,25 +220,22 @@ final List<DailyWork> data = [
             defaultColor: Colors.white,
             flexible: true,
             colorMode: ColorMode.color,
-            datasets: {
-              DateTime(2021, 1, 6): 3,
-              DateTime(2021, 1, 7): 7,
-              DateTime(2021, 1, 8): 10,
-              DateTime(2021, 1, 9): 13,
-              DateTime(2021, 1, 13): 6,
+            datasets: heatMapDatasets,
+            colorsets:  {
+              1: Colors.amber.shade50,
+              3: Colors.amber.shade100,
+              5: Colors.amber.shade200,
+              7: Colors.amber.shade300,
+              8: Colors.amber.shade400,
+              // 11: Colors.indigo,
+              // 13: Colors.purple,
             },
-            colorsets: const {
-              1: Colors.red,
-              3: Colors.orange,
-              5: Colors.yellow,
-              7: Colors.green,
-              9: Colors.blue,
-              11: Colors.indigo,
-              13: Colors.purple,
-            },
-            onClick: (value) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.toString())));
-            },
+            textColor: primaryText[darkMode],
+            weekTextColor: primaryText[darkMode],
+            
+            // onClick: (value) {
+            //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.toString())));
+            // },
             )         
                   ],
                 ),
