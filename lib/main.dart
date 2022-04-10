@@ -10,6 +10,16 @@ import 'package:path_provider/path_provider.dart';
 import 'modules/notifications/notifications.dart';
 import 'modules/storage/storage.dart';
 import '../../theme.dart';
+import 'dart:math';
+
+
+String getrandomqot(){
+  var rand= new Random();
+  int i = rand.nextInt(notifs_dataset.length);
+  String randomString=notifs_dataset[i];
+  print(randomString);
+  return randomString;
+}
 
 
 // our background services
@@ -46,7 +56,9 @@ void backgroundService (HeadlessTask task) async {
 
     if (t.difference(DateTime.parse(data["quote"]["lastTime"])).inDays.abs() > 0) {
       // Instead of the quote, add the call to the function that gives a quote randomly.
-      Notifications.show("Quote of the day", "You miss 100% of the shots you dont take. - Michael G Scott", NotifID.motquote);
+      // Notifications.show("Quote of the day", "You miss 100% of the shots you dont take. - Michael G Scott", NotifID.motquote);
+      var motqottoshow = getrandomqot();
+      Notifications.show("Quote of the day", motqottoshow, NotifID.motquote);
       data["quote"]["lastTime"] = getNowDateTime();
     }
 
