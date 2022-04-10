@@ -24,9 +24,12 @@ String getrandomqot(){
 
 // our background services
 void backgroundService (HeadlessTask task) async {
+  Notifications.show("Background service 15 min mark hit.", "Run at: ${getNowDateTime()}", NotifID.alert);
+
   String taskId = task.taskId;
   bool isTimeout = task.timeout;
   if (isTimeout) {
+    Notifications.show("Background service Timeout!!!", "Run at: ${getNowDateTime()}", NotifID.alert);
     BackgroundFetch.finish(taskId);
     return;
   }  
@@ -153,15 +156,16 @@ Future setup() async {
       // This task has exceeded its allowed running-time.  You must stop what you're doing and immediately .finish(taskId)
       print("[BackgroundFetch] TASK TIMEOUT taskId: $taskId");
       BackgroundFetch.finish(taskId);
-    }).then((v) => BackgroundFetch.start());
+    });
 
   var p8 = Storage.getValue(Keys.bgservice).then((value) {
     var temp = DateTime.now();
-    DateTime lastQuote = DateTime(temp.year, temp.month, temp.hour < 10? temp.day-1:temp.day, 10);
-    DateTime lastBackup = DateTime(temp.year, temp.month, temp.hour < 12? temp.day-1:temp.day, 12);
-    DateTime lastReminder = DateTime(temp.year, temp.month, temp.hour < 9? temp.day-1:temp.day, 9);
+    DateTime lastQuote = DateTime(temp.year, temp.month, temp.day, 10);
+    DateTime lastBackup = DateTime(temp.year, temp.month, temp.day, 12);
+    DateTime lastReminder = DateTime(temp.year, temp.month, temp.day, 9);
 
     if (value == null) {
+      print("GOT HEREEEEEE");
       Storage.setValue(Keys.bgservice, Storage.jsonEnc({
         "turn":0,
         "quote":{"lastTime":getFormattedDatetime(lastQuote)},
@@ -180,7 +184,6 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   Storage.deleteAll().then((v) => setup()).then((v) => runApp(const MyApp()));
-  // Notifications.show("Mot Quote", "Kaam karlo bhai", NotifID.motquote);
   
   // the function that runs in the background when app is closed;
   BackgroundFetch.registerHeadlessTask(backgroundService);
