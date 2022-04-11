@@ -120,7 +120,7 @@ void postData(data, table, serverUrl) async {
     Map responseData = jsonDecode(response.body);
 }
 
-Future<Map> getData(url) async {
+Future<dynamic> getData(url) async {
   // Replace the url inside with https://localhost:{port}/?username=admin&password=123 (try either localhost or 10.0.0.2)
   Response response = await get(Uri.parse(url));
   Map data = {};
@@ -175,11 +175,18 @@ Future<void> sendScores(serverUrl) async {
   postData(data, "Stats", serverUrl);
 }
 
-Future<Map> getScores() async {
+Future<dynamic> getScoreData(url) async {
+  // Replace the url inside with https://localhost:{port}/?username=admin&password=123 (try either localhost or 10.0.0.2)
+  Response response = await get(Uri.parse(url));
+  dynamic temp = jsonDecode(response.body);
+  return temp;
+}
+
+Future<dynamic> getScores() async {
   final prefs = await SharedPreferences.getInstance();
   String user = prefs.getString('username') ?? "";
   var month = DateTime.now().month - 1;
-  Map data = await getData("http://74.207.234.113:8080/?username="+user+"&scores="+month.toString());
+  dynamic data = await getScoreData("http://74.207.234.113:8080/?username="+user+"&scores="+month.toString());
   return data;
 }
 

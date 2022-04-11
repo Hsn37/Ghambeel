@@ -124,6 +124,7 @@ def addScore(data, user):
     for item in result:
         monthlyProductivity.append(calcProd(item))
     
+    print(monthlyProductivity)
     finalquery = ""
     for i, val in enumerate(monthlyProductivity):
         if val == 0:
