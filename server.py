@@ -105,7 +105,7 @@ def calcProd(stats):
     tsum = 0
 
     for item in stats:
-        psum = psum + int(item[0])
+        psum = psum + int(item[0]) + 1
         tsum = tsum + int(item[1])    
     return psum*3600/tsum
 
