@@ -5,6 +5,27 @@ class Task {
   late String taskId;
   DateTime dline = DateTime(1990);
   
+  String shortName(){
+    int stringLength = 20;
+
+    if (name.length > stringLength) {
+      return name.substring(0, stringLength) + "...";
+    }
+    else {
+      return name;
+    }
+  }
+  String shortDescription(){
+    int stringLength = 35;
+
+    if (description.length > stringLength) {
+      return description.substring(0, stringLength) + "...";
+    }
+    else {
+      return description;
+    }
+  }
+
   Task(this.name, this.priority, this.description, this.notes, this.status, this.timeAdded, this.deadline, this.timeCompleted, this.imgname) {
     if (deadline != "") {
       dline = DateTime.parse(deadline);
