@@ -14,9 +14,9 @@ import 'dart:math';
 
 
 String getrandomqot(){
-  var rand= new Random();
+  var rand = new Random();
   int i = rand.nextInt(notifs_dataset.length);
-  String randomString=notifs_dataset[i];
+  String randomString = notifs_dataset[i];
   print(randomString);
   return randomString;
 }
@@ -24,10 +24,10 @@ String getrandomqot(){
 
 // our background services
 void backgroundService (HeadlessTask task) async {
-  Notifications.show("Background service 15 min mark hit.", "Run at: ${getNowDateTime()}", NotifID.alert);
 
   String taskId = task.taskId;
   bool isTimeout = task.timeout;
+
   if (isTimeout) {
     Notifications.show("Background service Timeout!!!", "Run at: ${getNowDateTime()}", NotifID.alert);
     BackgroundFetch.finish(taskId);
@@ -37,64 +37,51 @@ void backgroundService (HeadlessTask task) async {
   var data = await Storage.getValue(Keys.bgservice).then((value) => Storage.jsonDec(value));
   var t = DateTime.now();
 
-  if (data["turn"] == 0) {
-    // backup
-    if (t.difference(DateTime.parse(data["backup"]["lastTime"])).inDays.abs() > 0) {
-      // check for internet and backup
-      try {
-        final result = await InternetAddress.lookup('example.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          doBackup(serverUrl);
-          data["backup"]["lastTime"] = getFormattedDatetime(DateTime(t.year, t.month, t.day, 12));
+  // backup
+  if (t.difference(DateTime.parse(data["backup"]["lastTime"])).inDays.abs() > 0) {
+    // check for internet and backup
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        doBackup(serverUrl);
+        data["backup"]["lastTime"] = getFormattedDatetime(DateTime(t.year, t.month, t.day, 12));
 
-          Notifications.show("Backup", "Your data was backed up!", NotifID.backup);
-        }
-      } on SocketException catch (_) {}
-    }
-
-    data["turn"] = 1;
+        Notifications.show("Backup", "Your data was backed up!", NotifID.backup);
+      }
+    } on SocketException catch (_) {}
   }
-  else if (data["turn"] == 1) {
-    // motivational quote
 
-    if (t.difference(DateTime.parse(data["quote"]["lastTime"])).inDays.abs() > 0) {
-      // Instead of the quote, add the call to the function that gives a quote randomly.
-      // Notifications.show("Quote of the day", "You miss 100% of the shots you dont take. - Michael G Scott", NotifID.motquote);
-      var motqottoshow = getrandomqot();
-      Notifications.show("Quote of the day", motqottoshow, NotifID.motquote);
-      data["quote"]["lastTime"] = getNowDateTime();
-    }
-
-    data["turn"] = 2;
+  // motivational quote
+  if (t.difference(DateTime.parse(data["quote"]["lastTime"])).inDays.abs() > 0) {
+    var motqottoshow = getrandomqot();
+    Notifications.show("Quote of the day", motqottoshow, NotifID.motquote);
+    data["quote"]["lastTime"] = getNowDateTime();
   }
-  else if (data["turn"] == 2) {
-    // deadlines
-    if (t.difference(DateTime.parse(data["deadline"]["lastTime"])).inDays.abs() > 0) {
-      var tasks = await Storage.fetchTasks().then((value) => value["incomplete"]);
-      int counter = 0;
-      int counter2 = 0;
 
-      tasks.forEach((k, v)  {
-        var d = DateTime.tryParse(v["deadline"])!.difference(t).inDays;
-        if (d == 0) {
-          counter++;
-        }
-        else if (d < 0) {
-          counter2++;
-        }
-      });
+  // deadlines
+  if (t.difference(DateTime.parse(data["deadline"]["lastTime"])).inDays.abs() > 0) {
+    var tasks = await Storage.fetchTasks().then((value) => value["incomplete"]);
+    int counter = 0;
+    int counter2 = 0;
 
-      if (counter > 0 || counter2 > 0)
-        Notifications.show(
-          "Approaching Deadlines", 
-          "${counter > 0? "You have ${counter} ${counter > 1? "tasks":"task"} due in less than 24 hours!":""}" +
-          "${counter2 > 0? "You have missed the deadline for ${counter2} ${counter2 > 1? "tasks":"task"}":""} You might want to have a look at them.", 
-          NotifID.deadline);
+    tasks.forEach((k, v)  {
+      var d = DateTime.tryParse(v["deadline"])!.difference(t).inDays;
+      if (d == 0) {
+        counter++;
+      }
+      else if (d < 0) {
+        counter2++;
+      }
+    });
 
-      data["deadline"]["lastTime"] = getNowDateTime();
-    }
-    
-    data["turn"] = 0;
+    if (counter > 0 || counter2 > 0)
+      Notifications.show(
+        "Approaching Deadlines", 
+        "${counter > 0? "You have ${counter} ${counter > 1? "tasks":"task"} due in less than 24 hours!":""}" +
+        "${counter2 > 0? "You have missed the deadline for ${counter2} ${counter2 > 1? "tasks":"task"}":""} You might want to have a look at them.", 
+        NotifID.deadline);
+
+    data["deadline"]["lastTime"] = getNowDateTime();
   }
 
   Storage.setValue(Keys.bgservice, Storage.jsonEnc(data));
@@ -117,13 +104,13 @@ Future setup() async {
       
       if (v == null || v == "") {
         Storage.setValue(Keys.tasks, Storage.jsonEnc({
-            "tasks":{
-              "incomplete":{
-                  "task0":{"name":"First Task", "priority":"0", "description":"Take a tour of our app", "notes": "", "status":"incomplete", "timeAdded":getNowDateTime(), "deadline":getNowDateTime(), "timeCompleted":"", "imgname":""},
-                },
-              "complete":{},
+          "tasks":{
+            "incomplete":{
+                "task0":{"name":"First Task", "priority":"0", "description":"Take a tour of our app", "notes": "", "status":"incomplete", "timeAdded":getNowDateTime(), "deadline":getNowDateTime(), "timeCompleted":"", "imgname":""},
               },
-            }))
+            "complete":{},
+          },
+        }))
       }
     });
 
@@ -137,20 +124,20 @@ Future setup() async {
 
   var p5 = Notifications.init();
 
-  var p6 = Storage.getValue(Keys.timespent).then((v) => {
+  var p6 = Storage.getValue(Keys.timeSpentPerTask).then((v) => {
     if (v == null)
-      Storage.setValue(Keys.timespent, Storage.jsonEnc({}))
+      Storage.setValue(Keys.timeSpentPerTask, Storage.jsonEnc({}))
   });
 
   var p7 = BackgroundFetch.configure(BackgroundFetchConfig(
-        minimumFetchInterval: 1,
+        minimumFetchInterval: 15,
         stopOnTerminate: false,
         enableHeadless: true,
         requiresBatteryNotLow: false,
         requiresCharging: false,
         requiresStorageNotLow: false,
         requiresDeviceIdle: false,
-        requiredNetworkType: NetworkType.NONE
+        requiredNetworkType: NetworkType.NONE,
     ), backgroundService,
     (String taskId) async {  // <-- Task timeout handler.
       // This task has exceeded its allowed running-time.  You must stop what you're doing and immediately .finish(taskId)
@@ -167,7 +154,6 @@ Future setup() async {
     if (value == null) {
       print("GOT HEREEEEEE");
       Storage.setValue(Keys.bgservice, Storage.jsonEnc({
-        "turn":0,
         "quote":{"lastTime":getFormattedDatetime(lastQuote)},
         "backup":{"lastTime":getFormattedDatetime(lastBackup)},
         "deadline":{"lastTime":getFormattedDatetime(lastReminder)}
@@ -175,7 +161,12 @@ Future setup() async {
     }
   });
 
-  return Future.wait(<Future>[p1, p2, p3, p4, p5, p6, p7, p8]);
+  var p9 = Storage.getValue(Keys.timeSpentPerDay).then((v) => {
+    if (v == null)
+      Storage.setValue(Keys.timeSpentPerDay, Storage.jsonEnc({}))
+  });
+
+  return Future.wait(<Future>[p1, p2, p3, p4, p5, p6, p7, p8, p9]);
 }
 
 void main() {
@@ -183,10 +174,13 @@ void main() {
   isDark = false;
   WidgetsFlutterBinding.ensureInitialized();
 
-  Storage.deleteAll().then((v) => setup()).then((v) => runApp(const MyApp()));
+  setup().then((v) {
+    backgroundService(HeadlessTask("taskId", false));
+    BackgroundFetch.registerHeadlessTask(backgroundService);
+    runApp(const MyApp());
+  });
   
   // the function that runs in the background when app is closed;
-  BackgroundFetch.registerHeadlessTask(backgroundService);
 }
 
 
