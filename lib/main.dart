@@ -174,6 +174,17 @@ void main() {
   isDark = false;
   WidgetsFlutterBinding.ensureInitialized();
 
+  ///////////////////////////////////////////////////////////////////
+  // RUN THIS IF YOU WANT TO CLEAR OUT THE STORAGE AND START AFRESH
+  ///////////////////////////////////////////////////////////////////
+  // Storage.deleteAll().then((v) {
+  //   setup().then((v2) {
+  //     backgroundService(HeadlessTask("taskId", false));
+  //     BackgroundFetch.registerHeadlessTask(backgroundService);
+  //     runApp(const MyApp());
+  //   });
+  // });
+
   setup().then((v) {
     backgroundService(HeadlessTask("taskId", false));
     BackgroundFetch.registerHeadlessTask(backgroundService);

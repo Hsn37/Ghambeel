@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:ghambeel/sharedfolder/task.dart';
 import '../../theme.dart';
 
+
 class ToDoList extends StatefulWidget{
   const ToDoList({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -43,6 +44,9 @@ class ToDoListState extends State<ToDoList>{
   var itemsUncomp = <Task>[];
 
   var fetchData = true;
+  var searchActive = false;
+  TextEditingController searchController = new TextEditingController();
+  
   
   @override
   void initState() {
@@ -74,55 +78,86 @@ class ToDoListState extends State<ToDoList>{
       });
     
   }
+
+  Widget infoAndButtons() {
+    return Container(
+      color: bg[darkMode],
+      //mainAxisAlignment: MainAxisAlignment.start
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+      child:Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  child: Text("Incomplete: ${incompleteTasks.length}, Complete: ${completedTasks.length}", style: TextStyle(fontSize: 12,color: primaryText[darkMode])),
+                ),
+              ],
+          ),
+          Row(             
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 5, 0, 5),
+                child:  IconButton(
+                  icon: Icon(Icons.search, color: toDoIconCols),
+                  onPressed: () => setState(() {searchActive = true;}),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 5, 20, 5),
+                child:  IconButton(
+                  icon: Icon(Icons.filter_list, color: toDoIconCols),
+                  onPressed: () {
+                    filterTasks(context, currentFilter).then((val) {
+                      if (val != null && val != -1) {
+                        print(val);
+                        currentFilter = val;
+                        setState(() {
+                          fetchData = true;
+                        });
+                      }
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),            
+      ],
+      )        
+    );
+  }
+  
+  Widget searchWidget() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(5, 10, 30, 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          IconButton(onPressed: () => setState(() {searchActive = false;}), icon: Icon(Icons.arrow_back), constraints: BoxConstraints(),),
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Search',
+              ),
+              controller: searchController,
+              onChanged: (s) => setState(() => {}),
+            )
+          )
+        ],
+      ),
+    );
+  }
+
   Widget makeBody(BuildContext context){
 
     return ListView (
       //shrinkWrap: true,
       //physics: const ClampingScrollPhysics(), 
       children:<Widget>[
-        Container(
-          color: bg[darkMode],
-          //mainAxisAlignment: MainAxisAlignment.start
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-          child:Column(
-            children: [
-              Row(             
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                      child: Text("Incomplete: ${incompleteTasks.length}, Complete: ${completedTasks.length}", style: TextStyle(fontSize: 12,color: primaryText[darkMode])),
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    child:  IconButton(
-                      icon: Icon(Icons.filter_list, color: toDoIconCols),
-                      onPressed: () {
-                        filterTasks(context, currentFilter).then((val) {
-                          if (val != null && val != -1) {
-                            print(val);
-                            currentFilter = val;
-                            setState(() {
-                              fetchData = true;
-                            });
-                          }
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Text("Incomplete",style: TextStyle( fontWeight: FontWeight. bold,fontSize: 14,color: primaryText[darkMode])),
-                    ),
-                  ],
-              ),            
-          ],
-          )        
-        ),  
+        searchActive? searchWidget():infoAndButtons(),
         Container(
             decoration: BoxDecoration(color:bg[darkMode]),
             padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -208,6 +243,13 @@ class ToDoListState extends State<ToDoList>{
   );
   }
   Widget makeCarddone(int index) {
+    if (searchActive) {
+      String text = searchController.text.toLowerCase();
+      if (!itemsComp[index].name.toLowerCase().contains(text) && !itemsComp[index].description.toLowerCase().contains(text) && !itemsComp[index].notes.toLowerCase().contains(text)) {
+        return Container();
+      }
+    }
+
     return Card ( //static cos otherwise implicit declaration
       elevation: 7.0,
       shadowColor: Color.fromARGB(255, 0, 0, 0),
@@ -223,6 +265,13 @@ class ToDoListState extends State<ToDoList>{
 
   Widget makeCardundone(int index){
     
+    if (searchActive) {
+      String text = searchController.text.toLowerCase();
+      if (!itemsUncomp[index].name.toLowerCase().contains(text) && !itemsUncomp[index].description.toLowerCase().contains(text) && !itemsUncomp[index].notes.toLowerCase().contains(text)) {
+        return Container();
+      }
+    }
+
     Color col;
     int days = itemsUncomp[index].dline.difference(DateTime.now()).inDays;
     
@@ -248,7 +297,7 @@ class ToDoListState extends State<ToDoList>{
 
   Text deadlineToDays(String deadline) {
     if (deadline == "")
-      null;
+      return Text("");
     
     var t = DateTime.parse(deadline).difference(DateTime.now());
     if (t.inDays > 0)
