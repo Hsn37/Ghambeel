@@ -2,9 +2,12 @@ import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/main.dart';
+import 'package:ghambeel/modules/utils.dart';
+import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:ghambeel/sharedfolder/task.dart';
 import 'dart:async';
 import 'package:simple_timer/simple_timer.dart';
+import 'package:ghambeel/modules/storage/storage.dart';
 
 import '../../theme.dart';
 
@@ -35,33 +38,22 @@ class CountdownTimer extends StatefulWidget {
 }
 
 class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProviderStateMixin{
-  static const testDuration = Duration(minutes: 1, seconds: 5);
-  Duration myTime = const Duration();
-  // Timer? timer;
-  // declaration
+  
+  Duration timeElapsed = const Duration();
+
   var isRunning = false;
   var isPaused = false;
   late TimerController _timerController;
-  var selectedAssignment="No task";// select default assignment here.
-  late final List<DropdownMenuItem<String>> currentTaskList;
+  late Task selectedAssignment;// select default assignment here.
+  late final List<DropdownMenuItem<Task>> currentTaskList;
 
-  _loadCurrentTaskList(){
+  bool noTasks = false;
+  bool fetchData = true;
 
-    List<Task> rawTasks;
-    currentTaskList = [DropdownMenuItem(child: Text("No task"),value: "No task")];
-    Storage.fetchTasks().then((v) =>
-    {
-      rawTasks = Task.parseTasksCal(v["incomplete"], null),
+  _loadCurrentTaskList(List<Task> list) {
 
-      setState(() {
-        for (var task in rawTasks) {
-          currentTaskList.add(
-              DropdownMenuItem(child: Text(task.name),value: task.name)
-          );
-        }
-      })
-    });
-
+    currentTaskList = list.map((e) => DropdownMenuItem(child: Text(e.shortName()), value: e)).toList();
+    selectedAssignment = list[0];
     //
   }
 
@@ -80,7 +72,7 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _loadCurrentTaskList();
+    // _loadCurrentTaskList();
     _timerController = TimerController(this);
   }
 
@@ -93,6 +85,8 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
   void stopTimer() {
     if (isRunning) {
       _timerController.stop();
+      print(timeElapsed);
+      Storage.AddTimeSpent(selectedAssignment, timeElapsed);
       setState(() {isRunning = false;});
     }
     else{
@@ -125,13 +119,39 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: (!isRunning)? topBar(context: context, myTitle: '',):null,
-      backgroundColor: bg[darkMode],
-      body: Center(
-        child: createTimer(),
-      )
-    );
+    if (fetchData) {
+      var start = DateTime.now();
+      Storage.fetchTasks().then((v) {
+        var list = Task.parseTasks(v["incomplete"]);
+        
+        if (list.length == 0) {
+          noTasks = true;          
+        }
+        else {
+          _loadCurrentTaskList(list);
+        }
+        
+        if (noTasks) {
+            Navigator.pop(context);
+            alertDialog("Voila", "You currently have no tasks to work on", context);
+        }
+        else
+          Timer(Duration(milliseconds: 1000 - DateTime.now().difference(start).inMilliseconds), () => setState(() => {
+            fetchData = false,
+          }));
+      });
+
+      return Loading();
+    }
+    else {
+      return Scaffold(
+          appBar: (!isRunning)? topBar(context: context, myTitle: '',):null,
+        backgroundColor: bg[darkMode],
+        body: Center(
+          child: createTimer(),
+        )
+      );
+    }
   }
 
   Widget createTimer() {
@@ -151,13 +171,13 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
                 value:selectedAssignment,
                 iconDisabledColor: accent,
                 hint: const Text("Select Task", style:TextStyle(color: accent)),
-                disabledHint: Text(selectedAssignment, style:TextStyle(color: accent)),
-                onChanged: (!isRunning) ? (String ?nvalue)
+                disabledHint: Text(selectedAssignment.shortName(), style:TextStyle(color: accent)),
+                onChanged: (!isRunning) ? (Task? nvalue)
                 {
-                  setState(()
-                  {
-                    selectedAssignment = nvalue!;
-                  }
+                    setState(()
+                    {
+                      selectedAssignment = nvalue!;
+                    }
                   );
                 }: null),
 
@@ -176,6 +196,7 @@ class _CountdownTimerState extends State<CountdownTimer> with SingleTickerProvid
                         backgroundColor: Colors.grey,
                         progressTextCountDirection: TimerProgressTextCountDirection.count_up,
                         progressTextStyle: const TextStyle(color: accent, fontSize: 60),
+                        valueListener: (e) => timeElapsed = e,
                       ),
                     ),
                   ),
