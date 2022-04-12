@@ -112,7 +112,7 @@ class _LeaderboardState extends State<Leaderboard>{
           child: Column(
             mainAxisAlignment:MainAxisAlignment.center,
             children: [
-              Text(initials,style:TextStyle(color:primaryText[darkMode],fontSize: 28)),
+              Text(initials,style:TextStyle(color:primaryText[0],fontSize: 28)),
             ],
           )
       ),
@@ -122,7 +122,7 @@ class _LeaderboardState extends State<Leaderboard>{
           const SizedBox(width: 2,),
         ]
       ),
-      trailing: Text(Score),
+      trailing: Text(Score, style: TextStyle(color:primaryText[darkMode])),
     );     
   }
   
@@ -141,6 +141,7 @@ class _LeaderboardState extends State<Leaderboard>{
 
      SafeArea(
           child: Container(
+
             child: Container(
               child:ListView(
                 children:[
@@ -179,8 +180,8 @@ class _LeaderboardState extends State<Leaderboard>{
                         
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                           Text("Username"),
-                           Text("Score")
+                           Text("Username", style: TextStyle(color:primaryText[darkMode])),
+                           Text("Score", style: TextStyle(color:primaryText[darkMode]))
                           //Text("Rankings")
                         ],
                       ),
@@ -242,6 +243,7 @@ class _LeaderboardState extends State<Leaderboard>{
 
     return Scaffold(
       appBar: topBar(context: context, myTitle: '',),
+      backgroundColor: bg[darkMode],
       body: makeBody(),
     );
   }
