@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ghambeel/sharedfolder/task.dart';
 import 'dart:convert';
 import 'package:ghambeel/modules/utils.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils.dart';
@@ -73,18 +74,28 @@ class Storage {
   static Future<void> AddTimeSpent(Task task, Duration duration) async{
     var total = duration.inMinutes;
 
-    var times = await getValue(Keys.timespent).then((v) => jsonDec(v));
+    var times = await getValue(Keys.timeSpentPerTask).then((v) => jsonDec(v));
+    var timeperday = await getValue(Keys.timeSpentPerDay).then((v) => jsonDec(v));
 
     if (times[task.taskId] == null)
       times[task.taskId] = 0;
+
+    var date = getFormattedDate(DateTime.now());
+    if (timeperday[date] == null)
+      timeperday[date] = 0;
     
     int k = times[task.taskId];
-
     times[task.taskId] = k + total;
+
+    timeperday[date] = timeperday[date] + total;
 
     print("Updated times for tasks");
     print(times);
-    return setValue(Keys.timespent, jsonEnc(times));
+    print(timeperday);
+    
+    return setValue(Keys.timeSpentPerTask, jsonEnc(times)).then((v) => {
+      setValue(Keys.timeSpentPerDay, jsonEnc(timeperday))
+    });
   }
 
   static Future<void> markTaskDone (Task task) async {
@@ -184,8 +195,9 @@ class Keys {
   static String login = "loginStatus";
   static String tasks = "tasks";
   static String taskNum = "globalTaskNum";
-  static String timespent = "timespent";
+  static String timeSpentPerTask = "timespentPerTask";
   static String bgservice = "bgservice";
+  static String timeSpentPerDay = "timeSpentPerDay";
 }
 
 // initialized in the app setup function.

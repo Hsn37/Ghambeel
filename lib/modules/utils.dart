@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:http/http.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
@@ -40,6 +41,11 @@ String getFormattedDatetime(DateTime t) {
 
 String getNowDateTime() {
   return DateTime.now().toString().split(".")[0];
+}
+
+String getFormattedDate(DateTime t) {
+    
+  return DateFormat.yMd().format(t);
 }
 
 final appBarTitles = ["Calendar", "To-do List", "Timers", "Statistics"];
