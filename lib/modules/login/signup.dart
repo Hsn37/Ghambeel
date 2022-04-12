@@ -5,6 +5,7 @@ import 'package:ghambeel/modules/utils.dart';
 import 'dart:convert';
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ghambeel/modules/homepage/homepage.dart';
 // import 'package:mysql1/mysql1.dart';
 // import 'package:ghambeel/modules/utils.dart';
 
@@ -22,6 +23,7 @@ class _SignupPageState extends State<SignupPage> {
   var password = TextEditingController();
   var username = TextEditingController();
   String serverUrl = 'http://74.207.234.113:8080';
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   //var db = Mysql();
 
@@ -55,6 +57,7 @@ class _SignupPageState extends State<SignupPage> {
           )
       ),
       child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           title: const Text("Sign up Page"),
@@ -121,16 +124,34 @@ class _SignupPageState extends State<SignupPage> {
                     color: Colors.blue, borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
                   onPressed: () async {
-                    // var newEmail = email.text;
-                    // var newUsername = username.text;
-                    // var newPassword = password.text;
-                    // var data = jsonEncode({
-                    //   "email" : newEmail,
-                    //   "username" : newUsername,
-                    //   "password": newPassword
-                    // });
-                    // postData(data, "Users", serverUrl);
-                    Storage.recoverTasks();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        new SnackBar(duration: new Duration(seconds: 4), content:
+                        new Row(
+                          children: <Widget>[
+                              new CircularProgressIndicator(),
+                              new Text("  Signing-In...")
+                            ],
+                          ),
+                        )
+                    );
+                    var newEmail = email.text;
+                    var newUsername = username.text;
+                    var newPassword = password.text;
+                    var data = jsonEncode({
+                      "email" : newEmail,
+                      "username" : newUsername,
+                      "password": newPassword
+                    });
+                    postData(data, "Users", serverUrl);
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.setBool('log', true);
+                    prefs.setString('username', newUsername);
+                    setState(() => {
+                      loading = true
+                    });
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => const MyHomePage(
+                            title: "FLutter")));
                   },
                   child: const Text(
                     'Sign up',
