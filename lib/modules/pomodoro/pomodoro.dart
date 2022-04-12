@@ -268,7 +268,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   }
   
   _loadCurrentTaskList(List<Task> list){//load assignment list. use index for vallue and display title as text
-     currentTaskList = list.map((e) => DropdownMenuItem(child: Text(e.name), value: e)).toList();
+     currentTaskList = list.map((e) => DropdownMenuItem(child: Text(e.shortName()), value: e)).toList();
      selectedAssignment = list[0];
   }
   
@@ -476,7 +476,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
               value:selectedAssignment,
               iconDisabledColor: subtleGrey,
               hint: Text("Select Task",style: TextStyle(color: subtleGrey),),
-              disabledHint: Text(selectedAssignment.name,style: TextStyle(color: subtleGrey),),
+              disabledHint: Text(selectedAssignment.shortName(),style: TextStyle(color: subtleGrey),),
                onChanged: (allowSelectionOnce<1) ? (Task? nvalue)
                { 
                  setState(() 

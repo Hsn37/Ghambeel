@@ -226,7 +226,9 @@ class ToDoListState extends State<ToDoList>{
     Color col;
     int days = itemsUncomp[index].dline.difference(DateTime.now()).inDays;
     
-    if (days < 1)
+    // -4000 is here because the deadline is 1990 by default, if there is no deadline. thus
+    // we keep this lower check as well.
+    if (days < 1 && days > -4000)
       col = listTileColPriority[darkMode];
     else
       col = listTileCol[darkMode];
@@ -277,12 +279,12 @@ class ToDoListState extends State<ToDoList>{
         ),
       title: Row(
           children: <Widget>[ // this needs to have task header!!!!! sample text here
-            Text(shortenTitle(list[index].name), style: TextStyle(color: primaryText[darkMode], fontSize: 18)),
+            Text(list[index].shortName(), style: TextStyle(color: primaryText[darkMode], fontSize: 18)),
             const SizedBox(width: 2,),
             Icon(Icons.timer, color: timerCol, size: 14)
           ]
         ),
-      subtitle: Text(shortenDescription(list[index].description), style: TextStyle(color: secondaryText[darkMode])),
+      subtitle: Text(list[index].shortDescription(), style: TextStyle(color: secondaryText[darkMode])),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -314,27 +316,6 @@ class ToDoListState extends State<ToDoList>{
       ),
       onTap: () => viewTask(list[index], context),
     );
-  }
-
-  String shortenTitle(String x){
-    int stringLength = 12;
-
-    if (x.length > stringLength) {
-      return x.substring(0, stringLength) + "...";
-    }
-    else {
-      return x;
-    }
-  }
-  String shortenDescription(String x){
-    int stringLength = 25;
-
-    if (x.length > stringLength) {
-      return x.substring(0, stringLength) + "...";
-    }
-    else {
-      return x;
-    }
   }
   
   // see options for this.
@@ -377,14 +358,14 @@ class ToDoListState extends State<ToDoList>{
           ),
       title: Row(
         children: <Widget>[ // this needs to have task header!!!!! sample text here
-          Text(shortenTitle(list[index].name), style: TextStyle(color: primaryText[darkMode], fontSize: 18)),
+          Text(list[index].shortName(), style: TextStyle(color: primaryText[darkMode], fontSize: 18)),
           const SizedBox(width: 2,),
           Icon(Icons.timer, color: timerCol, size: 14)
         ]
       ),
       subtitle: Row(
           children: <Widget>[
-            Text(shortenDescription(list[index].description), style:  TextStyle(color: secondaryText[darkMode])),
+            Text(list[index].shortDescription(), style:  TextStyle(color: secondaryText[darkMode])),
           // Icon(Icons.timer, color: Color.fromARGB(255, 255, 0, 0), ),
             // so set color thru a function??
           ],
