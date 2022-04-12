@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:ghambeel/sharedfolder/loading.dart';
-
+import 'package:numberpicker/numberpicker.dart';
 import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/sharedfolder/task.dart';
 import '../../theme.dart';
 import '../utils.dart';
+import 'dart:math';
 
 
 class topBar extends AppBar {
@@ -42,6 +43,7 @@ class Leaderboard extends StatefulWidget{
 class _LeaderboardState extends State<Leaderboard>{
   var topNum = 5;
   var toDisplay = 0;
+  var maxShow = 50;
   // Map<dynamic, dynamic>? scores;
   List<dynamic> rawscores = [];
   List<dynamic> scores = [];
@@ -57,6 +59,8 @@ class _LeaderboardState extends State<Leaderboard>{
     scores = rawscores.take(topNum).toList();
     setState(() {
       toDisplay = scores.length;
+      topNum = min(toDisplay, topNum);
+      maxShow = min(50, rawscores.length);
     });
   }
 
@@ -108,7 +112,7 @@ class _LeaderboardState extends State<Leaderboard>{
           child: Column(
             mainAxisAlignment:MainAxisAlignment.center,
             children: [
-              Text(initials,style:TextStyle(color:primaryText[darkMode],fontSize: 28)),
+              Text(initials,style:TextStyle(color:primaryText[0],fontSize: 28)),
             ],
           )
       ),
@@ -118,7 +122,7 @@ class _LeaderboardState extends State<Leaderboard>{
           const SizedBox(width: 2,),
         ]
       ),
-      trailing: Text(Score),
+      trailing: Text(Score, style: TextStyle(color:primaryText[darkMode])),
     );     
   }
   
@@ -137,12 +141,31 @@ class _LeaderboardState extends State<Leaderboard>{
 
      SafeArea(
           child: Container(
+
             child: Container(
               child:ListView(
                 children:[
                   const Padding(
                     padding: EdgeInsets.all(24),
                     child:  Text("A healthy competition goes a long way!",style: TextStyle(color: subtleGrey )),
+                  ),
+                   Padding(
+                    padding: EdgeInsets.all(24),
+                    child:  Text("Select number of top scorers:",style: TextStyle(color: primaryText[darkMode] )),
+                  ),
+                  NumberPicker(
+                    value: topNum,
+                    minValue: 1,
+                    maxValue: maxShow,
+                    step: 1,
+                    itemHeight: 25,
+                    axis: Axis.horizontal,
+                    textStyle: TextStyle(color:primaryText[darkMode]),
+                    selectedTextStyle: TextStyle(color:accent),
+                    onChanged: (value) => setState(
+                            () {topNum = value;
+                            syncScores();}
+                    ),
                   ),
                   Container(
                   padding: EdgeInsets.all(14),
@@ -157,8 +180,8 @@ class _LeaderboardState extends State<Leaderboard>{
                         
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                           Text("Username"),
-                           Text("Score")
+                           Text("Username", style: TextStyle(color:primaryText[darkMode])),
+                           Text("Score", style: TextStyle(color:primaryText[darkMode]))
                           //Text("Rankings")
                         ],
                       ),
@@ -220,6 +243,7 @@ class _LeaderboardState extends State<Leaderboard>{
 
     return Scaffold(
       appBar: topBar(context: context, myTitle: '',),
+      backgroundColor: bg[darkMode],
       body: makeBody(),
     );
   }

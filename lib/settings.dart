@@ -55,6 +55,7 @@ class _settings extends State<settings> {
               backing_up = true;
             });
             await doBackup(serverUrl);
+            await sendScores(serverUrl);
             setState(() {
               backing_up = false;
             });
