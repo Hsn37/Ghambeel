@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ghambeel/theme.dart';
 
-List<String> options = <String>["Deadline", "Priority", "None"];
+List<String> options = <String>["Deadline", "Priority", "Time added"];
 
 Widget listOption(BuildContext context, String option, int value, int currentFilter) {
   return (

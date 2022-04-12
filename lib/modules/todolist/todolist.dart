@@ -33,8 +33,8 @@ class ToDoListState extends State<ToDoList>{
   int presentUncomp = 0;
   int perPageUncomp = 3;
 
-  // 3 corresponds to "None" in the list;
-  int currentFilter = 3;
+  // 3 corresponds to "TimeAdded" in the list;
+  int currentFilter = 1;
 
   var completedTasks = <Task>[];
   var incompleteTasks = <Task>[];
@@ -246,6 +246,21 @@ class ToDoListState extends State<ToDoList>{
     );
   }
 
+  Text deadlineToDays(String deadline) {
+    if (deadline == "")
+      null;
+    
+    var t = DateTime.parse(deadline).difference(DateTime.now());
+    if (t.inDays > 0)
+      return Text("in " + t.inDays.toString() + " day${t.inDays > 1? "s":""}", style: TextStyle(color: secondaryText[darkMode]));
+    else if (t.inHours > 0)
+      return Text("in " + t.inHours.toString() + " hour${t.inHours > 1? "s":""}", style: TextStyle(color: secondaryText[darkMode]));
+    else if (t.inMinutes > 0)
+      return Text("in " + t.inMinutes.toString() + " minute${t.inMinutes > 1? "s":""}", style: TextStyle(color: secondaryText[darkMode]));
+    else
+      return Text("deadline passed!", style: TextStyle(color: Colors.red[200]));
+  }
+
   Widget makeListTileUncomp(int index, List<Task> list) {
     
     Color timerCol;
@@ -284,7 +299,13 @@ class ToDoListState extends State<ToDoList>{
             Icon(Icons.timer, color: timerCol, size: 14)
           ]
         ),
-      subtitle: Text(list[index].shortDescription(), style: TextStyle(color: secondaryText[darkMode])),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(list[index].shortDescription(), style: TextStyle(color: secondaryText[darkMode])),
+          deadlineToDays(list[index].deadline),
+        ]
+      ),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -418,8 +439,9 @@ class ToDoListState extends State<ToDoList>{
       completedTasks.sort((a, b) => comparePriority(b.priority, a.priority));
     }
     else if (currentFilter == 3) {
-      // do nothing. this is the "None" option
+      // do nothing. this is the "Time added" option
       // keep the list unsorted
+      // tasks are by default sorted in the order they are added.
     }
   }
 

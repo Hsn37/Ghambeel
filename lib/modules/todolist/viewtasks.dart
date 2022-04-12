@@ -6,6 +6,8 @@ import 'package:ghambeel/sharedfolder/task.dart';
 import 'package:ghambeel/theme.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../utils.dart';
+
 Widget subHeading(String heading, IconData icon, [Color col = accent]) {
   return Row(
     children: <Widget>[
@@ -59,7 +61,7 @@ Future<void> viewTask(Task task, BuildContext context) async {
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
-              subHeading("Description", Icons.description),
+              subHeading(task.description == ""? "-":task.description, Icons.description),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                 child: Text(task.description),
@@ -69,6 +71,7 @@ Future<void> viewTask(Task task, BuildContext context) async {
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                 child: Text(task.notes == ""? "-":task.notes),
               ),
+              subHeading(task.timeAdded, Icons.create, Color.fromARGB(255, 172, 166, 166)),
               subHeading(task.deadline, Icons.timer, timerCol),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
