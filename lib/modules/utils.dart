@@ -185,6 +185,7 @@ Future<dynamic> getScoreData(url) async {
   // Replace the url inside with https://localhost:{port}/?username=admin&password=123 (try either localhost or 10.0.0.2)
   Response response = await get(Uri.parse(url));
   dynamic temp = jsonDecode(response.body);
+
   return temp;
 }
 
@@ -193,6 +194,7 @@ Future<dynamic> getScores() async {
   String user = prefs.getString('username') ?? "";
   var month = DateTime.now().month - 1;
   dynamic data = await getScoreData("http://74.207.234.113:8080/?username="+user+"&scores="+month.toString());
+  print(data);
   return data;
 }
 

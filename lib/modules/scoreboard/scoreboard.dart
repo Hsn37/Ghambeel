@@ -7,6 +7,7 @@ import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/sharedfolder/task.dart';
 import '../../theme.dart';
+import '../utils.dart';
 
 
 class topBar extends AppBar {
@@ -39,6 +40,31 @@ class Leaderboard extends StatefulWidget{
   _LeaderboardState createState() => _LeaderboardState();
 }
 class _LeaderboardState extends State<Leaderboard>{
+  var topNum = 5;
+  var toDisplay = 0;
+  // Map<dynamic, dynamic>? scores;
+  List<dynamic> rawscores = [];
+  List<dynamic> scores = [];
+
+  void syncScores () async {
+    rawscores = await getScores();
+    print(rawscores);
+
+    rawscores.sort((s1, s2) {
+      return Comparable.compare(s1.score, s2.score);
+    });
+
+    scores = rawscores.take(topNum).toList();
+    setState(() {
+      toDisplay = scores.length;
+    });
+  }
+
+  void initState() {
+    super.initState();
+    syncScores();
+  }
+
   Widget makeCard(String str1, flag,score) {
     var initials=str1[0];
     
@@ -60,6 +86,8 @@ class _LeaderboardState extends State<Leaderboard>{
     
   }
   Widget makeTileU(String str1,String initials, String Score,Color coloftile){
+
+
    return ListTile ( 
     //  contentPadding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10.0),
       selectedColor: coloftile,
@@ -100,8 +128,8 @@ class _LeaderboardState extends State<Leaderboard>{
    Widget makeBody() {
     return 
     // uncomment beow line of code to check if data has been fetched. laoding screen laoded else call fetch data function
-    
-    // isInit ? 
+
+    // isInit ?
     //   Center(
     //     child: Loading(),
     //   )
@@ -114,7 +142,7 @@ class _LeaderboardState extends State<Leaderboard>{
                 children:[
                   const Padding(
                     padding: EdgeInsets.all(24),
-                    child:  Text("A healthy competeion goes a long way!",style: TextStyle(color: subtleGrey )),
+                    child:  Text("A healthy competition goes a long way!",style: TextStyle(color: subtleGrey )),
                   ),
                   Container(
                   padding: EdgeInsets.all(14),
@@ -137,11 +165,13 @@ class _LeaderboardState extends State<Leaderboard>{
                       SizedBox(
                         height: 10,
                       ),
-                      makeCard("maaz",true,"4.4"),
-                       makeCard("maaz",true,"4.4"),
-                        makeCard("maaz",true,"4.4"),
-                         makeCard("maaz",true,"4.4"),
-                          makeCard("maaz",true,"4.4"),
+                      for (int i=0; i<toDisplay; i++)
+                        makeCard( (scores.length > i) ? scores[i]["username"] : "",true,(scores.length > i) ? scores[i]["score"].toString() : ""),
+                       //
+                       // makeCard("maaz",true,"4.4"),
+                       //  makeCard("maaz",true,"4.4"),
+                       //   makeCard("maaz",true,"4.4"),
+                       //    makeCard("maaz",true,"4.4"),
 
                       // Row(
                       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,10 +216,11 @@ class _LeaderboardState extends State<Leaderboard>{
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: topBar(context: context, myTitle: '',),
-      body:makeBody(),
-
+      body: makeBody(),
     );
   }
   
