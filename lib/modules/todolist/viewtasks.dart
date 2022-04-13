@@ -61,10 +61,10 @@ Future<void> viewTask(Task task, BuildContext context) async {
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
-              subHeading(task.description == ""? "-":task.description, Icons.description),
+              subHeading("Description", Icons.description),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                child: Text(task.description),
+                child: Text(task.description == ""? "-":task.description),
               ),
               subHeading("Notes", Icons.notes),
               Padding(
