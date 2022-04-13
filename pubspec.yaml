@@ -64,6 +64,7 @@ dependencies:
   background_fetch: ^1.1.0
   heatmap_calendar: ^1.2.8
   flutter_heatmap_calendar: ^1.0.3
+  sortedmap: ^0.5.1
 
 dev_dependencies:
   flutter_test:

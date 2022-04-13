@@ -1,8 +1,10 @@
 import 'dart:collection';
+import 'dart:ui';
 // import 'dart:';
 
 import 'package:flutter/material.dart';
 import 'package:ghambeel/sharedfolder/task.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:pie_chart/pie_chart.dart';
@@ -11,6 +13,10 @@ import '../../theme.dart';
 // import 'package:heatmap_calendar/time_utils.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
+import 'package:sortedmap/sortedmap.dart';
+
+
+
 
 
 class Statistics extends StatefulWidget {
@@ -21,15 +27,39 @@ class Statistics extends StatefulWidget {
   _StatState createState() => _StatState();
 }
 
-class _StatState extends State<Statistics> {
-
   Map<String, double> pieData = {
     'Task1': 35.8,
     'Task2': 8.3,
     'Task3': 10.8,
     'Task4': 15.6,
     'Task5': 19.2,
+    'Task6': 23,
   };
+
+  // Map<String, double> getTop5(Map map)
+  // {
+  //   Map<String, double> ret = {};
+  //   for (var i = 0; i < 5; i++) {
+  //     ret.add()
+  //   }
+     
+  //   return ret;
+  // }
+class _StatState extends State<Statistics> {
+
+  // var sorteddatapie = SortedMap(Ordering.byValue());
+
+
+  var sortMapByValue = Map.fromEntries(
+    pieData.entries.toList()
+    ..sort((e1, e2) => e1.value.compareTo(e2.value)));
+    
+  // print("***Sorted Map by value***");
+  // print(sortMapByValue);
+
+
+  
+  
 
   List<Color> mycolorList = [
     const Color(0xffFE9539),
@@ -135,7 +165,7 @@ class _StatState extends State<Statistics> {
                                         fontWeight: FontWeight.bold,
                                       )
                                   ),
-                                  dataMap: pieData,
+                                  dataMap: sortMapByValue,
                                   colorList: mycolorList,
                                   chartRadius: MediaQuery
                                       .of(context)
