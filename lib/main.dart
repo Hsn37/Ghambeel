@@ -65,7 +65,11 @@ void backgroundService (HeadlessTask task) async {
     int counter2 = 0;
 
     tasks.forEach((k, v)  {
+      if (v["deadline"] == "")
+        return;
+        
       var d = DateTime.tryParse(v["deadline"])!.difference(t).inDays;
+      
       if (d == 0) {
         counter++;
       }
