@@ -164,12 +164,12 @@ class _Pomodorosettings extends State<PomodoroSettings> {
           
           padding: EdgeInsets.all(24),
           children: [
+            // const Padding(
+            //     padding: EdgeInsets.all(24),
+            //     child:  Text("Improve Focus",style: TextStyle(color: subtleGrey )),
+            // ),
+            //  makeCardFocus("Focus Mode", "Turn On to Block Notifications While Working"),
             const Padding(
-                padding: EdgeInsets.all(24),
-                child:  Text("Improve Focus",style: TextStyle(color: subtleGrey )),
-            ),
-             makeCardFocus("Focus Mode", "Turn On to Block Notifications While Working"),
-              const Padding(
                 padding: const EdgeInsets.all(24),
                 child:  Text("Edit The Pomodoro Cycle Preferences",style: TextStyle(color: subtleGrey ,fontSize: 16)),
 
