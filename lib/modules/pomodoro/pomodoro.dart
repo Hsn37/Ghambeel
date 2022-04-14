@@ -471,6 +471,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
           const SizedBox( height: 10, ),
           DropdownButtonHideUnderline(
             child: DropdownButton(
+              elevation:8,
               iconEnabledColor: lightPrimary[darkMode],
               items:currentTaskList,
               value:selectedAssignment,
