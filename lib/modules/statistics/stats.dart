@@ -390,26 +390,47 @@ Future<dynamic> getPieData() async {
   dynamic tasks = {};
   Map holder = SortedMap(Ordering.byValue());
   Map<String, double> result = {};
-  if (temp != "") {
-    tasks = json.decode(temp!);
-    holder.addAll(tasks);
-    var iter = holder.keys.toList().reversed;
-    var count = 0;
-    print(holder);
-    for (var key in iter) {
-      print(key);
-      print(holder[key]);
-      count = count + 1;
-      print("Result0:"+ result.toString());
-      // result.putIfAbsent(key, () => holder[key]);
-      result[key.toString()] = holder[key];
-      print("Result:"+ result.toString());
-      if (count == 5) {
-        break;
+  try {
+    if (temp != "") {
+      tasks = json.decode(temp!);
+      holder.addAll(tasks);
+      var iter = holder.keys.toList().reversed;
+      var count = 0;
+      print(holder);
+      for (var key in iter) {
+        print(key);
+        print(holder[key]);
+        print(tasks[key]);
+        print(key.runtimeType);
+        print(holder[key].runtimeType);
+        print(tasks[key].runtimeType);
+        String tempkey = key;
+        double tempval = tasks[key].toDouble();
+        count = count + 1;
+        // print("Result0:"+ result.toString());
+        // result.putIfAbsent(key, () => holder[key]);
+        result[tempkey] = tempval;
+        // print("Result:"+ result.toString());
+        if (count == 5) {
+          break;
+        }
       }
     }
   }
+  catch (e) {
+    print(e);
+    result = {
+      'Task1': 35.8,
+      'Task2': 8.3,
+      'Task3': 10.8,
+      'Task4': 15.6,
+      'Task5': 19.2,
+      'Task6': 23,
+    };
+  }
   // print("Result2:"+ holder.toString());
+  print(result);
+
   return result;
 }
 
@@ -438,7 +459,7 @@ Future<dynamic> getAllData() async {
   dynamic barData = await getBarData();
   dynamic heatData = await getHeatData();
 
-  // print(pieData);
+  print(pieData);
   return [pieData, barData, heatData];
 }
 
