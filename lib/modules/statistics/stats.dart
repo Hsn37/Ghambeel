@@ -30,14 +30,14 @@ class Statistics extends StatefulWidget {
   _StatState createState() => _StatState();
 }
 
-  Map<String, double> pieData = {
-    'Task1': 35.8,
-    'Task2': 8.3,
-    'Task3': 10.8,
-    'Task4': 15.6,
-    'Task5': 19.2,
-    'Task6': 23,
-  };
+  // Map<String, double> pieData = {
+  //   'Task1': 35.8,
+  //   'Task2': 8.3,
+  //   'Task3': 10.8,
+  //   'Task4': 15.6,
+  //   'Task5': 19.2,
+  //   'Task6': 23,
+  // };
 
   // Map<String, double> getTop5(Map map)
   // {
@@ -53,9 +53,9 @@ class _StatState extends State<Statistics> {
   // var sorteddatapie = SortedMap(Ordering.byValue());
 
 
-  var sortMapByValue = Map.fromEntries(
-    pieData.entries.toList()
-    ..sort((e1, e2) => e1.value.compareTo(e2.value)));
+  // var sortMapByValue = Map.fromEntries(
+  //   pieData.entries.toList()
+  //   ..sort((e1, e2) => e1.value.compareTo(e2.value)));
     
   // print("***Sorted Map by value***");
   // print(sortMapByValue);
@@ -157,7 +157,7 @@ class _StatState extends State<Statistics> {
                                         fontWeight: FontWeight.bold,
                                       )
                                   ),
-                                  dataMap: sortMapByValue,
+                                  dataMap: data[0], //pie data top 5 added here
                                   colorList: mycolorList,
                                   chartRadius: MediaQuery
                                       .of(context)
@@ -389,21 +389,27 @@ Future<dynamic> getPieData() async {
   String? temp = await Storage.getValue("timespentPerTask");
   dynamic tasks = {};
   Map holder = SortedMap(Ordering.byValue());
-  Map<String, int> result = {};
+  Map<String, double> result = {};
   if (temp != "") {
     tasks = json.decode(temp!);
     holder.addAll(tasks);
     var iter = holder.keys.toList().reversed;
     var count = 0;
+    print(holder);
     for (var key in iter) {
+      print(key);
+      print(holder[key]);
       count = count + 1;
+      print("Result0:"+ result.toString());
+      // result.putIfAbsent(key, () => holder[key]);
       result[key.toString()] = holder[key];
+      print("Result:"+ result.toString());
       if (count == 5) {
         break;
       }
     }
   }
-
+  // print("Result2:"+ holder.toString());
   return result;
 }
 
@@ -432,6 +438,7 @@ Future<dynamic> getAllData() async {
   dynamic barData = await getBarData();
   dynamic heatData = await getHeatData();
 
+  // print(pieData);
   return [pieData, barData, heatData];
 }
 
