@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -6,8 +7,11 @@ import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:ghambeel/sharedfolder/task.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../theme.dart';
 import '../utils.dart';
+import 'package:collection/collection.dart';
+import 'package:crypto/crypto.dart';
 import 'dart:math';
 
 
@@ -47,7 +51,7 @@ class _LeaderboardState extends State<Leaderboard>{
   // Map<dynamic, dynamic>? scores;
   List<dynamic> rawscores = [];
   List<dynamic> scores = [];
-
+  String username = "";
   void syncScores () async {
     rawscores = await getScores();
     print(rawscores);
@@ -60,12 +64,15 @@ class _LeaderboardState extends State<Leaderboard>{
 
 
     scores = rawscores.take(topNum).toList();
-    setState(() {
+    final prefs = await SharedPreferences.getInstance();
+    setState(()  {
       toDisplay = scores.length;
       topNum = min(toDisplay, topNum);
       maxShow = min(50, rawscores.length);
+      username = prefs.getString('username')!;
     });
     print(scores);
+    isInit = false;
   }
 
   void initState() {
@@ -75,7 +82,9 @@ class _LeaderboardState extends State<Leaderboard>{
 
   Widget makeCard(String str1, flag,score) {
     var initials=str1[0];
-    
+    var bytes = utf8.encode(str1);
+    var digest = sha1.convert(bytes);
+    var color = Color(((digest.bytes.sum * digest.bytes.sum)%9000000 * 0xFFFFFF).toInt()).withOpacity(1.0);
       return Card ( //static cos otherwise implicit declaration
          // elevation: 8.0,
           shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(30), ),
@@ -83,10 +92,13 @@ class _LeaderboardState extends State<Leaderboard>{
           //color: Colors.red,
           margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 6.0),
           child: Container(
-          decoration: BoxDecoration(color: bg[darkMode],borderRadius:BorderRadius.all(Radius.circular(50.0))),// function call check task urgency, select and return color!!!
+          decoration: BoxDecoration(color: bg[darkMode],borderRadius:BorderRadius.all(Radius.circular(50.0)),
+            boxShadow:  [
+              BoxShadow(color: (username == str1) ? accent : bg[darkMode], spreadRadius: 3),
+            ],),// function call check task urgency, select and return color!!!
           child:Container(
               decoration:  BoxDecoration(color: listTileCol[darkMode], borderRadius:  const BorderRadius.all(Radius.circular(50))),
-            child: makeTileU(str1,initials,score,Colors.amberAccent),
+            child: makeTileU(str1,initials,score,color),
           ),
         ),
       );
@@ -130,18 +142,18 @@ class _LeaderboardState extends State<Leaderboard>{
     );     
   }
   
-  var isInit = false;
+  var isInit = true;
   var isLoading = false;
 
    Widget makeBody() {
     return 
     // uncomment beow line of code to check if data has been fetched. laoding screen laoded else call fetch data function
 
-    // isInit ?
-    //   Center(
-    //     child: Loading(),
-    //   )
-    //   :
+    isInit ?
+      Center(
+        child: Loading(),
+      )
+      :
 
      SafeArea(
           child: Container(

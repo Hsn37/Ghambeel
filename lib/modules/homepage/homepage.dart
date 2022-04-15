@@ -25,11 +25,20 @@ class _MyHomePageState extends State<MyHomePage> {
   static const Color navColor = Color(0xFF0097A7);
   static const Color navColorSelected = Color(0xFFFFC107);
 
+  Future<void> usernameInit() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString('username')!;
+    });
+  }
+
   int _selectedIndex = 0;
   bool loggedin = true;
+  var username = "";
   @override
   void initState() {
     super.initState();
+    usernameInit();
   }
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
@@ -61,6 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+
   void _onReturn() {
     setState(() {
       print("here");
@@ -71,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     if (loggedin) {
+
       return Scaffold(
         appBar: AppBar(
           title: Text(appBarTitles[_selectedIndex]),
@@ -87,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: bg[darkMode],
           child: ListView(
             children: <Widget>[
-               const SizedBox(
+                SizedBox(
 
                 height: 80,
                 child: DrawerHeader(
@@ -96,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
 
                 child: Text(
-                  'Hello!',
+                  'Hello ${username}!',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
