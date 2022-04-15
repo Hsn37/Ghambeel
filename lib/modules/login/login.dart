@@ -22,7 +22,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool loading = false;
-  var email = TextEditingController();
+  var username = TextEditingController();
   var password = TextEditingController();
 
   //var db = Mysql();
@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    email.dispose();
+    username.dispose();
     password.dispose();
     super.dispose();
   }
@@ -88,14 +88,14 @@ class _LoginPageState extends State<LoginPage> {
                         //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: TextField(
-                          controller: email,
+                          controller: username,
                           decoration: InputDecoration(
                               border: const OutlineInputBorder(),
-                              prefixIcon: const Icon(Icons.email),
+                              prefixIcon: const Icon(Icons.account_circle),
                               filled: true,
                               fillColor: Colors.white.withOpacity(0.5),
-                              labelText: 'Email',
-                              hintText: 'Enter valid email id as abc@gmail.com'),
+                              labelText: 'username',
+                              hintText: 'Enter valid username'),
                         ),
                       ),
                       Padding(
@@ -130,13 +130,13 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.blue, borderRadius: BorderRadius.circular(20)),
                         child: TextButton(
                           onPressed: () async {
-                            var success = await getData("http://74.207.234.113:8080/?username="+email.text + "&password=" + password.text);
+                            var success = await getData("http://74.207.234.113:8080/?username="+username.text + "&password=" + password.text);
 
                             if (success['status'] == 'true') {
                               // redo after validation
                               final prefs = await SharedPreferences.getInstance();
                               prefs.setBool('log', true);
-                              prefs.setString('username', email.text);
+                              prefs.setString('username', username.text);
                               await Storage.recoverTasks();
                               setState(() => {
                                 loading = true

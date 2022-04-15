@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:ui';
 // import 'dart:';
 
@@ -14,6 +15,8 @@ import '../../theme.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:sortedmap/sortedmap.dart';
+import 'package:sortedmap/sortedmap.dart';
+
 
 
 
@@ -100,20 +103,9 @@ class _StatState extends State<Statistics> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.white,
-                  Color.fromRGBO(197, 244, 250, 1),
-                  Color.fromRGBO(255, 223, 126, 1)
-                ]
-            )
-        ),
-        child: FutureBuilder(
-          future: getBarData(),
+    return
+      FutureBuilder(
+          future: getAllData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               data = snapshot.data;
@@ -220,7 +212,7 @@ class _StatState extends State<Statistics> {
                                   width: 4500,
                                   height: 300,
                                   child: DailyWorkChart(
-                                    data,
+                                    data[1], // you can get specific data like this after returning
                                     // animate: false,
                                   ),
                                 ),
@@ -273,7 +265,7 @@ class _StatState extends State<Statistics> {
                                   defaultColor: Colors.white,
                                   flexible: true,
                                   colorMode: ColorMode.color,
-                                  datasets: heatMapDatasets,
+                                  datasets: data[2],
                                   colorsets: {
                                     1: Colors.amber.shade50,
                                     3: Colors.amber.shade100,
@@ -302,10 +294,8 @@ class _StatState extends State<Statistics> {
             else {
               return const CircularProgressIndicator();
             }
-
           },
-        )
-    );
+        );
   }
 }
 
@@ -370,34 +360,110 @@ class DailyWorkChart extends StatelessWidget {
 }
 
 Future<List<DailyWork>> getBarData() async {
-  DailyWork temp;
-  var prod = [0, 0, 0, 0, 0, 0, 0];
+  List<int> prod = [0, 0, 0, 0, 0, 0, 0];
   var week = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"];
+  List<int> tprod = [1, 2, 3, 4, 5, 6, 7];
+  var tweek = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"];
   List<DailyWork> result = [];
-  final tasks = await Storage.fetchTasks();
-  var complete = tasks['complete'];
-  for (var key in complete.keys) {
-    var current = complete[key];
-    var added = DateTime.parse(current['timeAdded']);
-    var completed = DateTime.parse(current['timeCompleted']);
-    var priority = current['priority'];
-    var month = completed.month;
-    var day = week[completed.weekday-1];
-    var timeTaken = completed.difference(added).inSeconds; // Change this to whatever metric you want
-    if (DateTime.now().difference(completed).inDays < 7) {
-      print(timeTaken);
-      prod[completed.weekday - 1] = prod[completed.weekday - 1] + timeTaken;
+  String? temp = await Storage.getValue("timeSpentPerDay");
+  if (temp != "") {
+    dynamic tasks = json.decode(temp!);
+    for (var item in tasks.keys) {
+      var now = DateTime.now();
+      var tiemdone = DateTime.parse(item);
+      if (now.difference(tiemdone).inDays < 7) {
+        var day = DateTime.parse(item).weekday;
+        int add = tasks[item];
+        prod[day-1] = prod[day-1] + add;
+      }
     }
   }
+
   for (var i = 0; i < prod.length; i++) {
     result.add(DailyWork(week[i], prod[i], charts.ColorUtil.fromDartColor(Colors.cyan.shade100)));
   }
+  return result;
+}
 
-  print(result[1].day);
-  print(result[1].hours);
+Future<dynamic> getPieData() async {
+  String? temp = await Storage.getValue("timespentPerTask");
+  dynamic tasks = {};
+  Map holder = SortedMap(Ordering.byValue());
+  Map<String, int> result = {};
+  if (temp != "") {
+    tasks = json.decode(temp!);
+    holder.addAll(tasks);
+    var iter = holder.keys.toList().reversed;
+    var count = 0;
+    for (var key in iter) {
+      count = count + 1;
+      result[key.toString()] = holder[key];
+      if (count == 5) {
+        break;
+      }
+    }
+  }
 
   return result;
 }
+
+Future<dynamic> getHeatData() async {
+  Map<DateTime, int> result = {};
+  String? temp = await Storage.getValue("timeSpentPerDay");
+  if (temp != "") {
+    dynamic temp2 = json.decode(temp!);
+    for (var key in temp2.keys) {
+      var day = DateTime.parse(key).day;
+      var month = DateTime.parse(key).month;
+      var year = DateTime.parse(key).year;
+      result[DateTime(year, month, day)] = temp2[key];
+    }
+  }
+
+  return result;
+}
+
+Future<dynamic> getAllData() async {
+  // this function gets data for all charts. you can do more processing here if you want.
+  // bar and heatmap data should be fine as is. pie data you'll have to deal with dynamically. it
+  // has top 5 or less.
+
+  dynamic pieData = await getPieData();
+  dynamic barData = await getBarData();
+  dynamic heatData = await getHeatData();
+
+  return [pieData, barData, heatData];
+}
+
+// Future<List<DailyWork>> oldgetBarData() async {
+//   DailyWork temp;
+//   var prod = [0, 0, 0, 0, 0, 0, 0];
+//   var week = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"];
+//   List<DailyWork> result = [];
+//   final tasks = await Storage.fetchTasks();
+//   var complete = tasks['complete'];
+//   for (var key in complete.keys) {
+//     var current = complete[key];
+//     var added = DateTime.parse(current['timeAdded']);
+//     var completed = DateTime.parse(current['timeCompleted']);
+//     var priority = current['priority'];
+//     var month = completed.month;
+//     var day = week[completed.weekday-1];
+//     var timeTaken = completed.difference(added).inSeconds; // Change this to whatever metric you want
+//     if (DateTime.now().difference(completed).inDays < 7) {
+//       print(timeTaken);
+//       prod[completed.weekday - 1] = prod[completed.weekday - 1] + timeTaken;
+//     }
+//   }
+//   for (var i = 0; i < prod.length; i++) {
+//     result.add(DailyWork(week[i], prod[i], charts.ColorUtil.fromDartColor(Colors.cyan.shade100)));
+//   }
+//
+//   print(result[1].day);
+//   print(result[1].hours);
+//
+//   return result;
+// }
 
 // Future<Map<String, double>> getPieData() async {
 //   final tasks = await Storage.fetchTasks();
