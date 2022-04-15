@@ -100,6 +100,8 @@ Future setup() async {
       if (v == null) 
         Storage.setValue(Keys.login, "false")
     });
+  
+
 
   // the tasks object to be present int the system always
   var p2 = Storage.getValue(Keys.tasks).then((v) => {
@@ -169,6 +171,12 @@ Future setup() async {
     if (v == null)
       Storage.setValue(Keys.timeSpentPerDay, Storage.jsonEnc({}))
   });
+  Storage.setValue("cft","25");
+  Storage.setValue("sbt","5");
+   
+   Storage.setValue("lbt","10");
+   Storage.setValue("cnc","4");
+   Storage.setValue("lba","2");
 
   return Future.wait(<Future>[p1, p2, p3, p4, p5, p6, p7, p8, p9]);
 }
