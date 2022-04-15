@@ -72,7 +72,7 @@ class Storage {
   }
   
   static Future<void> AddTimeSpent(Task task, Duration duration) async{
-    var total = duration.inMinutes;
+    var total = duration.inSeconds;
 
     var times = await getValue(Keys.timeSpentPerTask).then((v) => jsonDec(v));
     var timeperday = await getValue(Keys.timeSpentPerDay).then((v) => jsonDec(v));
@@ -80,7 +80,7 @@ class Storage {
     if (times[task.taskId] == null)
       times[task.taskId] = 0;
 
-    var date = getFormattedDate(DateTime.now());
+    var date = DateTime.now().toString(); // I changed this to better fit stats usecase
     if (timeperday[date] == null)
       timeperday[date] = 0;
     
