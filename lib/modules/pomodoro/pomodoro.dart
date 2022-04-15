@@ -271,11 +271,10 @@ class PomodoroTimerState extends State<PomodoroTimer>{
      currentTaskList = list.map((e) => DropdownMenuItem(child: Text(e.shortName()), value: e)).toList();
      selectedAssignment = list[0];
   }
-  
-
-  var allowSelectionOnce=0;
-  @override
-  void initState() async{
+  Future<dynamic> getAllData() async {
+  // this function gets data for all charts. you can do more processing here if you want.
+  // bar and heatmap data should be fine as is. pie data you'll have to deal with dynamically. it
+  // has top 5 or less.
 
       var tea;
       tea=await Storage.getValue("cft") ;///load from memory
@@ -289,6 +288,15 @@ class PomodoroTimerState extends State<PomodoroTimer>{
       tea= await Storage.getValue("lba"); //load from memory
       longBreakAfter=int.parse(tea);
 
+
+    return [testDuration, shortBreakDuration, longBreakDuration,numOfCycles, longBreakAfter];
+  }
+
+  var allowSelectionOnce=0;
+  @override
+  void initState() async{
+
+      
       currentDuartion=testDuration;
       pausedwithrunning=false;
       super.initState();
@@ -535,39 +543,53 @@ class PomodoroTimerState extends State<PomodoroTimer>{
 
     );
   }
-
+  var data;
   @override
   Widget build(BuildContext context) {
-    if (fetchData) {
-      var start = DateTime.now();
-      Storage.fetchTasks().then((v) {
-        var list = Task.parseTasks(v["incomplete"]);
-        
-        if (list.length == 0) {
-          noTasks = true;          
-        }
-        else {
-          _loadCurrentTaskList(list);
-        }
-        
-        if (noTasks) {
-            Navigator.pop(context);
-            alertDialog("Voila", "You currently have no tasks to work on", context);
-        }
-        else
-          Timer(Duration(milliseconds: 1000 - DateTime.now().difference(start).inMilliseconds), () => setState(() => {
-            fetchData = false,
-          }));
-      });
+    return 
+      FutureBuilder( 
+        future: getAllData(),
+        builder: (context, snapshot){
+          if (snapshot.connectionState == ConnectionState.done) {
+              data = snapshot.data;
+              if (fetchData) {
+                var start = DateTime.now();
+                Storage.fetchTasks().then((v) {
+                  var list = Task.parseTasks(v["incomplete"]);
+                  
+                  if (list.length == 0) {
+                    noTasks = true;          
+                  }
+                  else {
+                    _loadCurrentTaskList(list);
+                  }
+                  
+                  if (noTasks) {
+                      Navigator.pop(context);
+                      alertDialog("Voila", "You currently have no tasks to work on", context);
+                  }
+                  else
+                    Timer(Duration(milliseconds: 1000 - DateTime.now().difference(start).inMilliseconds), () => setState(() => {
+                      fetchData = false,
+                    }));
+                });
 
-      return Loading();
-    }
-    else {
-      return Scaffold(
-        appBar: (isStopState>0)? topBar(context: context, myTitle: '',):null,
-        key: _formKey,
-        body: makeBody(),
+                return Loading();
+              }
+              else {
+                return Scaffold(
+                  appBar: (isStopState>0)? topBar(context: context, myTitle: '',):null,
+                  key: _formKey,
+                  body: makeBody(),
+                );
+              }
+          }
+          else{
+            return const CircularProgressIndicator();
+          }
+        }
       );
-    }
+
+    
   }
 }
