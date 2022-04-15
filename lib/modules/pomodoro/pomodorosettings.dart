@@ -46,6 +46,7 @@ class _Pomodorosettings extends State<PomodoroSettings> {
   var temp;
   var longbreakAfter; // validation >0 , <num of cycles. by default numofcycles/2
   var l1;//=[workingTime,shortbreaktime,longbreaktime,numOfCycles,longbreakAfter];// use this instead
+  
   Widget textinput1(subtitle,whichVar,extra,ind) {
     return TextFormField(
                 keyboardType: TextInputType.number,
@@ -161,17 +162,17 @@ class _Pomodorosettings extends State<PomodoroSettings> {
   }
 
   @override
-  void initState(){
-      temp=Storage.getValue("cft") ;///load from memory
+  void initState() async{
+      temp=await Storage.getValue("cft") ;///load from memory
       workingTime=int.parse(temp);
-      temp=Storage.getValue("sbt"); //load from memory
+      temp=await Storage.getValue("sbt"); //load from memory
       shortbreaktime=int.parse(temp);
-      temp=Storage.getValue("lbt"); // load from memory
+      temp= await Storage.getValue("lbt"); // load from memory
       longbreaktime=int.parse(temp);
-      temp=Storage.getValue("cnc"); // load from memory
+      temp=await Storage.getValue("cnc"); // load from memory
       numOfCycles=int.parse(temp);
-      temp=Storage.getValue("lba"); //load from memory
-      longbreakAfter=int.parse(temp);
+      temp= await Storage.getValue("lba"); //load from memory
+      longbreakAfter=  int.parse(temp);
       l1=[workingTime,shortbreaktime,longbreaktime,numOfCycles,longbreakAfter]; // load from memory at these positions or no need here
   }
   @override

@@ -63,9 +63,9 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   final _formKey = GlobalKey<FormState>();
   late final List<DropdownMenuItem<Task>> currentTaskList; // populate in init 
   var currentCycleNumber;
-  static const testDuration = Duration(minutes:  00, seconds: 10);//load from storage
-  static const shortBreakDuration = Duration(minutes:  0, seconds: 3);//load from storage
-  static const longBreakDuration = Duration(minutes:  0, seconds: 5);//load from storage
+  var testDuration ;//= Duration(minutes:  00, seconds: 10);//load from storage
+  var shortBreakDuration ;//= Duration(minutes:  0, seconds: 3);//load from storage
+  var longBreakDuration;// = Duration(minutes:  0, seconds: 5);//load from storage
   var currentDuartion;// 
   Duration myTime = const Duration();
   Timer? timer;
@@ -74,8 +74,8 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   var timerTypeList=["Focus Time","Short Break","Long Break","None"];
   var timerType;
   var temp1;
-  var longBreakAfter=2;
-  var numOfCycles=4; // load number of cyeces from storage by default set in settings
+  var longBreakAfter;//=2;
+  var numOfCycles;//; // load number of cyeces from storage by default set in settings
 
   
   bool noTasks = false;
@@ -275,7 +275,20 @@ class PomodoroTimerState extends State<PomodoroTimer>{
 
   var allowSelectionOnce=0;
   @override
-  void initState() {
+  void initState() async{
+
+      var tea;
+      tea=await Storage.getValue("cft") ;///load from memory
+      testDuration=Duration(minutes: int.parse(tea) ) ;
+      tea=await Storage.getValue("sbt"); //load from memory
+      shortBreakDuration=Duration(minutes: int.parse(tea) ) ;
+      tea= await Storage.getValue("lbt"); // load from memory
+      longBreakDuration=Duration(minutes: int.parse(tea) ) ;
+      tea=await Storage.getValue("cnc"); // load from memory
+      numOfCycles=int.parse(tea);
+      tea= await Storage.getValue("lba"); //load from memory
+      longBreakAfter=int.parse(tea);
+
       currentDuartion=testDuration;
       pausedwithrunning=false;
       super.initState();
