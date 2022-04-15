@@ -46,7 +46,7 @@ class _Pomodorosettings extends State<PomodoroSettings> {
   var temp;
   var longbreakAfter; // validation >0 , <num of cycles. by default numofcycles/2
   var l1;//=[workingTime,shortbreaktime,longbreaktime,numOfCycles,longbreakAfter];// use this instead
-  
+  dynamic data = [];
   Widget textinput1(subtitle,whichVar,extra,ind) {
     return TextFormField(
                 keyboardType: TextInputType.number,
@@ -161,8 +161,11 @@ class _Pomodorosettings extends State<PomodoroSettings> {
     );
   }
 
-  @override
-  void initState() async{
+  Future<dynamic> getAllData() async {
+  // this function gets data for all charts. you can do more processing here if you want.
+  // bar and heatmap data should be fine as is. pie data you'll have to deal with dynamically. it
+  // has top 5 or less.
+
       temp=await Storage.getValue("cft") ;///load from memory
       workingTime=int.parse(temp);
       temp=await Storage.getValue("sbt"); //load from memory
@@ -173,46 +176,66 @@ class _Pomodorosettings extends State<PomodoroSettings> {
       numOfCycles=int.parse(temp);
       temp= await Storage.getValue("lba"); //load from memory
       longbreakAfter=  int.parse(temp);
+
+    return [workingTime, shortbreaktime, longbreaktime,numOfCycles,longbreakAfter];
+  }
+
+  @override
+  void initState() async{
+      
       l1=[workingTime,shortbreaktime,longbreaktime,numOfCycles,longbreakAfter]; // load from memory at these positions or no need here
   }
+
   @override
   Widget build(BuildContext context) {
     // darkMode = isDark ? 1 : 0;
-    return Scaffold(
-      appBar: topBar(context:context, myTitle: '', ),
-      body:SafeArea(
-
-        child:Container(
-        child:ListView(
-          
-          padding: EdgeInsets.all(24),
-          children: [
-            // const Padding(
-            //     padding: EdgeInsets.all(24),
-            //     child:  Text("Improve Focus",style: TextStyle(color: subtleGrey )),
-            // ),
-            //  makeCardFocus("Focus Mode", "Turn On to Block Notifications While Working"),
-            const Padding(
-                padding: const EdgeInsets.all(24),
-                child:  Text("Edit The Pomodoro Cycle Preferences",style: TextStyle(color: subtleGrey ,fontSize: 16)),
-
-            ),
+    return
+      FutureBuilder(
+        future: getAllData(),
+        builder: (context, snapshot) {
             
-  
-            makeCard("Focus Time", "Current Focus Time ", workingTime,'',0),  
-            makeCard("Short Break", "Short Break Duration ",shortbreaktime,'',1),
-            makeCard("Long Break", "Long Break Duration ",longbreaktime,'',2),
-            makeCard("Number of Cycles", "Current Number of Cycles ", numOfCycles,'',3),
-            makeCard("Schedule Long Break", "Long Break is after ", longbreakAfter, 'cycles',4),
+            if (snapshot.connectionState == ConnectionState.done) {
+              data = snapshot.data;
+               return Scaffold(
+                  appBar: topBar(context:context, myTitle: '', ),
+                  body:SafeArea(
+
+                    child:Container(
+                    child:ListView(
+                      
+                      padding: EdgeInsets.all(24),
+                      children: [
+                        // const Padding(
+                        //     padding: EdgeInsets.all(24),
+                        //     child:  Text("Improve Focus",style: TextStyle(color: subtleGrey )),
+                        // ),
+                        //  makeCardFocus("Focus Mode", "Turn On to Block Notifications While Working"),
+                        const Padding(
+                            padding: const EdgeInsets.all(24),
+                            child:  Text("Edit The Pomodoro Cycle Preferences",style: TextStyle(color: subtleGrey ,fontSize: 16)),
+
+                        ),
+                        makeCard("Focus Time", "Current Focus Time ", workingTime,'',0),  
+                        makeCard("Short Break", "Short Break Duration ",shortbreaktime,'',1),
+                        makeCard("Long Break", "Long Break Duration ",longbreaktime,'',2),
+                        makeCard("Number of Cycles", "Current Number of Cycles ", numOfCycles,'',3),
+                        makeCard("Schedule Long Break", "Long Break is after ", longbreakAfter, 'cycles',4),
+                      ],
+                  ) 
+                ),
+                ),
+                );
 
             
-           
-          ],
-        ) 
-      ),
-      ),
-      
-      
+            }else{
+               return const CircularProgressIndicator();
+            }
+        }
+
+       
     );
+
+
+   
   }
 }
