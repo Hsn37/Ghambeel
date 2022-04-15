@@ -15,6 +15,8 @@ import '../../theme.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:sortedmap/sortedmap.dart';
+import 'package:sortedmap/sortedmap.dart';
+
 
 
 
@@ -386,11 +388,23 @@ Future<List<DailyWork>> getBarData() async {
 Future<dynamic> getPieData() async {
   String? temp = await Storage.getValue("timespentPerTask");
   dynamic tasks = {};
+  Map holder = SortedMap(Ordering.byValue());
+  Map<String, int> result = {};
   if (temp != "") {
     tasks = json.decode(temp!);
+    holder.addAll(tasks);
+    var iter = holder.keys.toList().reversed;
+    var count = 0;
+    for (var key in iter) {
+      count = count + 1;
+      result[key.toString()] = holder[key];
+      if (count == 5) {
+        break;
+      }
+    }
   }
 
-  return tasks;
+  return result;
 }
 
 Future<dynamic> getHeatData() async {
@@ -411,7 +425,8 @@ Future<dynamic> getHeatData() async {
 
 Future<dynamic> getAllData() async {
   // this function gets data for all charts. you can do more processing here if you want.
-  // bar and heatmap data should be fine as is. pie data you'll have to deal with dynamically
+  // bar and heatmap data should be fine as is. pie data you'll have to deal with dynamically. it
+  // has top 5 or less.
 
   dynamic pieData = await getPieData();
   dynamic barData = await getBarData();
