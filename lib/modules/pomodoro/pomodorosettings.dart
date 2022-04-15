@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_const
 
 import 'package:flutter/cupertino.dart';
-
+import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ghambeel/theme.dart';
@@ -43,6 +43,7 @@ class _Pomodorosettings extends State<PomodoroSettings> {
   var shortbreaktime; // set app default time 5
   var longbreaktime; // set app default time double of shortbreaktime.
   var numOfCycles;
+  var temp;
   var longbreakAfter; // validation >0 , <num of cycles. by default numofcycles/2
   var l1;//=[workingTime,shortbreaktime,longbreaktime,numOfCycles,longbreakAfter];// use this instead
   Widget textinput1(subtitle,whichVar,extra,ind) {
@@ -54,6 +55,22 @@ class _Pomodorosettings extends State<PomodoroSettings> {
                 onChanged: (val) {
                   setState(() {
                     l1[ind]=val; //corresponding variable changes value. //hoping not a copy.
+                    if(ind==0){
+                      Storage.setValue("cft",val.toString());
+                    }
+                    else if(ind==1){
+                      Storage.setValue("sbt",val.toString());
+                    }
+                    else if(ind==2){
+                      Storage.setValue("lbt",val.toString());
+                    }
+                    else if(ind==3){
+                      Storage.setValue("cnc",val.toString());
+                    }
+                    else if(ind==4){
+                      Storage.setValue("lba",val.toString());
+                    }
+                   
                   });
                     
                     print("ww");
@@ -145,11 +162,16 @@ class _Pomodorosettings extends State<PomodoroSettings> {
 
   @override
   void initState(){
-      workingTime=25;///load from memory
-      shortbreaktime=5; //load from memory
-      longbreaktime=10; // load from memory
-      numOfCycles=4; // load from memory
-      longbreakAfter=numOfCycles/2; //load from memory
+      temp=Storage.getValue("cft") ;///load from memory
+      workingTime=int.parse(temp);
+      temp=Storage.getValue("sbt"); //load from memory
+      shortbreaktime=int.parse(temp);
+      temp=Storage.getValue("lbt"); // load from memory
+      longbreaktime=int.parse(temp);
+      temp=Storage.getValue("cnc"); // load from memory
+      numOfCycles=int.parse(temp);
+      temp=Storage.getValue("lba"); //load from memory
+      longbreakAfter=int.parse(temp);
       l1=[workingTime,shortbreaktime,longbreaktime,numOfCycles,longbreakAfter]; // load from memory at these positions or no need here
   }
   @override
