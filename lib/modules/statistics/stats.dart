@@ -109,6 +109,7 @@ class _StatState extends State<Statistics> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               data = snapshot.data;
+              print(data[0].isEmpty);
               return Scaffold(
                 backgroundColor: bg[darkMode],
                 body: Center(
@@ -148,7 +149,8 @@ class _StatState extends State<Statistics> {
                                     ),),
                                 ),
                                 SizedBox(height: 18.0,),
-                                PieChart(
+                                data[0].isEmpty ? SizedBox(height: 18.0,) // replace this with some empty message or whatevs
+                                    : PieChart(
                                   legendOptions: LegendOptions(
                                       legendPosition: LegendPosition.bottom,
                                       legendTextStyle: TextStyle(
@@ -169,7 +171,7 @@ class _StatState extends State<Statistics> {
                                     showChartValuesOutside: true,
                                     // showChartValueBackground: false
                                   ),
-                                )
+                                ),
                               ],
                             ),
 
