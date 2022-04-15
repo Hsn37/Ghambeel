@@ -157,12 +157,16 @@ class _LeaderboardState extends State<Leaderboard>{
                     padding: EdgeInsets.all(24),
                     child:  Text("Select number of top scorers:",style: TextStyle(color: primaryText[darkMode] )),
                   ),
-                  NumberPicker(
+                  Container(
+                    margin: const EdgeInsets.only(left: 15),
+                      child:NumberPicker(
                     value: topNum,
                     minValue: 1,
                     maxValue: maxShow,
+                    itemCount: 6,
                     step: 1,
                     itemHeight: 25,
+                    itemWidth: 73,
                     axis: Axis.horizontal,
                     textStyle: TextStyle(color:primaryText[darkMode]),
                     selectedTextStyle: TextStyle(color:accent),
@@ -170,7 +174,7 @@ class _LeaderboardState extends State<Leaderboard>{
                             () {topNum = value;
                             syncScores();}
                     ),
-                  ),
+                  ),),
                   Container(
                   padding: EdgeInsets.all(14),
                    margin: EdgeInsets.all(35),
