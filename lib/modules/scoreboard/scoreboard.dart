@@ -52,9 +52,12 @@ class _LeaderboardState extends State<Leaderboard>{
     rawscores = await getScores();
     print(rawscores);
 
-    rawscores.sort((s1, s2) {
-      return Comparable.compare(s1.score, s2.score);
+    setState(() {
+      rawscores.sort((s2, s1) {
+        return Comparable.compare(s1["score"], s2["score"]);
+      });
     });
+
 
     scores = rawscores.take(topNum).toList();
     setState(() {
@@ -62,6 +65,7 @@ class _LeaderboardState extends State<Leaderboard>{
       topNum = min(toDisplay, topNum);
       maxShow = min(50, rawscores.length);
     });
+    print(scores);
   }
 
   void initState() {
