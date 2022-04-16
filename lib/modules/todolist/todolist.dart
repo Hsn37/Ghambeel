@@ -466,8 +466,17 @@ class ToDoListState extends State<ToDoList>{
 
   void sortTasks() {
     if (currentFilter == 1) {
-      incompleteTasks.sort((a, b) => a.dline.compareTo(b.dline));
-      completedTasks.sort((a, b) => a.dline.compareTo(b.dline));
+      List<Task> l = incompleteTasks.where((element) => element.dline.year != 1990).toList();
+      List<Task> l2 = incompleteTasks.where((element) => element.dline.year == 1990).toList();
+
+      l.sort((a, b) => a.dline.compareTo(b.dline));
+      incompleteTasks = l + l2;
+
+      List<Task> l3 = completedTasks.where((element) => element.dline.year != 1990).toList();
+      List<Task> l4 = completedTasks.where((element) => element.dline.year == 1990).toList();
+
+      l3.sort((a, b) => a.dline.compareTo(b.dline));
+      completedTasks = l3 + l4;
     }
     else if (currentFilter == 2) {
       

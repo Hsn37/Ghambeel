@@ -102,7 +102,6 @@ Future setup() async {
     });
   
 
-
   // the tasks object to be present int the system always
   var p2 = Storage.getValue(Keys.tasks).then((v) => {
       // Priorities: 0 = low, 1 = medium, 2 = high
@@ -171,14 +170,12 @@ Future setup() async {
     if (v == null)
       Storage.setValue(Keys.timeSpentPerDay, Storage.jsonEnc({}))
   });
-  Storage.setValue("cft","25");
-  Storage.setValue("sbt","5");
-   
-   Storage.setValue("lbt","10");
-   Storage.setValue("cnc","4");
-   Storage.setValue("lba","2");
 
-  return Future.wait(<Future>[p1, p2, p3, p4, p5, p6, p7, p8, p9]);
+  // Pomodoro settings.
+  var p10 = Storage.setValue("cft","25").then((value) => Storage.setValue("sbt","5")).then((value) => Storage.setValue("lbt","10")).then((value) => 
+    Storage.setValue("cnc","4")).then((value) => Storage.setValue("lba","2"));
+
+  return Future.wait(<Future>[p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]);
 }
 
 void main() {
@@ -189,19 +186,19 @@ void main() {
   ///////////////////////////////////////////////////////////////////
   // RUN THIS IF YOU WANT TO CLEAR OUT THE STORAGE AND START AFRESH
   ///////////////////////////////////////////////////////////////////
-  Storage.deleteAll().then((v) {
-    setup().then((v2) {
-      backgroundService(HeadlessTask("taskId", false));
-      BackgroundFetch.registerHeadlessTask(backgroundService);
-      runApp(const MyApp());
-    });
-  });
-
-  // setup().then((v) {
-  //   backgroundService(HeadlessTask("taskId", false));
-  //   BackgroundFetch.registerHeadlessTask(backgroundService);
-  //   runApp(const MyApp());
+  // Storage.deleteAll().then((v) {
+  //   setup().then((v2) {
+  //     backgroundService(HeadlessTask("taskId", false));
+  //     BackgroundFetch.registerHeadlessTask(backgroundService);
+  //     runApp(const MyApp());
+  //   });
   // });
+
+  setup().then((v) {
+    backgroundService(HeadlessTask("taskId", false));
+    BackgroundFetch.registerHeadlessTask(backgroundService);
+    runApp(const MyApp());
+  });
   
   // the function that runs in the background when app is closed;
 }
