@@ -282,7 +282,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
       tea=await Storage.getValue("cft") ;
       print("tea value is: , "+ tea);///load from memory
       testDuration=Duration(minutes: int.parse(tea)  ) ;
-      print("tests udration : "+testDuration);
+      // print("tests udration : " + testDuration);
       tea=await Storage.getValue("sbt"); //load from memory
       shortBreakDuration=Duration(minutes: int.parse(tea) ) ;
       tea= await Storage.getValue("lbt"); // load from memory
@@ -292,6 +292,9 @@ class PomodoroTimerState extends State<PomodoroTimer>{
       tea= await Storage.getValue("lba"); //load from memory
       longBreakAfter=int.parse(tea);
 
+      myTime=testDuration;
+      currentDuartion=testDuration;
+
 
     return [testDuration, shortBreakDuration, longBreakDuration,numOfCycles, longBreakAfter];
   }
@@ -300,15 +303,12 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   @override
   void initState() {
 
-      
-      currentDuartion=testDuration;
       pausedwithrunning=false;
       super.initState();
       currentCycleNumber=1;
       // _loadCurrentTaskList();
       allowSelectionOnce=0;
       timerType=timerTypeList[0];
-      myTime=testDuration;
       isStopState=2;
       //currentcyclenum=0;
   }
@@ -582,7 +582,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
                       }));
                   });
                 });
-                
+
                 return Loading();
               }
               else {
