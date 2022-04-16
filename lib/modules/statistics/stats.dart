@@ -138,15 +138,18 @@ class _StatState extends State<Statistics> {
                             // shadowColor: Colors.grey,
                             child: Column(
                               children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text("Time spent on tasks:",
-                                    style: TextStyle(
-                                      fontFamily: "Nunito",
-                                      fontWeight: FontWeight.bold,
-                                      color: primaryText[darkMode],
-                                      fontSize: 16,
-                                    ),),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text("Time spent on tasks:",
+                                      style: TextStyle(
+                                        fontFamily: "Nunito",
+                                        fontWeight: FontWeight.bold,
+                                        color: primaryText[darkMode],
+                                        fontSize: 16,
+                                      ),),
+                                  ),
                                 ),
                                 SizedBox(height: 18.0,),
                                 data[0].isEmpty ? SizedBox(height: 18.0,) // replace this with some empty message or whatevs
@@ -198,15 +201,18 @@ class _StatState extends State<Statistics> {
                             ),
                             child: Column(
                               children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text("Hours spent each day:",
-                                    style: TextStyle(
-                                      fontFamily: "Nunito",
-                                      fontWeight: FontWeight.bold,
-                                      color: primaryText[darkMode],
-                                      fontSize: 16,
-                                    ),),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text("Hours spent each day:",
+                                      style: TextStyle(
+                                        fontFamily: "Nunito",
+                                        fontWeight: FontWeight.bold,
+                                        color: primaryText[darkMode],
+                                        fontSize: 16,
+                                      ),),
+                                  ),
                                 ),
                                 SizedBox(height: 18.0,),
                                 // put barchart here
@@ -229,29 +235,32 @@ class _StatState extends State<Statistics> {
                             elevation: 2.0,
                             shadowColor: bg[(darkMode + 1) % 2],
                             margin: EdgeInsets.only(
-                                left: 10.0,
+                                left: 8.0,
                                 top: 10.0,
-                                right: 10.0,
+                                right: 8.0,
                                 bottom: 10.0),
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(30),
-                                bottomRight: Radius.circular(30),
-                                bottomLeft: Radius.circular(30),
+                                bottomRight: Radius.circular(15),
+                                bottomLeft: Radius.circular(15),
                                 topLeft: Radius.circular(30),
                               ),
                             ),
                             child: Column(
                               children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text("Monthly heatmap:",
-                                    style: TextStyle(
-                                      fontFamily: "Nunito",
-                                      fontWeight: FontWeight.bold,
-                                      color: primaryText[darkMode],
-                                      fontSize: 16,
-                                    ),),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text("Monthly heatmap:",
+                                      style: TextStyle(
+                                        fontFamily: "Nunito",
+                                        fontWeight: FontWeight.bold,
+                                        color: primaryText[darkMode],
+                                        fontSize: 16,
+                                      ),),
+                                  ),
                                 ),
                                 SizedBox(height: 18.0,),
                                 // put barchart here
@@ -263,26 +272,30 @@ class _StatState extends State<Statistics> {
                                 //     // animate: false,
                                 //   ),
                                 // ),
-                                HeatMapCalendar(
-                                  defaultColor: Colors.white,
-                                  flexible: true,
-                                  colorMode: ColorMode.color,
-                                  datasets: data[2],
-                                  colorsets: {
-                                    1: Colors.amber.shade50,
-                                    3: Colors.amber.shade100,
-                                    5: Colors.amber.shade200,
-                                    7: Colors.amber.shade300,
-                                    8: Colors.amber.shade400,
-                                    // 11: Colors.indigo,
-                                    // 13: Colors.purple,
-                                  },
-                                  textColor: primaryText[darkMode],
-                                  weekTextColor: primaryText[darkMode],
-
-                                  // onClick: (value) {
-                                  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.toString())));
-                                  // },
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: HeatMapCalendar(
+                                    defaultColor: bg[darkMode],
+                                    flexible: true,
+                                    colorMode: ColorMode.color,
+                                    datasets: data[2],
+                                    colorsets: {
+                                      1: Colors.amber.shade50,
+                                      3: Colors.amber.shade100,
+                                      5: Colors.amber.shade200,
+                                      7: Colors.amber.shade300,
+                                      8: Colors.amber.shade400,
+                                      // 11: Colors.indigo,
+                                      // 13: Colors.purple,
+                                    },
+                                    textColor: primaryText[darkMode],
+                                    // textColor:Colors.grey.shade400,
+                                    weekTextColor: primaryText[darkMode],
+                                    
+                                    // onClick: (value) {
+                                    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.toString())));
+                                    // },
+                                  ),
                                 )
                               ],
                             ),
@@ -349,15 +362,33 @@ class DailyWorkChart extends StatelessWidget {
         domainFn: (DailyWork series, _) => series.day,
         measureFn: (DailyWork series, _)=> series.hours,
         colorFn: (DailyWork series, _) => series.barColor,
+        
       )
     ];
+
+    var baraxiscolor = charts.MaterialPalette.black;
+    if(darkMode == 1)
+    {
+      baraxiscolor = charts.MaterialPalette.white;
+    }
+    var axis = charts.OrdinalAxisSpec(
+        renderSpec: charts.GridlineRendererSpec(
+            labelStyle: charts.TextStyleSpec(
+                fontSize: 10, color: baraxiscolor), //chnage white color as per your requirement.
+            ));
     return charts.BarChart(
       series, 
       animate: true,
+      
+      // barRendererDecorator: ,
+      // primaryMeasureAxis: axis,
+      domainAxis: axis,
       defaultRenderer: new charts.BarRendererConfig(
         maxBarWidthPx: 40,
+        
       ),
       );
+      
   }
 }
 
