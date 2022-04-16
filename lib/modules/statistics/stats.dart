@@ -30,14 +30,14 @@ class Statistics extends StatefulWidget {
   _StatState createState() => _StatState();
 }
 
-  Map<String, double> pieData = {
-    'Task1': 35.8,
-    'Task2': 8.3,
-    'Task3': 10.8,
-    'Task4': 15.6,
-    'Task5': 19.2,
-    'Task6': 23,
-  };
+  // Map<String, double> pieData = {
+  //   'Task1': 35.8,
+  //   'Task2': 8.3,
+  //   'Task3': 10.8,
+  //   'Task4': 15.6,
+  //   'Task5': 19.2,
+  //   'Task6': 23,
+  // };
 
   // Map<String, double> getTop5(Map map)
   // {
@@ -53,9 +53,9 @@ class _StatState extends State<Statistics> {
   // var sorteddatapie = SortedMap(Ordering.byValue());
 
 
-  var sortMapByValue = Map.fromEntries(
-    pieData.entries.toList()
-    ..sort((e1, e2) => e1.value.compareTo(e2.value)));
+  // var sortMapByValue = Map.fromEntries(
+  //   pieData.entries.toList()
+  //   ..sort((e1, e2) => e1.value.compareTo(e2.value)));
     
   // print("***Sorted Map by value***");
   // print(sortMapByValue);
@@ -109,6 +109,7 @@ class _StatState extends State<Statistics> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               data = snapshot.data;
+              print(data[0].isEmpty);
               return Scaffold(
                 backgroundColor: bg[darkMode],
                 body: Center(
@@ -148,7 +149,8 @@ class _StatState extends State<Statistics> {
                                     ),),
                                 ),
                                 SizedBox(height: 18.0,),
-                                PieChart(
+                                data[0].isEmpty ? SizedBox(height: 18.0,) // replace this with some empty message or whatevs
+                                    : PieChart(
                                   legendOptions: LegendOptions(
                                       legendPosition: LegendPosition.bottom,
                                       legendTextStyle: TextStyle(
@@ -157,7 +159,7 @@ class _StatState extends State<Statistics> {
                                         fontWeight: FontWeight.bold,
                                       )
                                   ),
-                                  dataMap: sortMapByValue,
+                                  dataMap: data[0], //pie data top 5 added here
                                   colorList: mycolorList,
                                   chartRadius: MediaQuery
                                       .of(context)
@@ -169,7 +171,7 @@ class _StatState extends State<Statistics> {
                                     showChartValuesOutside: true,
                                     // showChartValueBackground: false
                                   ),
-                                )
+                                ),
                               ],
                             ),
 
@@ -389,20 +391,47 @@ Future<dynamic> getPieData() async {
   String? temp = await Storage.getValue("timespentPerTask");
   dynamic tasks = {};
   Map holder = SortedMap(Ordering.byValue());
-  Map<String, int> result = {};
-  if (temp != "") {
-    tasks = json.decode(temp!);
-    holder.addAll(tasks);
-    var iter = holder.keys.toList().reversed;
-    var count = 0;
-    for (var key in iter) {
-      count = count + 1;
-      result[key.toString()] = holder[key];
-      if (count == 5) {
-        break;
+  Map<String, double> result = {};
+  try {
+    if (temp != "") {
+      tasks = json.decode(temp!);
+      holder.addAll(tasks);
+      var iter = holder.keys.toList().reversed;
+      var count = 0;
+      print(holder);
+      for (var key in iter) {
+        print(key);
+        print(holder[key]);
+        print(tasks[key]);
+        print(key.runtimeType);
+        print(holder[key].runtimeType);
+        print(tasks[key].runtimeType);
+        String tempkey = key;
+        double tempval = tasks[key].toDouble();
+        count = count + 1;
+        // print("Result0:"+ result.toString());
+        // result.putIfAbsent(key, () => holder[key]);
+        result[tempkey] = tempval;
+        // print("Result:"+ result.toString());
+        if (count == 5) {
+          break;
+        }
       }
     }
   }
+  catch (e) {
+    print(e);
+    result = {
+      'Task1': 35.8,
+      'Task2': 8.3,
+      'Task3': 10.8,
+      'Task4': 15.6,
+      'Task5': 19.2,
+      'Task6': 23,
+    };
+  }
+  // print("Result2:"+ holder.toString());
+  print(result);
 
   return result;
 }
@@ -432,6 +461,7 @@ Future<dynamic> getAllData() async {
   dynamic barData = await getBarData();
   dynamic heatData = await getHeatData();
 
+  print(pieData);
   return [pieData, barData, heatData];
 }
 
