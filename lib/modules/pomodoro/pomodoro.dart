@@ -559,29 +559,28 @@ class PomodoroTimerState extends State<PomodoroTimer>{
               if (fetchData ) {
                 
                 var start = DateTime.now();
-                Storage.fetchTasks().then((v) {
-                  var f=getAllData().then(() => {
-
+                getAllData().then((value) {
+                    Storage.fetchTasks().then((v) {
+                    var list = Task.parseTasks(v["incomplete"]);
+                    
+                    if (list.length == 0) {
+                      noTasks = true;          
+                    }
+                    else {
+                      _loadCurrentTaskList(list);
+                    }
+                    
+                    if (noTasks) {
+                        Navigator.pop(context);
+                        alertDialog("Voila", "You currently have no tasks to work on", context);
+                    }
+                    else
+                      Timer(Duration(milliseconds: 1000 - DateTime.now().difference(start).inMilliseconds), () => setState(() => {
+                        fetchData = false,
+                      }));
                   });
-                  var list = Task.parseTasks(v["incomplete"]);
-                  
-                  if (list.length == 0) {
-                    noTasks = true;          
-                  }
-                  else {
-                    _loadCurrentTaskList(list);
-                  }
-                  
-                  if (noTasks) {
-                      Navigator.pop(context);
-                      alertDialog("Voila", "You currently have no tasks to work on", context);
-                  }
-                  else
-                    Timer(Duration(milliseconds: 1000 - DateTime.now().difference(start).inMilliseconds), () => setState(() => {
-                      fetchData = false,
-                    }));
                 });
-
+                
                 return Loading();
               }
               else {
