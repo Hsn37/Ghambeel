@@ -17,6 +17,7 @@ import 'package:select_form_field/select_form_field.dart';
 import 'package:image_picker/image_picker.dart';
 import 'pomodorosettings.dart';
 
+var condFlag=false;
 
 class topBar extends AppBar {
     final String myTitle;
@@ -77,6 +78,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   var longBreakAfter;//=2;
   var numOfCycles;//; // load number of cyeces from storage by default set in settings
 
+  
   
   bool noTasks = false;
   bool fetchData = true;
@@ -337,6 +339,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
     color: primaryText[darkMode],
   );
   Widget createTimer(typeofduration) {
+    condFlag=true;
     String formatted(int n) => n.toString().padLeft(2, "0") ;
     String minutes = formatted(myTime.inMinutes.remainder(60));
     String seconds = formatted(myTime.inSeconds.remainder(60));
@@ -547,14 +550,19 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   @override
   Widget build(BuildContext context) {
     return 
+    
       FutureBuilder( 
         future: getAllData(),
         builder: (context, snapshot){
           if (snapshot.connectionState == ConnectionState.done) {
               data = snapshot.data;
-              if (fetchData) {
+              if (fetchData ) {
+                
                 var start = DateTime.now();
                 Storage.fetchTasks().then((v) {
+                  var f=getAllData().then(() => {
+
+                  });
                   var list = Task.parseTasks(v["incomplete"]);
                   
                   if (list.length == 0) {

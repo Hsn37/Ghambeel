@@ -47,6 +47,7 @@ class _Pomodorosettings extends State<PomodoroSettings> {
   var longbreakAfter; // validation >0 , <num of cycles. by default numofcycles/2
   var l1;//=[workingTime,shortbreaktime,longbreaktime,numOfCycles,longbreakAfter];// use this instead
   dynamic data = [];
+  
   Widget textinput1(subtitle,whichVar,extra,ind) {
     return TextFormField(
                 keyboardType: TextInputType.number,
