@@ -54,7 +54,7 @@ class _Pomodorosettings extends State<PomodoroSettings> {
                     FilteringTextInputFormatter.digitsOnly
                 ],
                 onChanged: (val) {
-                  setState(() {
+                 // setState(() {
                     l1[ind]=val; //corresponding variable changes value. //hoping not a copy.
                     if(ind==0){
                       Storage.setValue("cft",val.toString());
@@ -72,7 +72,7 @@ class _Pomodorosettings extends State<PomodoroSettings> {
                       Storage.setValue("lba",val.toString());
                     }
                    
-                  });
+                 // });
                     
                     print("ww");
                     print(workingTime);
@@ -181,7 +181,7 @@ class _Pomodorosettings extends State<PomodoroSettings> {
   }
 
   @override
-  void initState() async{
+  void initState() {
       
       l1=[workingTime,shortbreaktime,longbreaktime,numOfCycles,longbreakAfter]; // load from memory at these positions or no need here
   }

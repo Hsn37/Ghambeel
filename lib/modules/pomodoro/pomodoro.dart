@@ -294,7 +294,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
 
   var allowSelectionOnce=0;
   @override
-  void initState() async{
+  void initState() {
 
       
       currentDuartion=testDuration;
