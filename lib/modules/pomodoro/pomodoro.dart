@@ -279,8 +279,10 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   // has top 5 or less.
 
       var tea;
-      tea=await Storage.getValue("cft") ;///load from memory
-      testDuration=Duration(minutes: int.parse(tea) ) ;
+      tea=await Storage.getValue("cft") ;
+      print("tea value is: , "+ tea);///load from memory
+      testDuration=Duration(minutes: int.parse(tea)  ) ;
+      print("tests udration : "+testDuration);
       tea=await Storage.getValue("sbt"); //load from memory
       shortBreakDuration=Duration(minutes: int.parse(tea) ) ;
       tea= await Storage.getValue("lbt"); // load from memory
