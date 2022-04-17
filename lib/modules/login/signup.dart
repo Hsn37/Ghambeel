@@ -62,6 +62,7 @@ class _SignupPageState extends State<SignupPage> {
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           title: const Text("Sign up Page"),
+          backgroundColor: Color(0xff00bcd4),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -167,7 +168,8 @@ class _SignupPageState extends State<SignupPage> {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
                   },
                   child: const Text(
-                      "Existing user? Sign in!"
+                      "Existing user? Sign in!",
+                      style: TextStyle(color: Colors.blue, fontSize: 14),
                   )
               )
             ],
