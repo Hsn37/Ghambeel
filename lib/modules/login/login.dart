@@ -148,9 +148,12 @@ class _LoginPageState extends State<LoginPage> {
                               // loading = false;
                             }
                           },
-                          child: const Text(
-                            'Login',
-                            style: TextStyle(color: Colors.white, fontSize: 25),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Text(
+                              'Login',
+                              style: TextStyle(color: Colors.white, fontSize: 25),
+                            ),
                           ),
                         ),
                       ),
