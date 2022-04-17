@@ -142,9 +142,12 @@ class _LoginPageState extends State<LoginPage> {
                               bool status = await alertDialog("Incorrect Password", "Try again.", context);
                             }
                           },
-                          child: const Text(
-                            'Login',
-                            style: TextStyle(color: Colors.white, fontSize: 25),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Text(
+                              'Login',
+                              style: TextStyle(color: Colors.white, fontSize: 25),
+                            ),
                           ),
                         ),
                       ),
