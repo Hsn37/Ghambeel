@@ -44,6 +44,7 @@ void backgroundService (HeadlessTask task) async {
       final result = await InternetAddress.lookup('example.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         doBackup(serverUrl);
+        sendScores(serverUrl);
         data["backup"]["lastTime"] = getFormattedDatetime(DateTime(t.year, t.month, t.day, 12));
 
         Notifications.show("Backup", "Your data was backed up!", NotifID.backup);

@@ -188,11 +188,13 @@ class _CalendarState extends State<Calendar> {
                           itemCount: value.length,
                           itemBuilder: (context, index) {
                             return Container(
+                              height:90,
                               margin: const EdgeInsets.symmetric(
                                 horizontal: 12.0,
-                                vertical: 4.0,
+                                vertical: 7.0,
                               ),
                               decoration: BoxDecoration(
+                                  border: Border.all(color: lightPrimary[darkMode], width: 12),
                                   borderRadius: BorderRadius.circular(20),
                                   color: lightPrimary[darkMode]
                               ),
@@ -205,8 +207,12 @@ class _CalendarState extends State<Calendar> {
                                       Icon(Icons.timer,
                                         color: getColor(value[index].priority),size:20)
                                     ]),
-                                subtitle: Text(shortenDescription(
-                                    value[index].description)),
+                                subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [SizedBox(height: 7),Text(shortenDescription(
+                                      value[index].description)),SizedBox(height: 5),
+                              Text("Due: " + value[index].deadline.split(" ")[1].split(":").sublist(0,2).join(":"))]
+                                ),
                               ),
                             );
                           },

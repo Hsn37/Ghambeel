@@ -32,7 +32,7 @@ class topBar extends AppBar {
                 );
             }
         ),
-      title: Text('Weekly Leaderboard',style: TextStyle(color: primaryText[darkMode]),),
+      title: Text('Daily Leaderboard',style: TextStyle(color: primaryText[darkMode]),),
       
       backgroundColor: bg[darkMode],
     );
