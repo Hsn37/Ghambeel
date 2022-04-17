@@ -164,6 +164,23 @@ class ToDoListState extends State<ToDoList>{
       children:<Widget>[
         searchActive? searchWidget():infoAndButtons(),
         Container(
+          //mainAxisAlignment: MainAxisAlignment.start
+          color: bg[darkMode],
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+          child:Column(
+            children: [
+              Row(
+                children:  [
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: Text("Incomplete", style: TextStyle( fontWeight: FontWeight. bold, fontSize: 14, color: primaryText[darkMode])),
+                    ),
+                  ],
+              ),            
+          ],
+          )        
+        ),
+        Container(
             decoration: BoxDecoration(color:bg[darkMode]),
             padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
               child:ListView.builder(
@@ -198,7 +215,6 @@ class ToDoListState extends State<ToDoList>{
                   // make card creates the items. receive data from make card for our tasks
               ),
         ),
-
         Container(
           //mainAxisAlignment: MainAxisAlignment.start
           color: bg[darkMode],
