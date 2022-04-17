@@ -73,6 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
                   title: const Text("Login Page"),
+                  backgroundColor: Color(0xff00bcd4),
                 ),
                 body: SingleChildScrollView(
                   child: Column(
@@ -94,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                               prefixIcon: const Icon(Icons.account_circle),
                               filled: true,
                               fillColor: Colors.white.withOpacity(0.5),
-                              labelText: 'username',
+                              labelText: 'Username',
                               hintText: 'Enter valid username'),
                         ),
                       ),
@@ -114,36 +115,36 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Enter secure password'),
                         ),
                       ),
-                      Container(
-                        height: 50,
-                        width: 250,
-                        decoration: BoxDecoration(
-                            color: Colors.blue, borderRadius: BorderRadius.circular(20)),
-                        child: TextButton(
-                          onPressed: () async {
-                            var success = await getData("http://74.207.234.113:8080/?username="+username.text + "&password=" + password.text);
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Container(
+                          height: 50,
+                          width: 250,
+                          decoration: BoxDecoration(
+                              color: Color(0xff00bcd4), borderRadius: BorderRadius.circular(20)),
+                          child: TextButton(
+                            onPressed: () async {
+                              var success = await getData("http://74.207.234.113:8080/?username="+username.text + "&password=" + password.text);
 
-                            if (success['status'] == 'true') {
-                              // redo after validation
-                              final prefs = await SharedPreferences.getInstance();
-                              prefs.setBool('log', true);
-                              prefs.setString('username', username.text);
-                              await Storage.recoverTasks();
-                              setState(() => {
-                                loading = true
-                              });
-                              await Future.delayed(const Duration(seconds: 2));
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => const MyHomePage(
-                                      title: "FLutter")));
-                              // loading = false;
-                            }
-                            else {
-                              bool status = await youSure("Incorrect Password", "Do you want to try again?", context);
-                            }
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                              if (success['status'] == 'true') {
+                                // redo after validation
+                                final prefs = await SharedPreferences.getInstance();
+                                prefs.setBool('log', true);
+                                prefs.setString('username', username.text);
+                                await Storage.recoverTasks();
+                                setState(() => {
+                                  loading = true
+                                });
+                                await Future.delayed(const Duration(seconds: 2));
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) => const MyHomePage(
+                                        title: "FLutter")));
+                                // loading = false;
+                              }
+                              else {
+                                bool status = await youSure("Incorrect Password", "Do you want to try again?", context);
+                              }
+                            },
                             child: const Text(
                               'Login',
                               style: TextStyle(color: Colors.white, fontSize: 25),
@@ -151,13 +152,14 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      const Padding(padding: EdgeInsets.only(top: 20)),
+                      const Padding(padding: EdgeInsets.only(top: 2)),
                       TextButton(
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupPage()));
                           },
                           child: const Text(
-                              "New User? Sign up!"
+                              "New User? Sign up!",
+                               style: TextStyle(color: Colors.blue, fontSize: 14),
                           )
                       )
                   ]),
