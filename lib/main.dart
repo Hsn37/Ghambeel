@@ -196,7 +196,7 @@ void main() {
   // });
 
   setup().then((v) {
-    backgroundService(HeadlessTask("taskId", false));
+    backgroundService(HeadlessTask("customtask", false));
     BackgroundFetch.registerHeadlessTask(backgroundService);
     runApp(const MyApp());
   });

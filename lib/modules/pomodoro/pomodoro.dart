@@ -131,7 +131,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
           storeTimeForTask(); // see if you need to pass variables here.
           setState(() {
             //initState();
-              currentDuartion=testDuration;
+            currentDuartion=testDuration;
             pausedwithrunning=false;
             currentCycleNumber=1;
           // _loadCurrentTaskList();
@@ -146,7 +146,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
 
         }
         else{
-          print("break time not recorded for assgignment.");
+          print("break time not recorded for assignment.");
           // break ending early reset timer
           setState(() {
              currentCycleNumber+=1;
@@ -292,6 +292,8 @@ class PomodoroTimerState extends State<PomodoroTimer>{
       tea= await Storage.getValue("lba"); //load from memory
       longBreakAfter=int.parse(tea);
 
+      currentDuartion=testDuration;
+      myTime=testDuration;
 
     return [testDuration, shortBreakDuration, longBreakDuration,numOfCycles, longBreakAfter];
   }
@@ -300,15 +302,13 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   @override
   void initState() {
 
-      
-      currentDuartion=testDuration;
+    
       pausedwithrunning=false;
       super.initState();
       currentCycleNumber=1;
       // _loadCurrentTaskList();
       allowSelectionOnce=0;
       timerType=timerTypeList[0];
-      myTime=testDuration;
       isStopState=2;
       //currentcyclenum=0;
   }
