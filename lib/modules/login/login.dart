@@ -96,8 +96,8 @@ class _LoginPageState extends State<LoginPage> {
                               prefixIcon: const Icon(Icons.account_circle),
                               filled: true,
                               fillColor: Colors.white.withOpacity(0.5),
-                              labelText: 'Email',
-                              hintText: 'Enter valid email'),
+                              labelText: 'Username',
+                              hintText: 'Enter valid username'),
                         ),
                       ),
                       Padding(
