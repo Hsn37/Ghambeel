@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextButton(
                           onPressed: () async {
                             var success = await getData("http://74.207.234.113:8080/?username="+username.text + "&password=" + password.text);
-
+                            print(success['status']);
                             if (success['status'] == 'true') {
                               // redo after validation
                               final prefs = await SharedPreferences.getInstance();
