@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:async';
+
 import 'package:ghambeel/sharedfolder/loading.dart';
 import 'package:ghambeel/sharedfolder/task.dart';
 import 'package:pausable_timer/pausable_timer.dart';
@@ -279,10 +281,8 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   // has top 5 or less.
 
       var tea;
-      tea=await Storage.getValue("cft") ;
-      print("tea value is: , "+ tea);///load from memory
-      testDuration=Duration(minutes: int.parse(tea)  ) ;
-      // print("tests udration : " + testDuration);
+      tea=await Storage.getValue("cft") ;///load from memory
+      testDuration=Duration(minutes: int.parse(tea) ) ;
       tea=await Storage.getValue("sbt"); //load from memory
       shortBreakDuration=Duration(minutes: int.parse(tea) ) ;
       tea= await Storage.getValue("lbt"); // load from memory
@@ -292,9 +292,6 @@ class PomodoroTimerState extends State<PomodoroTimer>{
       tea= await Storage.getValue("lba"); //load from memory
       longBreakAfter=int.parse(tea);
 
-      myTime=testDuration;
-      currentDuartion=testDuration;
-
 
     return [testDuration, shortBreakDuration, longBreakDuration,numOfCycles, longBreakAfter];
   }
@@ -303,12 +300,15 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   @override
   void initState() {
 
+      
+      currentDuartion=testDuration;
       pausedwithrunning=false;
       super.initState();
       currentCycleNumber=1;
       // _loadCurrentTaskList();
       allowSelectionOnce=0;
       timerType=timerTypeList[0];
+      myTime=testDuration;
       isStopState=2;
       //currentcyclenum=0;
   }
@@ -497,13 +497,14 @@ class PomodoroTimerState extends State<PomodoroTimer>{
           const SizedBox( height: 10, ),
           DropdownButtonHideUnderline(
             child: DropdownButton(
+              dropdownColor: bg[darkMode],
+              iconDisabledColor: accent,
+              hint: Text("Select Task", style:TextStyle(color: accent)),
+              disabledHint: Text(selectedAssignment.shortName(),style:TextStyle(color: accent),),
               elevation:8,
               iconEnabledColor: lightPrimary[darkMode],
               items:currentTaskList,
               value:selectedAssignment,
-              iconDisabledColor: subtleGrey,
-              hint: Text("Select Task",style: TextStyle(color: subtleGrey),),
-              disabledHint: Text(selectedAssignment.shortName(),style: TextStyle(color: subtleGrey),),
                onChanged: (allowSelectionOnce<1) ? (Task? nvalue)
                { 
                  setState(() 
@@ -551,54 +552,39 @@ class PomodoroTimerState extends State<PomodoroTimer>{
   var data;
   @override
   Widget build(BuildContext context) {
-    return 
-    
-      FutureBuilder( 
-        future: getAllData(),
-        builder: (context, snapshot){
-          if (snapshot.connectionState == ConnectionState.done) {
-              data = snapshot.data;
-              if (fetchData ) {
-                
-                var start = DateTime.now();
-                getAllData().then((value) {
-                    Storage.fetchTasks().then((v) {
-                    var list = Task.parseTasks(v["incomplete"]);
-                    
-                    if (list.length == 0) {
-                      noTasks = true;          
-                    }
-                    else {
-                      _loadCurrentTaskList(list);
-                    }
-                    
-                    if (noTasks) {
-                        Navigator.pop(context);
-                        alertDialog("Voila", "You currently have no tasks to work on", context);
-                    }
-                    else
-                      Timer(Duration(milliseconds: 1000 - DateTime.now().difference(start).inMilliseconds), () => setState(() => {
-                        fetchData = false,
-                      }));
-                  });
-                });
-
-                return Loading();
-              }
-              else {
-                return Scaffold(
-                  appBar: (isStopState>0)? topBar(context: context, myTitle: '',):null,
-                  key: _formKey,
-                  body: makeBody(),
-                );
-              }
-          }
-          else{
-            return const CircularProgressIndicator();
-          }
-        }
+    if (fetchData ) {
+      
+      var start = DateTime.now();
+        getAllData().then((v) => {
+          Storage.fetchTasks().then((v) {
+            var list = Task.parseTasks(v["incomplete"]);
+            
+            if (list.length == 0) {
+              noTasks = true;          
+            }
+            else {
+              _loadCurrentTaskList(list);
+            }
+                  
+            if (noTasks) {
+                Navigator.pop(context);
+                alertDialog("Voila", "You currently have no tasks to work on", context);
+            }
+            else
+              Timer(Duration(milliseconds: 1000 - DateTime.now().difference(start).inMilliseconds), () => setState(() => {
+                fetchData = false,
+              }));
+          })});
+            
+            return Loading();
+    }
+    else {
+      return Scaffold(
+        backgroundColor: bg[darkMode],
+        appBar: (isStopState>0)? topBar(context: context, myTitle: '',):null,
+        key: _formKey,
+        body: makeBody(),
       );
-
-    
+    }
   }
 }
