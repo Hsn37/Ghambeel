@@ -173,7 +173,7 @@ class _LeaderboardState extends State<Leaderboard>{
                     margin: const EdgeInsets.only(left: 15),
                       child:NumberPicker(
                     value: topNum,
-                    minValue: 0,
+                    minValue: 1,
                     maxValue: maxShow,
                     itemCount: 6,
                     step: 1,

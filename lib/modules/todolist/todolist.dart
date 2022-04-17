@@ -136,11 +136,16 @@ class ToDoListState extends State<ToDoList>{
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          IconButton(onPressed: () => setState(() {searchActive = false;}), icon: Icon(Icons.arrow_back), constraints: BoxConstraints(),),
+          IconButton(onPressed: () => setState(() {searchActive = false;}), icon: Icon(Icons.arrow_back, color: primaryText[darkMode]), constraints: BoxConstraints(),),
           Expanded(
             child: TextField(
+              style: TextStyle(color: primaryText[darkMode]),
               decoration: InputDecoration(
-                labelText: 'Search',
+                enabledBorder: UnderlineInputBorder(      
+                  borderSide: BorderSide(color: primaryText[darkMode]),   
+                ), 
+                labelText: "Search",
+                labelStyle: TextStyle(color: primaryText[darkMode]),
               ),
               controller: searchController,
               onChanged: (s) => setState(() => {}),
@@ -158,6 +163,23 @@ class ToDoListState extends State<ToDoList>{
       //physics: const ClampingScrollPhysics(), 
       children:<Widget>[
         searchActive? searchWidget():infoAndButtons(),
+        Container(
+          //mainAxisAlignment: MainAxisAlignment.start
+          color: bg[darkMode],
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+          child:Column(
+            children: [
+              Row(
+                children:  [
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: Text("Incomplete", style: TextStyle( fontWeight: FontWeight. bold, fontSize: 14, color: primaryText[darkMode])),
+                    ),
+                  ],
+              ),            
+          ],
+          )        
+        ),
         Container(
             decoration: BoxDecoration(color:bg[darkMode]),
             padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -193,7 +215,6 @@ class ToDoListState extends State<ToDoList>{
                   // make card creates the items. receive data from make card for our tasks
               ),
         ),
-
         Container(
           //mainAxisAlignment: MainAxisAlignment.start
           color: bg[darkMode],
