@@ -178,14 +178,15 @@ class _AddTaskState extends State<AddTask>{
             onChanged: (text) {
                 tasktitle=text;
             },
-            decoration: const InputDecoration(
-              //border: OutlineInputBorder(),
-              //fillColor: navColor,
-              icon: Icon(Icons.title,color: accent,),
-              labelText: 'Task Title',
-              
+            decoration: InputDecoration(
+              icon: Icon(Icons.title, color: accent,),
+              enabledBorder: UnderlineInputBorder(      
+                  borderSide: BorderSide(color: primaryText[darkMode]),   
+                ), 
+                labelText: "Task Title",
+                labelStyle: TextStyle(color: primaryText[darkMode]),
               ),
-              
+              style: TextStyle(color: primaryText[darkMode]),
             ),
           ),
           Padding(
@@ -194,11 +195,16 @@ class _AddTaskState extends State<AddTask>{
             onChanged: (text) {
                 taskDesc=text;
             },
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               //border: OutlineInputBorder(),
               icon: Icon(Icons.description,color: accent,),
-              labelText: 'Task Description', //check for input length or implemetnt check khudi where it is displayed
+              enabledBorder: UnderlineInputBorder(      
+                  borderSide: BorderSide(color: primaryText[darkMode]),   
+                ), 
+                labelText: "Task Description",
+                labelStyle: TextStyle(color: primaryText[darkMode]),
               ),
+              style: TextStyle(color: primaryText[darkMode]),
             ),
           ),
           Padding(
@@ -207,45 +213,58 @@ class _AddTaskState extends State<AddTask>{
             onChanged: (text) {
                 taskNotes=text;
             },
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
             //  border: OutlineInputBorder(),
               icon: Icon(Icons.notes,color: accent,),
-              labelText: 'Notes',
+              enabledBorder: UnderlineInputBorder(      
+                  borderSide: BorderSide(color: primaryText[darkMode]),   
+                ), 
+                labelText: "Notes",
+                labelStyle: TextStyle(color: primaryText[darkMode]),
               ),
+              style: TextStyle(color: primaryText[darkMode]),
             ),
           ),
           Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Center(child:SelectFormField(
-            type: SelectFormFieldType.dropdown, // or can be dialog
-            initialValue: 'medium',
-            icon: priorityIcon,
-            labelText: 'Priority',
-            items: _items,
-            onChanged: (val) => {
-              if (val=="high"){
-                setState(() {
-                  priorityIcon = Icon(Icons.priority_high,color: Colors.red);
-                })
-              }
-              else if (val=="low"){
-                setState(() {
-                  priorityIcon = Icon(Icons.priority_high,color: Colors.blue);
-                })
-              }
-              else{
-                setState(() {
-                  priorityIcon = Icon(Icons.priority_high,color: accent);
-                }) 
-              },
+            child: Center(
+              child:SelectFormField(
+                type: SelectFormFieldType.dropdown, // or can be dialog
+                initialValue: 'medium',
+                style: TextStyle(color: primaryText[darkMode]),
+                decoration: InputDecoration(
+                    icon: priorityIcon,
+                    enabledBorder: UnderlineInputBorder(      
+                    borderSide: BorderSide(color: primaryText[darkMode]),   
+                  ), 
+                  labelText: "Priority",
+                  labelStyle: TextStyle(color: primaryText[darkMode]),
+                ),
+                items: _items,
+                onChanged: (val) => {
+                  if (val=="high"){
+                    setState(() {
+                      priorityIcon = Icon(Icons.priority_high,color: Colors.red);
+                    })
+                  }
+                  else if (val=="low"){
+                    setState(() {
+                      priorityIcon = Icon(Icons.priority_high,color: Colors.blue);
+                    })
+                  }
+                  else{
+                    setState(() {
+                      priorityIcon = Icon(Icons.priority_high,color: accent);
+                    }) 
+                  },
 
-              dropdownValuePriority=val
-                // print(val)
-                // print(dropdownValuePriority);
-            },
-            onSaved: (val) => print(val),
-          ),
-          ),
+                  dropdownValuePriority=val
+                    // print(val)
+                    // print(dropdownValuePriority);
+                },
+                onSaved: (val) => print(val),
+              ),
+            ),
           ),
          
           Padding(
@@ -253,9 +272,11 @@ class _AddTaskState extends State<AddTask>{
             child: Center( 
              child:TextField(
                 controller: dateinput, //editing controller of this TextField
-                decoration: const InputDecoration( 
+                style: TextStyle(color: primaryText[darkMode]),
+                decoration: InputDecoration( 
                    icon: Icon(Icons.calendar_today,color: accent,), //icon of text field
-                   labelText: "Enter Date" //label text of field
+                   labelText: "Enter Date", //label text of field
+                   labelStyle: TextStyle(color: primaryText[darkMode]),
                 ),
                 readOnly: true,  //set it true, so that user will not able to edit text
                 onTap: () async {
@@ -289,9 +310,11 @@ class _AddTaskState extends State<AddTask>{
             child: Center( 
              child:TextField(
                 controller: timeinput, //editing controller of this TextField
-                decoration: const InputDecoration( 
+                style: TextStyle(color: primaryText[darkMode]),
+                decoration: InputDecoration( 
                    icon: Icon(Icons.timer,color: accent,), //icon of text field
-                   labelText: "Enter Time" //label text of field
+                   labelText: "Enter Time", //label text of field
+                   labelStyle: TextStyle(color: primaryText[darkMode]),
                 ),
                 readOnly: true,  //set it true, so that user will not able to edit text
                 onTap: () async {
@@ -331,7 +354,7 @@ class _AddTaskState extends State<AddTask>{
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: image != null ? imageDisplay() : const Text("No image uploaded"),
+            child: image != null ? imageDisplay() : Text("No image uploaded", style: TextStyle(color: primaryText[darkMode])),
           ),
 
         ],

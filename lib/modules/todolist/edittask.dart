@@ -212,14 +212,15 @@ class _EditTaskState extends State<EditTask>{
                 tasktitle=text;
             },
             initialValue: widget.task.name,
-            decoration:  InputDecoration(
-              //border: OutlineInputBorder(),
-              //fillColor: navColor,
-              icon: const Icon(Icons.title,color: accent,),
-              labelText: "Task Title", //replacing label text with our variable'Task Title', // 
-              hintText: tasktitle,
+            decoration: InputDecoration(
+              icon: Icon(Icons.title, color: accent,),
+              enabledBorder: UnderlineInputBorder(      
+                  borderSide: BorderSide(color: primaryText[darkMode]),   
+                ), 
+                labelText: "Task Title",
+                labelStyle: TextStyle(color: primaryText[darkMode]),
               ),
-              
+              style: TextStyle(color: primaryText[darkMode]),
             ),
           ),
           Padding(
@@ -229,12 +230,16 @@ class _EditTaskState extends State<EditTask>{
                 taskDesc=text;
             },
             initialValue: widget.task.description,
-            decoration:  InputDecoration(
+            decoration: InputDecoration(
               //border: OutlineInputBorder(),
-              icon: const Icon(Icons.description,color: accent,),
-              labelText: 'Task Description', //check for input length or implemetnt check khudi where it is displayed
-              hintText: taskDesc,
+              icon: Icon(Icons.description,color: accent,),
+              enabledBorder: UnderlineInputBorder(      
+                  borderSide: BorderSide(color: primaryText[darkMode]),   
+                ), 
+                labelText: "Task Description",
+                labelStyle: TextStyle(color: primaryText[darkMode]),
               ),
+              style: TextStyle(color: primaryText[darkMode]),
             ),
           ),
           Padding(
@@ -244,12 +249,16 @@ class _EditTaskState extends State<EditTask>{
                 taskNotes=text;
             },
             initialValue: widget.task.notes,
-            decoration:  InputDecoration(
+            decoration: InputDecoration(
             //  border: OutlineInputBorder(),
-              icon: const Icon(Icons.notes,color: accent,),
-              labelText: 'Notes',
-              hintText: taskNotes,
+              icon: Icon(Icons.notes,color: accent,),
+              enabledBorder: UnderlineInputBorder(      
+                  borderSide: BorderSide(color: primaryText[darkMode]),   
+                ), 
+                labelText: "Notes",
+                labelStyle: TextStyle(color: primaryText[darkMode]),
               ),
+            style: TextStyle(color: primaryText[darkMode]),
             ),
           ),
           Padding(
@@ -257,9 +266,16 @@ class _EditTaskState extends State<EditTask>{
           child: Center(child:SelectFormField(
             type: SelectFormFieldType.dropdown, // or can be dialog
             initialValue:dropdownValuePriority,// 'medium',
-            icon: priorityIcon,// this has yellow by default. but should have
-            /// the color that isi initially in dropdown. if statement above needed
-            labelText: 'Priority',
+            style: TextStyle(color: primaryText[darkMode]),
+            decoration: InputDecoration(
+                icon: priorityIcon,
+                enabledBorder: UnderlineInputBorder(      
+                borderSide: BorderSide(color: primaryText[darkMode]),   
+              ), 
+              labelText: "Priority",
+              labelStyle: TextStyle(color: primaryText[darkMode]),
+            ),
+            
             items: _items,
             onChanged: (val) => {
               if (val=="high"){
@@ -292,9 +308,11 @@ class _EditTaskState extends State<EditTask>{
             child: Center( 
              child:TextField(
                 controller: dateinput, //editing controller of this TextField
-                decoration: const InputDecoration( 
+                style: TextStyle(color: primaryText[darkMode]),
+                decoration: InputDecoration( 
                    icon: Icon(Icons.calendar_today,color: accent,), //icon of text field
-                   labelText: "Enter Date" //label text of field
+                   labelText: "Enter Date", //label text of field
+                   labelStyle: TextStyle(color: primaryText[darkMode]),
                 ),
                 readOnly: true,  //set it true, so that user will not able to edit text
                 onTap: () async {
@@ -327,9 +345,11 @@ class _EditTaskState extends State<EditTask>{
             child: Center( 
              child:TextField(
                 controller: timeinput, //editing controller of this TextField
-                decoration: const InputDecoration( 
+                style: TextStyle(color: primaryText[darkMode]),
+                decoration: InputDecoration( 
                    icon: Icon(Icons.timer,color: accent,), //icon of text field
-                   labelText: "Enter Time" //label text of field
+                   labelText: "Enter Time", //label text of field
+                   labelStyle: TextStyle(color: primaryText[darkMode]),
                 ),
                 readOnly: true,  //set it true, so that user will not able to edit text
                 onTap: () async {
@@ -364,7 +384,7 @@ class _EditTaskState extends State<EditTask>{
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: image != null ? imageDisplay() : const Text("No image uploaded"),
+            child: image != null ? imageDisplay() : Text("No image uploaded", style: TextStyle(color: primaryText[darkMode])),
           ),
 
         ],
@@ -374,6 +394,10 @@ class _EditTaskState extends State<EditTask>{
           Task t = widget.task;
 
           t.name = tasktitle;
+          if (t.name == "") {
+            alertDialog("Error", "You must add a title.", context);
+            return;
+          }
           t.description = taskDesc;
           t.notes = taskNotes;
           if (dropdownValuePriority == "high") {

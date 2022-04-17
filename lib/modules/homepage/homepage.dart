@@ -162,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
             leading: Icon(Icons.logout, color: secondaryText[darkMode],),
             title: Text('Logout', style: TextStyle(color: primaryText[darkMode]),),
             onTap: () async {
-              bool status = await youSure("Logout?", "You may want to backup first.", context);
+              bool status = await youSure("Logout?", "You may want to backup first.", context, "Logout", "Cancel");
 
               print("Logout:");
               print(status);
