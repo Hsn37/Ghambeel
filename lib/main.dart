@@ -189,7 +189,7 @@ void main() {
   ///////////////////////////////////////////////////////////////////
   // Storage.deleteAll().then((v) {
   //   setup().then((v2) {
-  //     backgroundService(HeadlessTask("taskId", false));
+  //     backgroundService(HeadlessTask("customtask", false));
   //     BackgroundFetch.registerHeadlessTask(backgroundService);
   //     runApp(const MyApp());
   //   });
@@ -198,10 +198,9 @@ void main() {
   setup().then((v) {
     backgroundService(HeadlessTask("customtask", false));
     BackgroundFetch.registerHeadlessTask(backgroundService);
+    Storage.getValue(Keys.bgservice).then((v) => print("BACKGROUND SERVICE" + v.toString()));
     runApp(const MyApp());
   });
-  
-  // the function that runs in the background when app is closed;
 }
 
 

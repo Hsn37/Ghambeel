@@ -27,7 +27,7 @@ class _CalendarState extends State<Calendar> {
   // States:
   late Map<DateTime, List<Task>?> sortedTasks;
   DateTime _focusedDay = DateTime.now(); //
-  DateTime? _selectedDay;
+  DateTime _selectedDay = DateTime.now();
   late final ValueNotifier<List<Task>> _todayIncomplete;
 
 
@@ -36,13 +36,18 @@ class _CalendarState extends State<Calendar> {
 
   var fetchData = true;
 
+  void haha() async {
+    await getEvents();
+    _todayIncomplete.value = _getEventsToday(_selectedDay);
+  }
+
   @override
   void initState() {
     super.initState();
     sortedTasks = {};
-    getEvents();
     _selectedDay = _focusedDay;
-    _todayIncomplete = ValueNotifier(_getEventsToday(_selectedDay!));
+    _todayIncomplete = ValueNotifier(_getEventsToday(_selectedDay));
+    haha();
   }
 
   @override
@@ -237,8 +242,8 @@ class _CalendarState extends State<Calendar> {
     return sortedTasks[idx] ?? [];
   }
 
-  getEvents() {
-    Storage.fetchTasks().then((v) =>
+  Future getEvents() async {
+    return Storage.fetchTasks().then((v) =>
     {
       rawTasks = Task.parseTasksCal(v["incomplete"], null),
 
