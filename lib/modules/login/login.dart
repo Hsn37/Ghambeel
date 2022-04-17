@@ -139,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                               // loading = false;
                             }
                             else {
-                              bool status = await youSure("Incorrect Password", "Do you want to try again?", context);
+                              bool status = await alertDialog("Incorrect Password", "Try again.", context);
                             }
                           },
                           child: const Text(
