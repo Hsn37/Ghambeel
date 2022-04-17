@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ghambeel/modules/homepage/homepage.dart';
 // import 'package:mysql1/mysql1.dart';
 // import 'package:ghambeel/modules/utils.dart';
+import 'package:crypto/crypto.dart';
 
 
 class SignupPage extends StatefulWidget {
@@ -141,7 +142,7 @@ class _SignupPageState extends State<SignupPage> {
                     var data = jsonEncode({
                       "email" : newEmail,
                       "username" : newUsername,
-                      "password": newPassword
+                      "password": sha256.convert(utf8.encode(newPassword)).toString()
                     });
                     postData(data, "Users", serverUrl);
                     final prefs = await SharedPreferences.getInstance();

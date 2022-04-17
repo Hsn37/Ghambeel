@@ -9,6 +9,7 @@ import 'package:ghambeel/modules/utils.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
+import 'package:crypto/crypto.dart';
 // import 'package:mysql1/mysql1.dart';
 // import 'package:ghambeel/modules/utils.dart';
 
@@ -124,7 +125,8 @@ class _LoginPageState extends State<LoginPage> {
                               color: Color(0xff00bcd4), borderRadius: BorderRadius.circular(20)),
                           child: TextButton(
                             onPressed: () async {
-                              var success = await getData("http://74.207.234.113:8080/?username="+username.text + "&password=" + password.text);
+                              var to_send = sha256.convert(utf8.encode(password.text)).toString();
+                              var success = await getData("http://74.207.234.113:8080/?username="+username.text + "&password=" + to_send);
 
                             if (success['status'] == 'true') {
                               // redo after validation
