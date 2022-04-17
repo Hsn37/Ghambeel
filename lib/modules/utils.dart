@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:http/http.dart';
+import 'package:crypto/crypto.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -204,7 +205,7 @@ Future<void> changePass(password) async {
   var data = jsonEncode({
     "username" : username,
     "data" : jsonEncode({
-      "password" : password
+      "password" : sha256.convert(utf8.encode(password)).toString(),
     })
   });
   postData(data, "Password", serverUrl);

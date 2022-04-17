@@ -7,6 +7,7 @@ import 'signup.dart';
 import 'package:ghambeel/modules/login/signup.dart';
 import 'package:ghambeel/modules/utils.dart';
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ghambeel/modules/storage/storage.dart';
 
