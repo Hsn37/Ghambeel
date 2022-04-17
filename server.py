@@ -173,7 +173,7 @@ class MyServer(BaseHTTPRequestHandler):
                 username = query['username']
                 password = query['password']
                 print(query)
-                data = database(fr"SELECT * FROM Users WHERE Email='{username}' AND Pass='{password}'")
+                data = database(fr"SELECT * FROM Users WHERE Name='{username}' AND Pass='{password}'")
                 if len(data) > 0:
                     response = {"status":"true"}
                     self.wfile.write(bytes(dumps(response), "utf8"))
