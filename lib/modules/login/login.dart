@@ -126,33 +126,33 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () async {
                               var success = await getData("http://74.207.234.113:8080/?username="+username.text + "&password=" + password.text);
 
-                              if (success['status'] == 'true') {
-                                // redo after validation
-                                final prefs = await SharedPreferences.getInstance();
-                                prefs.setBool('log', true);
-                                prefs.setString('username', username.text);
-                                await Storage.recoverTasks();
-                                setState(() => {
-                                  loading = true
-                                });
-                                await Future.delayed(const Duration(seconds: 2));
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) => const MyHomePage(
-                                        title: "FLutter")));
-                                // loading = false;
-                              }
-                              else {
-                                bool status = await youSure("Incorrect Password", "Do you want to try again?", context);
-                              }
-                            },
-                            child: const Text(
-                              'Login',
-                              style: TextStyle(color: Colors.white, fontSize: 25),
-                            ),
+                            if (success['status'] == 'true') {
+                              // redo after validation
+                              final prefs = await SharedPreferences.getInstance();
+                              prefs.setBool('log', true);
+                              prefs.setString('username', username.text);
+                              await Storage.recoverTasks();
+                              setState(() => {
+                                loading = true
+                              });
+                              await Future.delayed(const Duration(seconds: 2));
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => const MyHomePage(
+                                      title: "FLutter")));
+                              // loading = false;
+                            }
+                            else {
+                              bool status = await alertDialog("Incorrect Password", "Try again.", context);
+                            }
+                          },
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(color: Colors.white, fontSize: 25),
                           ),
                         ),
-                      ),
-                      const Padding(padding: EdgeInsets.only(top: 2)),
+                      ),),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 2)),
                       TextButton(
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupPage()));
