@@ -408,17 +408,25 @@ Future<List<DailyWork>> getBarData() async {
   var tweek = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"];
   List<DailyWork> result = [];
   String? temp = await Storage.getValue("timeSpentPerDay");
-  if (temp != "") {
-    dynamic tasks = json.decode(temp!);
-    for (var item in tasks.keys) {
-      var now = DateTime.now();
-      var tiemdone = DateTime.parse(item);
-      if (now.difference(tiemdone).inDays < 7) {
-        var day = DateTime.parse(item).weekday;
-        int add = tasks[item];
-        prod[day-1] = prod[day-1] + add;
+  try {
+    if (temp != "") {
+      dynamic tasks = json.decode(temp!);
+      for (var item in tasks.keys) {
+        var now = DateTime.now();
+        var tiemdone = DateTime.parse(item);
+        if (now.difference(tiemdone).inDays < 7) {
+          var day = DateTime.parse(item).weekday;
+          int add = tasks[item];
+          prod[day-1] = prod[day-1] + add;
+        }
       }
     }
+  }
+  catch(e) {
+    for (var i = 0; i < prod.length; i++) {
+      result.add(DailyWork(week[i], prod[i], charts.ColorUtil.fromDartColor(Colors.cyan.shade100)));
+    }
+    return result;
   }
 
   for (var i = 0; i < prod.length; i++) {
@@ -468,14 +476,7 @@ Future<dynamic> getPieData() async {
   }
   catch (e) {
     print(e);
-    result = {
-      'Task1': 35.8,
-      'Task2': 8.3,
-      'Task3': 10.8,
-      'Task4': 15.6,
-      'Task5': 19.2,
-      'Task6': 23,
-    };
+    return result;
   }
   // print("Result2:"+ holder.toString());
   print(result);
@@ -486,14 +487,19 @@ Future<dynamic> getPieData() async {
 Future<dynamic> getHeatData() async {
   Map<DateTime, int> result = {};
   String? temp = await Storage.getValue("timeSpentPerDay");
-  if (temp != "") {
-    dynamic temp2 = json.decode(temp!);
-    for (var key in temp2.keys) {
-      var day = DateTime.parse(key).day;
-      var month = DateTime.parse(key).month;
-      var year = DateTime.parse(key).year;
-      result[DateTime(year, month, day)] = temp2[key];
+  try {
+    if (temp != "") {
+      dynamic temp2 = json.decode(temp!);
+      for (var key in temp2.keys) {
+        var day = DateTime.parse(key).day;
+        var month = DateTime.parse(key).month;
+        var year = DateTime.parse(key).year;
+        result[DateTime(year, month, day)] = temp2[key];
+      }
     }
+  }
+  catch(e) {
+    return result;
   }
 
   return result;
