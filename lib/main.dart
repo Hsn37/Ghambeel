@@ -104,19 +104,19 @@ Future setup() async {
   
 
   // the tasks object to be present int the system always
-  var p2 = Storage.getValue(Keys.tasks).then((v) => {
+  var p2 = Storage.getValue(Keys.tasks).then((v) {
       // Priorities: 0 = low, 1 = medium, 2 = high
       // using empty string if want to overwrite the value
-      
+      var firsttaskdue = getFormattedDatetime(DateTime.now().add(Duration(hours: 5)));
       if (v == null || v == "") {
         Storage.setValue(Keys.tasks, Storage.jsonEnc({
           "tasks":{
             "incomplete":{
-                "task0":{"name":"First Task", "priority":"0", "description":"Take a tour of our app", "notes": "", "status":"incomplete", "timeAdded":getNowDateTime(), "deadline":getNowDateTime(), "timeCompleted":"", "imgname":""},
+                "task0":{"name":"First Task", "priority":"0", "description":"Take a tour of our app", "notes": "", "status":"incomplete", "timeAdded":getNowDateTime(), "deadline":firsttaskdue, "timeCompleted":"", "imgname":""},
               },
             "complete":{},
           },
-        }))
+        }));
       }
     });
 
