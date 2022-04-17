@@ -183,6 +183,7 @@ class _StatState extends State<Statistics> {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Card(
+                            // color: (darkMode==0) ? Color.fromARGB(255, 255, 255, 255) : Colors.grey.shade600,
                             color: bg[darkMode],
                             elevation: 2.0,
                             shadowColor: bg[(darkMode + 1) % 2],
@@ -291,6 +292,8 @@ class _StatState extends State<Statistics> {
                                     textColor: primaryText[darkMode],
                                     // textColor:Colors.grey.shade400,
                                     weekTextColor: primaryText[darkMode],
+                                    // showColorTip: true,
+                                    
                                     
                                     // onClick: (value) {
                                     //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.toString())));
@@ -376,6 +379,11 @@ class DailyWorkChart extends StatelessWidget {
             labelStyle: charts.TextStyleSpec(
                 fontSize: 10, color: baraxiscolor), //chnage white color as per your requirement.
             ));
+    var axis_measure = charts.NumericAxisSpec(
+        renderSpec: charts.GridlineRendererSpec(
+            labelStyle: charts.TextStyleSpec(
+                fontSize: 10, color: baraxiscolor), //chnage white color as per your requirement.
+            ));
     return charts.BarChart(
       series, 
       animate: true,
@@ -383,9 +391,10 @@ class DailyWorkChart extends StatelessWidget {
       // barRendererDecorator: ,
       // primaryMeasureAxis: axis,
       domainAxis: axis,
+      primaryMeasureAxis: axis_measure,
       defaultRenderer: new charts.BarRendererConfig(
         maxBarWidthPx: 40,
-        
+      
       ),
       );
       
