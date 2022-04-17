@@ -136,11 +136,16 @@ class ToDoListState extends State<ToDoList>{
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          IconButton(onPressed: () => setState(() {searchActive = false;}), icon: Icon(Icons.arrow_back), constraints: BoxConstraints(),),
+          IconButton(onPressed: () => setState(() {searchActive = false;}), icon: Icon(Icons.arrow_back, color: primaryText[darkMode]), constraints: BoxConstraints(),),
           Expanded(
             child: TextField(
+              style: TextStyle(color: primaryText[darkMode]),
               decoration: InputDecoration(
-                labelText: 'Search',
+                enabledBorder: UnderlineInputBorder(      
+                  borderSide: BorderSide(color: primaryText[darkMode]),   
+                ), 
+                labelText: "Search",
+                labelStyle: TextStyle(color: primaryText[darkMode]),
               ),
               controller: searchController,
               onChanged: (s) => setState(() => {}),
