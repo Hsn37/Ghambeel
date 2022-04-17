@@ -12,7 +12,7 @@ Widget subHeading(String heading, IconData icon, [Color col = accent]) {
   return Row(
     children: <Widget>[
       Icon(icon, color: col),
-      Text(heading, style: const TextStyle(fontWeight: FontWeight.bold))
+      Text(heading, style: TextStyle(fontWeight: FontWeight.bold, color: primaryText[darkMode]))
     ],
   );
 }
@@ -57,19 +57,20 @@ Future<void> viewTask(Task task, BuildContext context) async {
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text(task.name),
+        title: Text(task.name, style: TextStyle(color: primaryText[darkMode]),),
+        backgroundColor: bg[darkMode],
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
               subHeading("Description", Icons.description),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                child: Text(task.description == ""? "-":task.description),
+                child: Text(task.description == ""? "-":task.description, style: TextStyle(color: primaryText[darkMode])),
               ),
               subHeading("Notes", Icons.notes),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                child: Text(task.notes == ""? "-":task.notes),
+                child: Text(task.notes == ""? "-":task.notes, style: TextStyle(color: primaryText[darkMode])),
               ),
               subHeading(task.timeAdded, Icons.create, Color.fromARGB(255, 172, 166, 166)),
               subHeading(task.deadline, Icons.timer, timerCol),
