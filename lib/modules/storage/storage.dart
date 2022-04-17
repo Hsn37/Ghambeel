@@ -72,7 +72,7 @@ class Storage {
   }
   
   static Future<void> AddTimeSpent(Task task, Duration duration) async{
-    var total = duration.inSeconds;
+    var total = duration.inMinutes;
 
     var times = await getValue(Keys.timeSpentPerTask).then((v) => jsonDec(v));
     var timeperday = await getValue(Keys.timeSpentPerDay).then((v) => jsonDec(v));

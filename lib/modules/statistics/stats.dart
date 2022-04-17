@@ -206,7 +206,7 @@ class _StatState extends State<Statistics> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Text("Hours spent each day:",
+                                    child: Text("Minutes spent each day:",
                                       style: TextStyle(
                                         fontFamily: "Nunito",
                                         fontWeight: FontWeight.bold,
@@ -429,6 +429,7 @@ Future<List<DailyWork>> getBarData() async {
 
 Future<dynamic> getPieData() async {
   String? temp = await Storage.getValue("timespentPerTask");
+  dynamic alltasks = await Storage.fetchTasks();
   dynamic tasks = {};
   Map holder = SortedMap(Ordering.byValue());
   Map<String, double> result = {};
@@ -447,6 +448,12 @@ Future<dynamic> getPieData() async {
         print(holder[key].runtimeType);
         print(tasks[key].runtimeType);
         String tempkey = key;
+        if (alltasks['complete'][tempkey] != null) {
+          tempkey = alltasks['complete'][tempkey]['name'];
+        }
+        if (alltasks['incomplete'][tempkey] != null) {
+          tempkey = alltasks['incomplete'][tempkey]['name'];
+        }
         double tempval = tasks[key].toDouble();
         count = count + 1;
         // print("Result0:"+ result.toString());

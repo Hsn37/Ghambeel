@@ -584,7 +584,9 @@ class PomodoroTimerState extends State<PomodoroTimer>{
         backgroundColor: bg[darkMode],
         appBar: (isStopState>0)? topBar(context: context, myTitle: '',):null,
         key: _formKey,
-        body: makeBody(),
+        body: Center(
+          child: makeBody(),
+        ),
       );
     }
   }
