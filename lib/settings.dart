@@ -78,20 +78,6 @@ class _settings extends State<settings> {
                   }}) :
             CircularProgressIndicator(),
             ListTile(
-                title: Text("SendScoreBoard", style: TextStyle(color: primaryText[darkMode]),),
-                contentPadding: const EdgeInsets.symmetric(vertical:10, horizontal: 20),
-                onTap: () async {
-                  sendScores(serverUrl);
-                }
-            ),
-            ListTile(
-                title: Text("GetScoreBoard", style: TextStyle(color: primaryText[darkMode]),),
-                contentPadding: const EdgeInsets.symmetric(vertical:10, horizontal: 20),
-                onTap: () async {
-                  getScores();
-                }
-            ),
-            ListTile(
                 title: Text("Change Password", style: TextStyle(color: primaryText[darkMode]),),
                 contentPadding: const EdgeInsets.symmetric(vertical:10, horizontal: 20),
                 onTap: () {

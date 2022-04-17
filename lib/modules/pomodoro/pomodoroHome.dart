@@ -72,25 +72,6 @@ class _PomodoroHomeState extends State<PomodoroHome> {
             ],
           ),
         ),
-        floatingActionButton: SpeedDial(
-          icon: Icons.share,
-          backgroundColor: Colors.blue,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.4,
-          spaceBetweenChildren: 12,
-          children: [
-            SpeedDialChild(
-              child: Icon(Icons.cloud_download),
-              label: "Recover",
-              onTap: () => Storage.recoverTasks()
-            ),
-            SpeedDialChild(
-                child: Icon(Icons.cloud_download),
-                label: "Backup",
-                onTap: () => doBackup(serverUrl)
-            )
-          ],
-        ),
       ),
     );
   }

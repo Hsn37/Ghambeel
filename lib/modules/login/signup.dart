@@ -117,6 +117,7 @@ class _SignupPageState extends State<SignupPage> {
                       hintText: 'Enter secure password'),
                 ),
               ),
+              const Padding(padding: EdgeInsets.only(top: 20)),
               Container(
                 height: 50,
                 width: 250,

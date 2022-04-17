@@ -114,15 +114,6 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Enter secure password'),
                         ),
                       ),
-                      TextButton(
-                        onPressed: (){
-                          print(":)");
-                        },
-                        child: const Text(
-                          'Forgot Password',
-                          style: TextStyle(color: Colors.blue, fontSize: 15),
-                        ),
-                      ),
                       Container(
                         height: 50,
                         width: 250,
@@ -146,6 +137,9 @@ class _LoginPageState extends State<LoginPage> {
                                   builder: (context) => const MyHomePage(
                                       title: "FLutter")));
                               // loading = false;
+                            }
+                            else {
+                              bool status = await youSure("Incorrect Password", "Do you want to try again?", context);
                             }
                           },
                           child: const Text(
