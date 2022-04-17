@@ -147,6 +147,24 @@ class PomodoroTimerState extends State<PomodoroTimer>{
         }
         else{
           print("break time not recorded for assignment.");
+          if(currentCycleNumber==numOfCycles){
+            alertDialog("Pomodoro", "Pomodoro Run Complete.",context);
+            // Navigator.pop(
+            //             context,
+            //         );
+            setState(() {
+              //initState();
+              currentDuartion=testDuration;
+              pausedwithrunning=false;
+              currentCycleNumber=1;
+            // _loadCurrentTaskList();
+              allowSelectionOnce=0;
+              timerType=timerTypeList[0];
+              myTime=testDuration;
+              isStopState=2;
+            });
+            // now re render the entire page as the last cycles break has also completed.
+          }
           // break ending early reset timer
           setState(() {
              currentCycleNumber+=1;
