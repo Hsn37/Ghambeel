@@ -483,7 +483,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
       ),
     );
   }
-
+  final TextStyle mainText = TextStyle(color:primaryText[darkMode]);
   Widget makeBody() {
     var flag1=false;
     return SafeArea(
@@ -497,6 +497,7 @@ class PomodoroTimerState extends State<PomodoroTimer>{
           const SizedBox( height: 10, ),
           DropdownButtonHideUnderline(
             child: DropdownButton(
+              style: mainText,
               dropdownColor: bg[darkMode],
               iconDisabledColor: accent,
               hint: Text("Select Task", style:TextStyle(color: accent)),

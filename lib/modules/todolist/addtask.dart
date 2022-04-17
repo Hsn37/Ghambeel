@@ -165,6 +165,7 @@ class _AddTaskState extends State<AddTask>{
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Scaffold(
+      backgroundColor: bg[darkMode],
       appBar: topBar(context: context, myTitle: '',),
       key: _formKey,
       body: ListView(      
