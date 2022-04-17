@@ -54,7 +54,7 @@ class _ChangePageState extends State<ChangePage> {
                   return null;
                 },
                 decoration: InputDecoration(
-                  labelText: 'Password',
+                  labelText: 'New Password',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                 ),

@@ -6,6 +6,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import time
 from urllib.parse import urlparse, parse_qsl
 from json import dumps, loads
+import hashlib
 
 def database(query, post=False):
     db = mysql.connector.connect(host = "74.207.234.113",user="esseee",password="essee1234",database="ghambeel")
@@ -25,6 +26,7 @@ def addUser(data):
     username = data['username']
     email = data['email']
     password = data['password']
+    password = hashlib.sha256(password.encode())
     query = fr"INSERT INTO Users VALUES ('{username}', '{password}', '{email}')"
     print(query)
     database(query, True)
@@ -150,6 +152,7 @@ def getScores(month):
 
 def changePass(data, user):
     password = data['password']
+    password = hashlib.sha256(password.encode())
     query = fr"UPDATE Users SET pass='{password}' WHERE Name='{user}'"
     database(query, True)
 
@@ -171,6 +174,7 @@ class MyServer(BaseHTTPRequestHandler):
             if 'password' in query.keys():
                 username = query['username']
                 password = query['password']
+                password = hashlib.sha256(password.encode())
                 print(query)
                 data = database(fr"SELECT * FROM Users WHERE Name='{username}' AND Pass='{password}'")
                 if len(data) > 0:
