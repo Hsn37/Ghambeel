@@ -174,7 +174,7 @@ class ToDoListState extends State<ToDoList>{
                       child: TextButton(
                           child: Opacity(
                             opacity: 0.3,
-                            child: Text("More incomplteed tasks",style: TextStyle(color: primaryText[darkMode])),
+                            child: Text("More incompleted tasks",style: TextStyle(color: primaryText[darkMode])),
                           ),
                         // child: const Text("Load More",style: TextStyle(color: Colors.black.withOpacity(0.5))
                         onPressed: () {
